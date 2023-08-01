@@ -2,17 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\DashboardController as Dashboard;
+use App\Http\Controllers\HomeController as Home;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Auth::routes(['verify' => true]);
+
+// GLOBAL
+Route::get('/', [Home::class, 'index'])->name('home.index');
+Route::post('upload', [Home::class, 'upload'])->name('home.upload');
+
+Route::get('settings', [Home::class, 'settings'])->name('home.settings');
+Route::get('sitemap', [Home::class, 'sitemap'])->name('home.sitemap');
+
+// DASHBOARD
+Route::get('dashboard', [Dashboard::class, 'index'])->name('dashboard.index');
+
+

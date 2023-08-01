@@ -19,11 +19,11 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->unsignedTinyInteger('active')->default(1)->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->foreignUuid('created_by')->default('00000000-0000-0000-0000-000000000000')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('created_by', 36)->nullable()->index();
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->foreignUuid('updated_by')->default('00000000-0000-0000-0000-000000000000')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('updated_by', 36)->nullable()->index();
             $table->softDeletes();
-            $table->foreignUuid('deleted_by')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('deleted_by', 36)->nullable()->index();
         });
     }
 

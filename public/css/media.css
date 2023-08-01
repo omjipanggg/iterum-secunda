@@ -1,0 +1,9 @@
+@media all and (max-width: 991.98px) {
+}
+
+@media all and (max-width: 767.98px) {
+}
+
+@media all and (max-width: 575.98px) {
+	ul.two-columns { columns: 1; }
+}

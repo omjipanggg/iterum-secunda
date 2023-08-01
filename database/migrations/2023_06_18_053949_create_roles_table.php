@@ -5,8 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-use App\Models\Role;
-
 return new class extends Migration
 {
     /**
@@ -24,7 +22,9 @@ return new class extends Migration
 
         DB::table('roles')->insert([
             ['name' => 'Administrator'],
-            ['name' => 'User'],
+            ['name' => 'Business'],
+            ['name' => 'Finance'],
+            ['name' => 'Human Resource'],
             ['name' => 'Partner']
         ]);
     }
