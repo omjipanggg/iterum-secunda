@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Login')
+@section('title', 'Masuk')
 @section('content')
 @include('components.navbar')
 <div class="container">
@@ -8,11 +8,11 @@
             <div class="card">
                 <div class="row">
                     <div class="col-lg-6 offset-lg-1 d-flex align-items-center">
-                        <img src="{{ asset('img/idea.webp') }}" alt="Login" class="img-fluid rounded-start px-6 px-lg-0">
+                        <img src="{{ asset('img/auth.webp') }}" alt="Login" class="img-fluid p-4">
                     </div>
                     <div class="col-lg-4 d-flex align-items-center">
                         <div class="card-body pt-0 py-lg-3">
-                            <h3 class="display-5 mb-4">@yield('title')</h3>
+                            <h3 class="display-6 mb-4">@yield('title')</h3>
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
 
@@ -36,7 +36,7 @@
                                     <label for="password" class="form-label text-md-end">{{ __('Password') }}</label>
                                 </div>
 
-                                <div class="mt-2 gap-2 d-flex flex-wrap align-items-start justify-content-between">
+                                <div class="mt-2 d-flex flex-wrap align-items-start justify-content-between">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" onchange="eyeOpen(event);" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="remember">
@@ -44,8 +44,8 @@
                                         </label>
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary px-3">
-                                        {{ __('Login') }}
+                                    <button type="submit" class="btn btn-color px-3 rounded-0">
+                                        {{ __('Masuk') }}
                                         <i class="bi bi-key ms-1"></i>
                                     </button>
                                 </div>
@@ -53,15 +53,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer text-bg-color">
                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                         <div class="group">
-                            {{ __('Does not have an account?') }}
-                            <a href="{{ route('register') }}" class="dotted">Register</a>
+                            {{ __('Belum memiliki akun?') }}
+                            <a href="{{ route('register') }}" class="dotted">Registrasi di sini!</a>
                         </div>
                         @if (Route::has('password.request'))
                             <a class="dotted" href="{{ route('password.request') }}">
-                                {{ __('Reset Password') }}
+                                {{ __('Lupa kata sandi?') }}
                             </a>
                         @endif
                     </div>

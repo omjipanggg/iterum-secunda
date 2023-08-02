@@ -1,4 +1,4 @@
-<nav class="navbar border-bottom border-body navbar-expand-lg">
+<nav class="navbar border-bottom border-body navbar-expand-lg" id="capitis">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
@@ -13,7 +13,7 @@
                 @guest
                 @if (Route::has('login'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('login') }}">Auth<i class="bi bi-box-arrow-in-right ms-1"></i></a>
+                    <a class="nav-link" href="{{ route('login') }}">Masuk<i class="bi bi-box-arrow-in-right ms-1"></i></a>
                 </li>
                 @endif
                 @else
@@ -23,9 +23,9 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             @if (Auth::user()->hasRole(1))
-                                <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dashboard</a>
+                                <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dasbor</a>
                             @endif
-                            <a href="{{ route('home.settings') }}" class="dropdown-item text-start text-lg-end">Settings</a>
+                            <a href="{{ route('home.settings') }}" class="dropdown-item text-start text-lg-end">Pengaturan</a>
                             <hr class="navbar-divider my-1">
                             <a class="dropdown-item text-start text-lg-end" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -39,4 +39,4 @@
     </div>
 </nav>
 
-<div class="mb-12"></div>
+<div class="mb-3"></div>

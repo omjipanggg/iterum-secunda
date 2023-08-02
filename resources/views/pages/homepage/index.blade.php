@@ -4,36 +4,25 @@
 @include('components.navbar')
 <div class="container">
     <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <i class="bi bi-database me-2"></i>
-                    {{ __('Dashboard') }}
+        <div class="col-lg-5 offset-lg-1 d-flex flex-column align-items-center justify-content-center">
+            <h4 class="display-5">Wujudkan pekerjaan impianmu bersama {{ config('app.name', 'SELENA') }}™</h4>
+            <form action="{{ route('home.portal.index') }}" method="GET" class="w-100">
+                @csrf
+                <div class="input-group">
+                    <div class="form-floating">
+                        <input type="text" class="form-control rounded-start" name="keyword" autocomplete="off" placeholder="Kata kunci" id="query">
+                        <label for="query">Kata kunci</label>
+                    </div>
+                    <button type="submit" class="btn btn-color rounded-end px-4">
+                        {{ __('Telusuri') }}
+                        <i class="bi bi-search ms-1"></i>
+                    </button>
                 </div>
+            </form>
+        </div>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    <form action="{{ route('home.upload') }}" enctype="multipart/form-data" method="POST">
-                        @method('POST')
-                        @csrf
-                        <div class="group mb-2">
-                        @error('file')
-                            <span class="form-text text-danger fw-bold">Kolom di bawah ini bersifat wajib.</span>
-                        @enderror
-                        <input type="file" class="@error('file') is-invalid @enderror form-control" name="file">
-                        </div>
-                        <button type="submit" class="btn btn-secondary">
-                        Submit
-                        <i class="bi bi-send ms-1"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
+        <div class="col-lg-6 d-flex align-items-center">
+            <img src="{{ asset('img/browse.webp') }}" alt="Browse" class="img-fluid">
         </div>
     </div>
 </div>

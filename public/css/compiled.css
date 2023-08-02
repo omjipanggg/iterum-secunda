@@ -1,10 +1,19 @@
 /* GLOBAL ===================================================================== */
 :root {
-	--background-color: hsla(210deg, 10%, 15%, 1);
-	--fixed-background-color: rgba(245, 245, 245, .82);
 	--shadow-color: rgba(0, 0, 0, .15);
-	--primary-color: rgba(250, 15, 117, 1);
-	--pinky-color: hsla(314deg, 90%, 52%, 1)
+	--fixed-background-color: rgba(245, 245, 245, .82);
+	--background-color: hsla(223deg, 10%, 15%, 1);
+	--border-color: hsla(223deg, 47%, 36%, .9);
+	--primary-color: hsla(223deg, 47%, 36%, 1);
+	--primary-darker-color: hsla(223deg, 47%, 25%, 1);
+	--primary-darkened-color: hsla(223deg, 47%, 19%, 1);
+	--primary-bright-color: hsla(223deg, 47%, 90%, 1);
+	--secondary-color: hsla(223deg, 35%, 60%, 1);
+	--pinky-color: hsla(314deg, 90%, 52%, 1);
+	--pinky-bright-color: hsla(314deg, 90%, 89%, 1);
+	--green-color: hsla(93deg, 48%, 36%, 1);
+	--yellow-color: hsla(30deg, 48%, 36%, 1);
+	--red-color: hsla(342deg, 48%, 36%, 1);
 }
 
 /* BASE */
@@ -12,15 +21,13 @@
 *,
 *::before,
 *::after {
-	font-family: 'Nunito', sans-serif;
-	font-size: 13px;
 	outline: 1px solid var(--pinky-color);
 }
 
 body {
 	/*letter-spacing: -2px;*/
-	font-family: 'Poppins', 'Open Sans', sans-serif;
-	font-size: 12.7px;
+	font-family: 'Nunito', sans-serif;
+	font-size: 12.4px;
 }
 
 /* COMPONENTS */
@@ -32,9 +39,7 @@ body {
 .card:hover {
 	transform: translateY(-9.75px);
 	box-shadow: 0 .5em 1em var(--shadow-color);
-}
-
-.card-footer {
+	border: 1px solid var(--border-color);
 }
 
 .carousel-item {
@@ -70,11 +75,18 @@ body {
 
 img { pointer-events: none; }
 
+.img-halved {
+	width: 72%;
+}
+
 ul.square {
 	list-style-type: square;
 	padding-left: 1em;
 }
 
+.w-100 {
+	width: 100%!important;
+}
 .h-100 {
 	height: 64vh;
 }
@@ -92,12 +104,20 @@ ul.square {
 	margin-bottom: 8em;
 }
 .px-6 {
-	padding-left: 5em!important;
-	padding-right: 5em!important;
+	padding-left: 5em;
+	padding-right: 5em;
+}
+.px-20 {
+	padding: 0 8em;
 }
 .py-20 {
 	padding: 8em 0;
 }
+.p-20 {
+	padding: 8em;
+}
+.pt-20 { padding-top: 8em; }
+.pb-20 { padding-bottom: 8em; }
 
 .dotted {
 	text-decoration: none;
@@ -109,9 +129,49 @@ ul.square {
 	text-decoration-style: dotted;
 }
 
+/* BUTTONS */
+/* ===================================================================== */
+.btn-color {
+	background-color: var(--primary-color);
+	color: var(--primary-bright-color);
+}
+.btn-color:focus,
+.btn-color:hover {
+	background-color: var(--primary-darker-color);
+	color: var(--primary-bright-color);
+}
+.btn-outline-color {
+	background-color: var(--primary-bright-color);
+	border: 1px solid var(--primary-color);
+	color: var(--primary-color);
+}
+.btn-outline-color:focus,
+.btn-outline-color:hover {
+	background-color: var(--primary-darker-color);
+	color: var(--primary-bright-color);
+}
+.btn-dual {
+	background-color: var(--primary-darker-color);
+	color: var(--primary-bright-color);
+}
+.btn-dual:focus,
+.btn-dual:hover {
+	background-color: var(--primary-darkened-color);
+	color: var(--primary-bright-color);
+}
+
 /* LAYOUTS */
 /* ===================================================================== */
 .w-100 { width: 100%!important; }
+
+.text-bg-color {
+	background-color: var(--primary-color);
+	color: var(--primary-bright-color);
+}
+.text-bg-color a {
+	color: var(--fixed-background-color);
+}
+.bg-darker-color { background-color: var(--primary-darker-color); }
 
 /* TEXT */
 /* ===================================================================== */
@@ -135,14 +195,14 @@ ul.square {
 /* FORM */
 /* ===================================================================== */
 .btn {
-	font-size: 13px!important;
+	font-size: 12.4px!important;
 	padding-left: 1em;
 	padding-right: 1em;
 }
 .form-control,
 .form-select {
-	font-size: 13px!important;
-	border-radius: 0!important;
+	font-size: 12.4px!important;
+	border-radius: 0;
 }
 .label-select label {
     position: absolute;
@@ -167,18 +227,30 @@ ul.square {
 
 /* FOOTER */
 /* ===================================================================== */
-footer .nav-item {
+footer.alt .nav-item {
 	position: relative;
 }
 
-footer .nav-item + .nav-item {
+footer.alt .nav-item + .nav-item {
 	padding-left: 1.5em;
 }
 
-footer .nav-item + .nav-item::before {
+footer.alt .nav-item + .nav-item::before {
 	content: "·";
 	position: absolute;
 	top: 50%;
 	left: 9px;
 	transform: translateY(-50%);
+}
+
+footer .nav-link {
+	transition: all 160ms ease-in-out;
+}
+footer .nav-link:hover {
+	color: var(--pinky-bright-color)!important;
+	transform: translateX(4px);
+}
+footer h5::after {
+	content: '';
+
 }

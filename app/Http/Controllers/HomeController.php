@@ -64,4 +64,14 @@ class HomeController extends Controller
     public function sitemap() {
         return view('pages.homepage.sitemap');
     }
+
+    public function portal(Request $request) {
+        dd($request);
+        return view('pages.portal.index');
+    }
+
+    public function showPortal(string $id) {
+        dd($id);
+        return view('pages.portal.show');
+    }
 }
