@@ -22,14 +22,16 @@
         <form>
           <h5>Berlangganan</h5>
           <hr>
-          <p>Dapatkan informasi lowongan kerja terbaru</p>
+          <p>Dapatkan informasi lowongan kerja terbaru!</p>
           <div class="d-flex flex-column flex-sm-row w-100 gap-2">
             <label for="newsletter1" class="visually-hidden">Alamat email</label>
             <div class="input-group">
-              <input id="newsletter1" type="text" class="form-control" placeholder="Alamat email">
-              <button class="btn btn-dual px-3 rounded-0" type="button">
-                {{ __('Kirim') }}
-                <i class="bi bi-send ms-2"></i>
+              <form action="{{ route('home.subscription') }}" method="POST">
+                <input id="newsletter1" type="text" class="form-control" placeholder="Alamat email">
+                <button class="btn btn-dual px-3 rounded-0" type="submit">
+                  {{ __('Kirim') }}
+                  <i class="bi bi-send ms-2"></i>
+              </form>
               </button>
             </div>
           </div>

@@ -26,7 +26,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('picture')->default('landscape.png')->nullable();
             $table->string('slug')->nullable();
-            $table->unsignedTinyInteger('active')->default(0);
+            $table->boolean('active')->default(0);
+            $table->unsignedTinyInteger('status')->default(0);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->foreignUuid('created_by')->cascadeOnUpdate()->constrained('users');
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));

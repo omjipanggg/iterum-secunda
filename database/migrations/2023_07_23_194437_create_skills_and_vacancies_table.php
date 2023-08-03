@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vacancy_has_skill', function (Blueprint $table) {
+        Schema::create('skills_and_vacancies', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('vacancy_id')->cascadeOnUpdate()->constrained('vacancies');
             $table->foreignId('skill_id')->cascadeOnUpdate()->constrained('skills');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vacancy_has_many_skills');
+        Schema::dropIfExists('skills_and_vacanciess');
     }
 };

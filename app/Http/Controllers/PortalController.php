@@ -9,9 +9,10 @@ class PortalController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        dd($request->all());
+        return view('pages.portal.index');
     }
 
     /**
@@ -35,7 +36,12 @@ class PortalController extends Controller
      */
     public function show(string $id)
     {
-        //
+        dd($id);
+        return view('pages.portal.show');
+    }
+
+    public function filter(Request $request) {
+        dd($request->all());
     }
 
     /**

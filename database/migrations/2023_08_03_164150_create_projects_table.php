@@ -11,11 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table_codes', function (Blueprint $table) {
+        Schema::create('projects', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('project_number');
             $table->string('name');
-            $table->string('label')->nullable();
-            $table->string('slug')->nullable();
+            $table->date('starting_date');
+            $table->date('ending_date');
+            $table->foreignUuid('partner_id')->cascadeOnUpdate()->constrained('partners');
+            $table->string('person_in_charge');
+            $table->string('phone_number');
+            $table->unsignedTinyInteger('status')->default(0);
+            $table->boolean('active')->default(0);
+            $table->string('document')->nullable();
+            $table->text('description')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
@@ -27,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_codes');
+        Schema::dropIfExists('projects');
     }
 };
