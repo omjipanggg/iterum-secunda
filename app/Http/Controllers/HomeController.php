@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Jobs\UploadFile;
 
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Filesystem;
@@ -28,7 +30,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages.homepage.index');
+        $user = User::all();
+        $context = [
+            'users' => $user
+        ];
+        return view('pages.homepage.index', $context);
     }
 
     public function check() {

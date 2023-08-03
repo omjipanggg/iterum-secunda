@@ -50,34 +50,16 @@
                         <div class="card vacancy-item">
                             <div class="card-body">
                                 <div class="text-justify">
-                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia nihil quos excepturi accusantium in praesentium eos aspernatur suscipit impedit, eum voluptas id facilis eaque nisi fugiat vero laboriosam reiciendis odio perspiciatis cupiditate veritatis ullam autem neque provident? Inventore nobis facere ipsa, modi ab deleniti odit voluptates accusantium magni esse eum cum omnis labore nesciunt cumque libero voluptas adipisci, dolores dolor molestiae. Quam minus quas totam molestiae veniam numquam voluptatibus, consectetur necessitatibus maxime repellendus ad sint tempore ipsam. Odit facere, obcaecati expedita atque voluptate explicabo molestiae nisi labore? Accusantium fugiat deserunt repudiandae in explicabo a ipsam, quibusdam, adipisci porro sapiente illo!
+                                    @foreach ($users as $element)
+                                        {{ $users }}
+                                    @endforeach
                                 </div>
                             </div>
                             <div class="card-footer text-bg-brighter-color">
                                 <i class="bi bi-clock me-2"></i>
-                                Dipublikasikan: 2 hari yang lalu
-                            </div>
-                        </div>
-                        <div class="card vacancy-item">
-                            <div class="card-body">
-                                <div class="text-justify">
-                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia nihil quos excepturi accusantium in praesentium eos aspernatur suscipit impedit, eum voluptas id facilis eaque nisi fugiat vero laboriosam reiciendis odio perspiciatis cupiditate veritatis ullam autem neque provident? Inventore nobis facere ipsa, modi ab deleniti odit voluptates accusantium magni esse eum cum omnis labore nesciunt cumque libero voluptas adipisci, dolores dolor molestiae. Quam minus quas totam molestiae veniam numquam voluptatibus, consectetur necessitatibus maxime repellendus ad sint tempore ipsam. Odit facere, obcaecati expedita atque voluptate explicabo molestiae nisi labore? Accusantium fugiat deserunt repudiandae in explicabo a ipsam, quibusdam, adipisci porro sapiente illo!
-                                </div>
-                            </div>
-                            <div class="card-footer text-bg-brighter-color">
-                                <i class="bi bi-clock me-2"></i>
-                                Dipublikasikan: 2 hari yang lalu
-                            </div>
-                        </div>
-                        <div class="card vacancy-item">
-                            <div class="card-body">
-                                <div class="text-justify">
-                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia nihil quos excepturi accusantium in praesentium eos aspernatur suscipit impedit, eum voluptas id facilis eaque nisi fugiat vero laboriosam reiciendis odio perspiciatis cupiditate veritatis ullam autem neque provident? Inventore nobis facere ipsa, modi ab deleniti odit voluptates accusantium magni esse eum cum omnis labore nesciunt cumque libero voluptas adipisci, dolores dolor molestiae. Quam minus quas totam molestiae veniam numquam voluptatibus, consectetur necessitatibus maxime repellendus ad sint tempore ipsam. Odit facere, obcaecati expedita atque voluptate explicabo molestiae nisi labore? Accusantium fugiat deserunt repudiandae in explicabo a ipsam, quibusdam, adipisci porro sapiente illo!
-                                </div>
-                            </div>
-                            <div class="card-footer text-bg-brighter-color">
-                                <i class="bi bi-clock me-2"></i>
-                                Dipublikasikan: 2 hari yang lalu
+                                @foreach ($users as $element)
+                                    {{ $element->created_at->locale('id')->diffForHumans() }}                            
+                                @endforeach
                             </div>
                         </div>
                     </div>

@@ -104,7 +104,7 @@ body {
     border: 1px solid var(--border-color);
 }
 .card:hover .card-header {
-    border-bottome: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 .card:hover .card-footer {
     border-top: 1px solid var(--border-color);
@@ -354,9 +354,9 @@ ul.square {
 }
 
 .icon-floating {
-    top: 53%;
+    top: 48%;
     left: 2.4em;
-    transform: translateY(-53%);
+    transform: translateY(-48%);
     z-index: 2;
 }
 
