@@ -10,7 +10,7 @@
       	<div id="modalControlPlaceholders">Fetching...</div>
       </div>
       <div class="modal-footer py-1 bg-outline-color">
-        <button type="button" class="btn btn-color" id="saveTrigger">Save<i class="bi bi-file-earmark-plus ms-2"></i></button>
+        <button type="button" class="btn btn-color" id="trigger">Save<i class="bi bi-file-earmark-plus ms-2"></i></button>
       </div>
     </div>
   </div>

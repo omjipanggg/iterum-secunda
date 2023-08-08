@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\UploadFile;
 
 use App\Models\User;
+use App\Models\Vacancy;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -30,9 +31,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = User::all();
+        $users = User::all();
+        $vacancies = Vacancy::withCount('candidates')->orderByDesc('published_at')->take(5)->get();
         $context = [
-            'users' => $user
+            'users' => $users,
+            'vacancies' => $vacancies
         ];
         return view('pages.homepage.index', $context);
     }
@@ -73,6 +76,15 @@ class HomeController extends Controller
 
     public function subscription(Request $request) {
         dd($request->all());
-        return redirect()->back();
+        // return redirect()->back();
+    }
+
+    public function lounge() {
+        $context = [];
+        return view('pages.dashboard.lounge', $context);
+    }
+
+    public function search(Request $request) {
+        dd($request->all());
     }
 }

@@ -5,7 +5,7 @@
     @error('file')
         <span class="form-text text-danger fw-bold">Kolom di bawah ini bersifat wajib.</span>
     @enderror
-    <input type="file" class="@error('file') is-invalid @enderror form-control" name="file">
+    <input type="file" class="@error('file') is-invalid @enderror form-control" name="file" required="">
     </div>
     <button type="submit" class="btn btn-secondary">
     Submit

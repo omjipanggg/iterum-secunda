@@ -22,9 +22,12 @@ return new class extends Migration
 
         DB::table('roles')->insert([
             ['name' => 'Administrator'],
+            ['name' => 'TBD'],
             ['name' => 'Business'],
             ['name' => 'Finance'],
             ['name' => 'Human Resource'],
+            ['name' => 'Employee'],
+            ['name' => 'Candidate'],
             ['name' => 'Partner']
         ]);
     }

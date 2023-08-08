@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('expected_facility')->nullable();
             $table->string('resume');
             $table->text('motivation');
-            $table->string('picture')->nullable();
+            $table->string('picture')->default('default.webp')->nullable();
             $table->foreignUuid('user_id')->cascadeOnUpdate()->constrained('users');
             $table->unsignedTinyInteger('status')->default(0);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));

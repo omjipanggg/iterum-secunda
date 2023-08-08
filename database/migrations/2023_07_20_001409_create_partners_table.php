@@ -33,7 +33,7 @@ return new class extends Migration
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->foreignUuid('updated_by')->cascadeOnUpdate()->constrained('users');
             $table->softDeletes();
-            $table->foreignUuid('deleted_by')->cascadeOnUpdate()->constrained('users');
+            $table->foreignUuid('deleted_by')->nullable()->cascadeOnUpdate()->constrained('users');
         });
     }
 

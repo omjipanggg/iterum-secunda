@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('table_codes', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
+            $table->char('code', 36);
             $table->string('name');
             $table->string('label')->nullable();
             $table->string('slug')->nullable();

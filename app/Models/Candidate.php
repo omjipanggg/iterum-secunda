@@ -12,4 +12,8 @@ class Candidate extends Model
 
     protected $table = 'candidates';
     protected $guarded = [];
+
+    public function appliedTo() {
+    	return $this->belongsToMany(Vacancy::class, 'candidates_and_vacancies')->orderByDesc('created_at');
+    }
 }

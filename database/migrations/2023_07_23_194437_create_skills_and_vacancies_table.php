@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('skills_and_vacancies', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('vacancy_id')->cascadeOnUpdate()->constrained('vacancies');
             $table->foreignId('skill_id')->cascadeOnUpdate()->constrained('skills');
+            $table->foreignUuid('vacancy_id')->cascadeOnUpdate()->constrained('vacancies');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('skills_and_vacanciess');
+        Schema::dropIfExists('skills_and_vacancies');
     }
 };

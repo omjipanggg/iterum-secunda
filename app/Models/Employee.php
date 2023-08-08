@@ -12,4 +12,8 @@ class Employee extends Model
 
     protected $table = 'employees';
     protected $guarded = [];
+
+    public function region() {
+    	return $this->belongsTo(Region::class, 'region_id');
+    }
 }

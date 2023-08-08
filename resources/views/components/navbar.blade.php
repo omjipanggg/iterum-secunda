@@ -22,7 +22,13 @@
                             {{ '@' . Str::lower(Str::of(Auth::user()->name)->explode(' ')->first()) }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            @if (Auth::user()->hasRole(1))
+                            @if (Auth::user()->hasRole([1]))
+                                <a class="dropdown-item text-start text-lg-end" href="{{ route('master.index') }}">Panel</a>
+                            @elseif(Auth::user()->hasRole(2))
+                                <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dasbor</a>
+                            @elseif(Auth::user()->hasRole(7))
+                                <a class="dropdown-item text-start text-lg-end" href="{{ route('candidate.index') }}">Profil</a>
+                            @else
                                 <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dasbor</a>
                             @endif
                             <a href="{{ route('home.settings') }}" class="dropdown-item text-start text-lg-end">Pengaturan</a>
@@ -38,5 +44,4 @@
         </div>
     </div>
 </nav>
-
-<div class="mb-3"></div>
+<div class="mb-12"></div>

@@ -1,16 +1,16 @@
 @media all and (max-width: 991.98px) {
-	.mb-lg-31 {
-		margin-bottom: 5em;
-	}
+	.mb-lg-31 { margin-bottom: 5rem; }
+	.mt-lg-31 { margin-top: 1.5rem; }
 }
 
 @media all and (max-width: 767.98px) {
+
 }
 
 @media all and (max-width: 575.98px) {
 	ul.two-columns { columns: 1; }
-	#patria .input-group button,
-	#patria .input-group input {
+	#patria .filter button,
+	#patria .filter input {
 		width: 100%;
 		border-radius: 0;
 	}

@@ -13,7 +13,7 @@ class DashboardController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'has.dashboard', 'verified']);
     }
 
     /**
@@ -21,7 +21,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return 'Dashboard.';
+        $context = [];
+        return view('pages.dashboard.index', $context);
     }
 
     /**

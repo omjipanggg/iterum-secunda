@@ -3,7 +3,8 @@
 <head>
     {{-- META --}}
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="Pohanggg">
     <meta name="description" content="SELENA, selection and recruitment alihdaya.">
     <meta name="keywords" content="recruitment, laravel, web, application, javascript">
@@ -38,9 +39,10 @@
     <link rel="stylesheet" href="{{ asset('css/media.css') }}">
 
 </head>
-<body>
+<body class="d-flex flex-column h-100">
     @include('components.modal')
     @include('components.loader')
+    @include('components.mover')
     @include('sweetalert::alert')
 
     @yield('content')
@@ -48,9 +50,9 @@
     @include('components.footer')
 
     {{-- SCRIPTS --}}
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.7.0.js"></script> --}}
+    <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
 
@@ -61,7 +63,10 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
     --}}
 
+    {!! ReCaptcha::htmlScriptTagJsApi() !!}
+
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/id.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.min.js"></script>
 
     {{-- CUSTOM --}}

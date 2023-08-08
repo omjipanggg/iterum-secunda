@@ -24,6 +24,7 @@ return new class extends Migration
             $table->boolean('active')->default(0);
             $table->string('document')->nullable();
             $table->text('description')->nullable();
+            $table->string('slug');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();

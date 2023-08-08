@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+
+use App\Helpers\ActivityLog;
+
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RegisterController extends Controller
 {
@@ -50,9 +57,13 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:191'],
+            'email' => ['required', 'string', 'email', 'max:191', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'type' => ['required'],
+            'g-recaptcha-response' => ['recaptcha', 'required'],
+        ], [
+            'g-recaptcha-response.required' => 'Mohon centang kolom yang tersedia.'
         ]);
     }
 
@@ -64,10 +75,39 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        $user->roles()->attach($data['type'], ['expired_date' => Carbon::now()->addMonths(12)]);
+
+        return $user;
+    }
+
+    public function register(Request $request) {
+        $this->validator($request->all())->validate();
+
+        $user = $this->create($request->all());
+
+        event(new Registered($user));
+
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user);
+    }
+
+    public function registered(Request $request, $user) {
+        if ($this->guard()->check()) {
+            ActivityLog::create('Register');
+            $this->guard()->logout();
+        }
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        Alert::info('Pendaftaran Sukses', 'Mohon aktivasi akun Anda melalui email.')->autoClose(false);
+        return redirect($this->redirectPath())->with('status', 'unverified');
     }
 }

@@ -34,7 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     public function roles() {
-        return $this->belongsToMany(Role::class, 'roles_and_users')->orderBy('roles.name')->withPivot(['expire_date']);
+        return $this->belongsToMany(Role::class, 'roles_and_users')->orderBy('roles.name')->withPivot(['expired_date']);
     }
 
     public function hasRole($id) {

@@ -1,45 +1,35 @@
 @extends('layouts.app')
-
+@section('title', 'Konfirmasi Kata Sandi')
 @section('content')
+@include('components.navbar')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
             <div class="card">
-                <div class="card-header">{{ __('Confirm Password') }}</div>
-
+                <div class="card-header text-bg-brighter-color">
+                    <i class="bi bi-link me-1"></i>
+                    @yield('title')
+                </div>
                 <div class="card-body">
-                    {{ __('Please confirm your password before continuing.') }}
-
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <strong>Perhatian!</strong> Mohon lakukan konfirmasi kata sandi Anda.
+                    </div>
                     <form method="POST" action="{{ route('password.confirm') }}">
                         @csrf
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <div class="form-floating mb-2">
+                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required="" autocomplete="current-password" placeholder="Kata sandi">
+                            <label for="password" class="form-label">Kata sandi</label>
                         </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Confirm Password') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
+                        <button type="submit" class="btn btn-color px-3 rounded-0">
+                            Kirim
+                            <i class="bi bi-send ms-1"></i>
+                        </button>
                     </form>
                 </div>
             </div>
