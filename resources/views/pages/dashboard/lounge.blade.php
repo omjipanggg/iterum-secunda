@@ -1,10 +1,11 @@
 @extends('layouts.panel')
-@section('title', 'Gazebo')
+@section('title', 'Dashboard')
 @section('content')
 <div class="container-fluid px-12">
 	<div class="row">
 		<div class="col">
 			<h3>Dashboard</h3>
+			@include('components.breadcrumbs')
 			<div class="card">
 				<div class="card-header text-bg-brighter-color">
 					<i class="bi bi-cup-hot me-2"></i>

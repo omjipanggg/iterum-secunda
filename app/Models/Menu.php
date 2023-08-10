@@ -10,7 +10,7 @@ class Menu extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'menus';
+    protected $table = 'menu';
     protected $guarded = [];
 
     protected $casts = [
@@ -19,6 +19,6 @@ class Menu extends Model
     ];
 
     public function roles() {
-    	return $this->belongsToMany(Role::class, 'menus_and_roles')->orderBy('menus.name');
+    	return $this->belongsToMany(Role::class, 'menu_and_roles')->orderBy('menu.name');
     }
 }

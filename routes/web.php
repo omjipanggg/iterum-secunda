@@ -30,10 +30,16 @@ Route::get('portal', [Portal::class, 'index'])->name('portal.index');
 Route::post('portal', [Portal::class, 'index'])->name('portal.filter');
 Route::get('portal/{slug}', [Portal::class, 'show'])->name('portal.show');
 
-// ADMIN
+// SUPERUSER
 Route::get('master', [Master::class, 'index'])->name('master.index');
-Route::get('master/generate-tables', [Master::class, 'generateTables'])->name('master.generateTables');
-Route::get('master/fetch/{id}', [Master::class, 'show'])->name('master.show');
+Route::get('master/{code}', [Master::class, 'fetch'])->name('master.fetch');
+Route::get('master/{code}/fetch', [Master::class, 'fetchOnServer'])->name('master.fetchOnServer');
+Route::get('master/{code}/fetch/{id}', [Master::class, 'show'])->name('master.show');
+Route::get('master/{code}/create', [Master::class, 'create'])->name('master.create');
+Route::post('master/{code}/store', [Master::class, 'store'])->name('master.store');
+Route::get('master/{code}/edit/{id}', [Master::class, 'edit'])->name('master.edit');
+Route::put('master/{code}/update/{id}', [Master::class, 'update'])->name('master.update');
+Route::delete('master/{code}/delete/{id}', [Master::class, 'destroy'])->name('master.destroy');
 
 // CANDIDATE
 Route::get('profile', [Candidate::class, 'index'])->name('candidate.index');

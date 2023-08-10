@@ -1,5 +1,5 @@
 @extends('layouts.panel')
-@section('title', 'Data Pengguna')
+@section('title', 'Pengguna')
 @section('content')
 <div class="container-fluid px-12">
     <div class="row">
@@ -10,7 +10,7 @@
             </div>
             <small class="small"></small>
             <div class="card">
-                <div class="card-header"><i class="bi bi-people me-2"></i>@yield('title')</div>
+                <div class="card-header text-bg-color"><i class="bi bi-people me-2"></i>@yield('title')</div>
                 <div class="card-body">
                     <form action="{{ route('login') }}" id="delete-form" method="POST">
                         @method('DELETE')
@@ -38,7 +38,7 @@
                                         <a href="{{ route('user.edit', $user->id) }}" onclick="event.preventDefault();" class="text-color" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="@yield('title')" data-bs-type="Sunting"><i class="bi bi-pencil-square"></i></a>
                                     </td>
                                     <td><a href="#" class="dotted btn-delete" data-id="{{ $user->id }}" data-name="{{ Str::headline($user->name) }}"><i class="bi bi-trash"></i></a></td>
-                                    <td>{{ Str::headline($user->name) }}</td>
+                                    <td>{{ Str::upper($user->name) }}</td>
                                     <td>{{ Str::lower($user->email) }}</td>
                                     @empty($user->email_verified_at)
                                     <td><span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Belum ada</span></td>
@@ -69,8 +69,8 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <i class="bi bi-info-circle me-2"></i>Data yang ditampilkan sudah melalui penyortiran.
+                <div class="card-footer text-bg-brighter-color">
+                    <i class="bi bi-info-circle me-2"></i>Laporkan masalah yg terjadi <a href="#" class="dotted">di sini</a>.
                 </div>
             </div>
         </div>

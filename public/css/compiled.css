@@ -11,6 +11,7 @@
     --primary-bright-color: hsla(223deg, 94%, 90%, 1);
     --primary-brighter-color: hsla(223deg, 99%, 97%, 1);
     --secondary-color: hsla(223deg, 35%, 60%, 1);
+    --secondary-bright-color: hsla(223deg, 86%, 90%, 1);
     --tertiary-color: hsla(223deg, 47%, 21%, 1);
     --tertiary-darker-color: hsla(223deg, 47%, 21%, .8);
     --pinky-color: hsla(314deg, 90%, 52%, 1);
@@ -19,7 +20,7 @@
     --yellow-color: hsla(30deg, 48%, 36%, 1);
     --red-color: hsla(342deg, 48%, 36%, 1);
     --form-focus-color: hsla(223deg, 47%, 36%, .25);
-    --muted-color: hsla(223deg, 0%, 27%, 1);
+    --muted-color: hsla(223deg, 10%, 15%, .65);
 
     /* SIZES */
     --normal-size: 12.4px;
@@ -59,6 +60,20 @@ body {
 }
 body.sb-nav-fixed {
     background-color: var(--primary-brighter-color);
+}
+
+/* BREADCRUMBS */
+/* ===================================================================== */
+.breadcrumb a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.breadcrumb a:focus,
+.breadcrumb a:hover {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    cursor: pointer;
 }
 
 /* NAVBAR */
@@ -111,6 +126,11 @@ body.sb-nav-fixed {
 .dropdown-item:active {
     background-color: var(--primary-darker-color);
     color: var(--primary-bright-color);
+}
+
+hr.dropdown-divider {
+    border: 0;
+    background-color: var(--bs-dropdown-border-color);
 }
 
 #layoutSidenav #layoutSidenav_content {
@@ -454,17 +474,21 @@ ul.square {
 }
 
 .text-bg-color {
-    background-color: var(--primary-color);
-    color: var(--primary-bright-color);
-}
-
-.text-bg-brighter-color {
-    background-color: var(--primary-bright-color);
-    color: var(--primary-darker-color);
+    background-color: var(--secondary-color);
+    color: var(--primary-brighter-color);
 }
 
 .text-bg-color a {
     color: var(--fixed-background-color);
+}
+
+.text-bg-brighter-color {
+    background-color: var(--secondary-bright-color);
+    color: var(--primary-color);
+}
+
+.text-bg-brighter-color a {
+    color: var(--border-color);
 }
 
 .bg-darker-color {
@@ -510,7 +534,8 @@ ul.square {
     text-overflow: ellipsis;
 }
 
-div.dataTables_wrapper div.dataTables_info {
+div.dataTables_wrapper
+div.dataTables_info {
     padding: 0 !important;
 }
 
@@ -539,13 +564,36 @@ div.dataTables_wrapper div.dataTables_info {
     /*box-shadow: 0 0 0 0.25rem var(--form-focus-color);*/
 }
 
-.form-select-floating .select2-selection {
-    padding: 24px .75rem 32px;
+.form-select-floating {
+    position: relative;
+}
+.form-select-floating .select2-selection--single {
+    /*padding: 24px .75rem 32px;*/
+}
+.form-select-floating .select2-selection--multiple {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    padding-top: 24px;
+    padding-left: 8px;
+    padding-bottom: 12px;
+}
+
+.form-select-floating label {
+    position: absolute;
+    top: 8px;
+    left: 5px;
+    font-size: var(--smaller-size);
+    color: var(--muted-color);
+    z-index: 1061;
+    padding: 0 .5rem;
 }
 
 .select2-selection {
     border-radius: 0 !important;
     font-size: var(--normal-size) !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-search .select2-search__field {
+    margin-top: 4px;
 }
 
 .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option {
@@ -558,17 +606,6 @@ div.dataTables_wrapper div.dataTables_info {
     transform: translateY(-50%);
     z-index: 2;
 }
-
-/*
-.label-select label {
-    position: absolute;
-    top: 8px;
-    left: 5px;
-    font-size: var(--smaller-size);
-    z-index: 1061;
-    padding: 0 .5rem;
-}
-*/
 
 /* PAGINATION */
 /* ===================================================================== */

@@ -13,8 +13,8 @@
                     <span class="d-none d-lg-inline-block">{{ Auth::user()->email }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    {{-- <li><a class="dropdown-item" href="#">Pengaturan</a></li> --}}
-                    {{-- <li><hr class="dropdown-divider"></li> --}}
+                    <li><a class="dropdown-item text-end" href="{{ route('home.settings') }}">Pengaturan</a></li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-end" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Keluar</a></li>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf

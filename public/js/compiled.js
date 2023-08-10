@@ -39,7 +39,6 @@ $(document).ready(function(event) {
         }
     });
 
-
     // SELECT-2-FUCNTIONALITY
     // ================================================================================
     if (document.body.querySelector('.select2-multiple')) {
@@ -47,7 +46,6 @@ $(document).ready(function(event) {
         dropdowns.map((item) => {
             $(item).select2({
                 placeholder: 'Ketikkan jika tidak ada',
-                theme: 'bootstrap-5',
                 width: '100%',
                 dropdownAutoWidth: true,
                 language: 'id',
@@ -63,7 +61,6 @@ $(document).ready(function(event) {
         dropdowns.map((item) => {
             $(item).select2({
                 placeholder: 'Pilih satu',
-                theme: 'bootstrap-5',
                 width: '100%',
                 dropdownAutoWidth: true,
                 language: 'id',
@@ -87,7 +84,7 @@ $(document).ready(function(event) {
                 },
                 infoFiltered: '',
                 lengthMenu: '_MENU_',
-                search: "",
+                search: '',
                 searchPlaceholder: "Pencarian",
                 emptyTable: "Data tidak ditemukan"
             }
@@ -96,18 +93,97 @@ $(document).ready(function(event) {
         // $('.dataTables_filter').addClass('mb-2');
     }
 
+    if ($('table.server-side')) {
+        const fetch = [...document.querySelectorAll('table.server-side')];
+        fetch.map((item) => {
+            let href = window.location.href + '/fetch';
+            let table = document.querySelector('#table-name').textContent;
+            let code = href.split('/')[4];
+            $.ajax({
+                url: href,
+                type: 'GET',
+                success: (response) => {
+                    let columns = response.columns;
+                    let columnDefs = [];
+
+                    for (let i = 0; i < columns.length; i++) {
+                        if (columns[i] == 'edit') {
+                            columnDefs.push({
+                                data: columns[2],
+                                render: function(data, type, row, meta) {
+                                    return '<a href="/master/'+ meta.settings.oInit.meta.code +'/edit/'+ row.id +'" onclick="event.preventDefault();" class="dotted" data-bs-route="/master/'+ meta.settings.oInit.meta.code +'/edit/'+ row.id +'" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="'+ meta.settings.oInit.meta.table +'" data-bs-type="Edit"><i class="bi bi-pencil-square"></i></a>';
+                                }
+                            });
+                        } else if (columns[i] == 'delete') {
+                            columnDefs.push({
+                                data: columns[2],
+                                render: function(data, type, row, meta) {
+                                    return '<a href="/master/'+ meta.settings.oInit.meta.code +'/delete/'+ row.id +'" class="dotted" data-bs-id="'+ row.id +'" data-bs-table="'+ meta.settings.oInit.meta.table +'" onclick="deleteConfirmation(event);"><i class="bi bi-trash"></i></a>';
+                                }
+                            });
+                        } else if (columns[i] == 'on_image' || columns[i] == 'off_image' || columns[i] == 'user_agent') {
+                            columnDefs.push({
+                                visible: false,
+                                data: columns[i],
+                                orderable: true,
+                                searchable: true
+                            });
+                        } else if (columns[i] == 'url') {
+                            columnDefs.push({
+                                data: columns[i],
+                                render: function(data, type, row) {
+                                    return data.substring(0, 64) + '...';
+                                },
+                                orderable: true,
+                                searchable: true
+                            });
+                        } else {
+                            columnDefs.push({
+                                data: columns[i],
+                                orderable: true,
+                                searchable: true
+                            });
+                        }
+                    }
+
+                    $('table.server-side').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                            paginate: {
+                                previous: '<i class="bi bi-caret-left-fill"></i>',
+                                next: '<i class="bi bi-caret-right-fill"></i>'
+                            },
+                            infoFiltered: '',
+                            lengthMenu: '_MENU_',
+                            search: '',
+                            searchPlaceholder: "Pencarian",
+                            emptyTable: "Data tidak ditemukan"
+                        },
+                        ajax: href,
+                        scrollX: true,
+                        columns: columnDefs,
+                        meta: {
+                            code: code,
+                            table: table
+                        },
+                        orderCellsTop: true
+                    });
+                },
+            });
+        });
+    }
+
     // DELETE-FUNCTIONALITY
     // ================================================================================
     $('.btn-delete').click(function(event) {
         event.preventDefault();
-        let form = $('#delete-form');
-        let id = $(this).data('id');
-        let name = $(this).data('name');
-
-        $('#delete-form').attr('action', '/user/' + id);
+        let id = $(this).data('bsId');
+        console.log(event, $(this));
 
         Swal.fire({
-            title: name,
+            title: id,
             text: "Hapus data ini?",
             icon: 'warning',
             showCancelButton: true,
@@ -116,7 +192,9 @@ $(document).ready(function(event) {
             reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                form[0].submit();
+                $.ajax({
+
+                })
             }
         });
     });
@@ -139,7 +217,7 @@ $(document).ready(function(event) {
             let table = btn.getAttribute('data-bs-table');
             let type = btn.getAttribute('data-bs-type');
 
-            modalControl.querySelector('.modal-title').textContent = table + '   ·   ' + type;
+            modalControl.querySelector('.modal-title').textContent = table + '—' + type;
 
             $.ajax({
                 url: route,
@@ -154,7 +232,14 @@ $(document).ready(function(event) {
                 complete: () => {
                     console.log('Fetched successfully...');
                     $('.select2-multiple-modal').select2({
-
+                        placeholder: 'Ketikkan jika tidak ada',
+                        tags: true,
+                        width: '100%',
+                        dropdownAutoWidth: true,
+                        dropdownParent: modalControl,
+                        cache: true,
+                        allowClear: true,
+                        debug: true
                     });
                 },
                 timeout: 6000
@@ -180,4 +265,49 @@ function resendEmailVerification(event) {
     event.preventDefault();
     $('#loader').fadeIn();
     event.target.submit();
+}
+
+function deleteConfirmation(event) {
+    event.preventDefault();
+    let href = event.currentTarget.getAttribute('href');
+    let id = event.currentTarget.dataset['bsId'];
+    let table = event.currentTarget.dataset['bsTable'];
+    let token = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: 'Hapus data ini?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Tidak',
+        reverseButtons: true
+    }).then((response) => {
+        console.log(response)
+        if (response.isConfirmed) {
+            $.ajax({
+                url: href,
+                type: 'DELETE',
+                data: {
+                    '_method': 'DELETE',
+                    '_token': token
+                },
+                async: true,
+                beforeSend: (result) => {
+                    $('#loader').fadeIn();
+                },
+                success: (result) => {
+                    Swal.fire('Berhasil', 'Data berhasil dihapus.', 'success');
+                },
+                complete: (result) => {
+                    $('#loader').fadeOut();
+                    console.log(result);
+                    // window.location.reload();
+                },
+                error: (xhr, status, error) => {
+                    Swal.fire('Kesalahan', 'Mohon coba lagi nanti.', 'error');
+                }
+            });
+        }
+    });
 }

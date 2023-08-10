@@ -7,6 +7,8 @@
 			<input type="text" name="name" placeholder="Name" class="form-control" required="" id="nameModal" value="{{ $user->name }}" autocomplete="off">
 			<label for="nameModal">Name</label>
 		</div>
+		<div class="form-select-floating">
+		<label for="roles-on-modal">Roles</label>
 		<select name="roles[]" id="roles-on-modal" class="form-select select2-multiple-modal" multiple="" required="">
 			@foreach ($roles as $role)
 				@php($selected = false)
@@ -20,7 +22,7 @@
 				<option value="{{ $role->id }}" @if($selected) selected="" @endif>{{ $role->name }}</option>
 			@endforeach
 		</select>
-		<label for="roles-on-modal" class="text-muted visually-hidden">Roles</label>
+		</div>
 	</div>
 	<button type="submit" class="btn btn-color d-none" id="btn-modal">Submit</button>
 </form>

@@ -2,24 +2,26 @@
 
 use App\Models\Menu;
 
+use App\Models\TableCode;
+
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 
-function menus() {
-    $menus = [];
+function menu() {
+    $menu = [];
     if (auth()->check()) {
         $roles = auth()->user()->roles->pluck('id');
-    	$menus = Menu::whereHas('roles', function($query) use($roles) {
+    	$menu = Menu::whereHas('roles', function($query) use($roles) {
             $query->whereIn('role_id', $roles);
         })->where('active', 1)->orderBy('order_number')->get();
         $render = [];
-        foreach ($menus as $menu) {
-            $parent_id = $menu->parent_id;
-            $render[$parent_id][] = $menu;
+        foreach ($menu as $element) {
+            $parent_id = $element->parent_id;
+            $render[$parent_id][] = $element;
         }
     }
-	return $menus;
+	return $menu;
 }
 
 function elapsed_date($date) {
@@ -39,19 +41,20 @@ function date_time_indo_format($date) {
     return sprintf('%02d', $result['mday']) . ' ' . $monthTuple[$result['mon']] . ' ' . $result['year'] . ' ' . sprintf('%02d', $result['hours']) . ':' . sprintf('%02d', $result['minutes']) . ':' . sprintf('%02d', $result['seconds']);
 }
 
-/*
-function generate_tables() {
+function get_column($table) {
+    return Schema::getColumnListing($table);
+}
+
+function generate_table_code() {
     $tables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
 
     $result = [];
 
-	TableCode::truncate();
+    TableCode::truncate();
     foreach ($tables as $key => $value) {
-    	$result[$key]['name'] = $value;
-    	$result[$key]['code'] = Str::uuid();
-    	$result[$key]['label'] = Str::headline(Str::singular($value));
-    	$result[$key]['slug'] = Str::slug(Str::singular($value));
-		TableCode::create($result[$key]);
+        $result[$key]['name'] = Str::lower($value);
+        $result[$key]['code'] = Str::uuid();
+        $result[$key]['label'] = Str::headline(Str::singular($value));
+        TableCode::create($result[$key]);
     }
 }
-*/

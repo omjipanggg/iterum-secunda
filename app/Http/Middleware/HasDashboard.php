@@ -17,11 +17,13 @@ class HasDashboard
     public function handle(Request $request, Closure $next): Response
     {
     	if (auth()->check() && auth()->user()->hasRole(2) && !auth()->user()->hasRole(1)) {
-            alert()->info('Perhatian', 'Hak akses Anda sedang disesuaikan.')->autoClose(false);
+            alert()->info('Mohon Menunggu', 'Hak akses Anda sedang disesuaikan.')->autoClose(false);
 			return redirect()->route('home.lounge');
     	} else if (auth()->check() && auth()->user()->hasRole(7) && !auth()->user()->hasRole(1)) {
             alert()->error('Kesalahan', 'Akses ditolak.');
             return redirect()->route('home.index');
+        } else if (auth()->check() && auth()->user()->hasRole(1)) {
+            return redirect()->route('master.index');
         } else {
             return $next($request);
         }

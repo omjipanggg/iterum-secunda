@@ -7,9 +7,8 @@
                 <div class="sb-nav-link-icon"><i class="bi bi-speedometer"></i></div>
                 Dashboard
             </a>
-
-            @if (menus()->count() > 0 && !auth()->user()->hasRole(2))
-            @foreach (menus() as $menu)
+            @if (menu()->count() > 0 && !auth()->user()->hasRole(2))
+            @foreach (menu() as $menu)
                 @if($menu->has_child)
                     <a class="nav-link collapsed" href="{{ route($menu->route) }}" data-bs-toggle="collapse" data-bs-target="#menu{{ $menu->id }}" aria-expanded="false" aria-controls="menu{{ $menu->id }}">
                         <div class="sb-nav-link-icon">
@@ -21,7 +20,7 @@
                         <div class="sb-sidenav-collapse-arrow"><i class="bi bi-caret-down-fill"></i></div>
                     </a>
                     <div class="collapse" id="menu{{ $menu->id }}" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        @foreach(menus() as $sub)
+                        @foreach(menu() as $sub)
                             @if($sub->parent_id == $menu->id)
                             <nav class="sb-sidenav-menu-nested nav">
                                 @if(isset($sub->model))

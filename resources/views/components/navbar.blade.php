@@ -23,7 +23,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             @if (Auth::user()->hasRole([1]))
-                                <a class="dropdown-item text-start text-lg-end" href="{{ route('master.index') }}">Panel</a>
+                                <a class="dropdown-item text-start text-lg-end" href="{{ route('master.index') }}">Konfigurasi</a>
                             @elseif(Auth::user()->hasRole(2))
                                 <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dasbor</a>
                             @elseif(Auth::user()->hasRole(7))

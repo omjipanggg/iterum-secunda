@@ -21,7 +21,7 @@ return new class extends Migration
         });
 
         DB::table('education')->insert([
-            ['name' => 'Laisnnya'],
+            ['name' => 'Lainnya'],
             ['name' => 'Tidak ada'],
             ['name' => 'SD'],
             ['name' => 'SMP'],

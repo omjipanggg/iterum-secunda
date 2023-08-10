@@ -17,7 +17,7 @@ class Role extends Model
     	return $this->belongsToMany(User::class, 'roles_and_users')->orderBy('roles.name')->withPivot(['expired_date']);
     }
 
-    public function menus() {
-    	return $this->belongsToMany(Menu::class, 'menus_and_roles')->orderBy('menus.name');
+    public function menu() {
+    	return $this->belongsToMany(Menu::class, 'menu_and_roles')->orderBy('menu.name');
     }
 }

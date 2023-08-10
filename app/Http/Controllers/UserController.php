@@ -23,8 +23,8 @@ class UserController extends Controller
     public function index()
     {
         $context = [
-            'users' => User::all()
-            // 'users' => User::withTrashed()->get()
+            'users' => User::orderByDesc('created_at')->get()
+            // 'users' => User::withTrashed()->orderByDesc()->get()
         ];
         return view('pages.master.user.index', $context);
     }

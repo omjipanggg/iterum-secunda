@@ -16,7 +16,7 @@
 						</tr>
 					</thead>
 					<tbody>
-					@foreach (menus() as $element)
+					@foreach (menu() as $element)
 						<tr>
 							<td>{{ $element->id }}</td>
 							<td>{{ $element->parent_id }}</td>
