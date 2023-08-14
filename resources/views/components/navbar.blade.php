@@ -19,17 +19,16 @@
                 @else
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ '@' . Str::lower(Str::of(Auth::user()->name)->explode(' ')->first()) }}
+                            {{-- {{ '@' . Str::lower(Str::of(auth()->user()->name)->explode(' ')->first()) }} --}}
+                            {{ Str::lower(auth()->user()->email) }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            @if (Auth::user()->hasRole([1]))
+                            @if (auth()->user()->hasRole(1))
                                 <a class="dropdown-item text-start text-lg-end" href="{{ route('master.index') }}">Konfigurasi</a>
-                            @elseif(Auth::user()->hasRole(2))
-                                <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dasbor</a>
-                            @elseif(Auth::user()->hasRole(7))
+                            @elseif(auth()->user()->hasRole(7))
                                 <a class="dropdown-item text-start text-lg-end" href="{{ route('candidate.index') }}">Profil</a>
                             @else
-                                <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dasbor</a>
+                                <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dashboard</a>
                             @endif
                             <a href="{{ route('home.settings') }}" class="dropdown-item text-start text-lg-end">Pengaturan</a>
                             <hr class="navbar-divider my-1">

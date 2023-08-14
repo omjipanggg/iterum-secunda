@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders_and_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('order_id')->cascadeOnUpdate()->constrained('orders');
-            $table->foreignUuid('product_id')->cascadeOnUpdate()->constrained('products');
+            $table->char('order_id', 36);
+            $table->char('product_id', 36);
             $table->unsignedBigInteger('quantity')->default(0);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));

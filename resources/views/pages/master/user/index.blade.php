@@ -1,23 +1,24 @@
 @extends('layouts.panel')
-@section('title', 'Pengguna')
+@section('title', 'Akun Terdaftar')
 @section('content')
 <div class="container-fluid px-12">
     <div class="row">
         <div class="col">
             <div class="wrap">
-                <h3>@yield('title')</h3>
-                <p class="mb-4">Home</p>
+                <div class="mb-4">
+                    <h3>Dashboard</h3>
+                    {{ Breadcrumbs::render('user.index') }}
+                </div>
             </div>
-            <small class="small"></small>
             <div class="card">
                 <div class="card-header text-bg-color"><i class="bi bi-people me-2"></i>@yield('title')</div>
                 <div class="card-body">
-                    <form action="{{ route('login') }}" id="delete-form" method="POST">
-                        @method('DELETE')
+                    <form action="{{ route('login') }}" id="delete-form" method="DELETE">
                         @csrf
+                        @method('DELETE')
                     </form>
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover table-bordered m-0 fetch" id="fetchUser">
+                        <table class="table table-sm table-hover table-bordered m-0 fetch">
                             <thead>
                                 <tr>
                                     <th colspan="2">Aksi</th>
@@ -41,17 +42,25 @@
                                     <td>{{ Str::upper($user->name) }}</td>
                                     <td>{{ Str::lower($user->email) }}</td>
                                     @empty($user->email_verified_at)
-                                    <td><span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Belum ada</span></td>
+                                    <td><span class="badge text-bg-danger"><i class="bi bi-x-circle-fill me-1"></i>unverified</span></td>
                                     @else
-                                    <td><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Terverifikasi</span></td>
+                                    <td><span class="badge text-bg-success"><i class="bi bi-check-circle-fill me-1"></i>verified</span></td>
                                     {{-- <td>{{ date('F d, Y', strtotime($user->email_verified_at)) }}</td> --}}
                                     @endempty
                                     <td>
-                                        @foreach ($user->roles as $role)
-                                            <span class="badge bg-dark">
-                                                <i class="bi bi-tags me-1"></i>{{ Str::slug($role->name) }}
+                                    @foreach ($user->roles as $element)
+                                        @if (Str::slug($element->name) == 'tbd')
+                                            <span class="badge text-bg-danger">
+                                                <i class="bi bi-exclamation-circle-fill me-1"></i>
+                                                {{ Str::slug($element->name) }}
                                             </span>
-                                        @endforeach
+                                        @else
+                                            <span class="badge text-bg-color">
+                                                <i class="bi bi-tags-fill me-1"></i>
+                                                {{ Str::slug($element->name) }}
+                                            </span>
+                                        @endif
+                                    @endforeach
                                     </td>
                                 </tr>
                                 @endforeach

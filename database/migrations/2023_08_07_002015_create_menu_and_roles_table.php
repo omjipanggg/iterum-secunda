@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('menu_and_roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('menu_id')->cascadeOnUpdate()->constrained('menu');
-            $table->foreignId('role_id')->cascadeOnUpdate()->constrained('roles');
+            $table->unsignedBigInteger('menu_id');
+            $table->unsignedBigInteger('role_id');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();

@@ -18,7 +18,7 @@ class ActivityLog {
 		Log::create($log);
 	}
 
-	public static function lastLogin() {
+	public static function latestLog() {
 		$data = [];
 		if (auth()->check()) {
 			$data = Log::where(['user_id' => auth()->user()->id])

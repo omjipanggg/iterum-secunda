@@ -67,10 +67,8 @@ class VerificationController extends Controller
 
         if ($user->hasRole(1)) {
             return redirect()->route('master.index');
-        } else if ($user->hasRole(2)) {
-            return redirect()->route('home.lounge');
         } else if ($user->hasRole(7)) {
-            return redirect()->route('candidate.profile');
+            return redirect()->route('candidate.index');
         } else if ($user->hasRole(8)) {
             return redirect()->route('partner.index');
         } else {

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalControl" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="modalControlLabel" aria-hidden="true">
+<div class="modal fade" id="modalControl" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalControlLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-fullscreen-lg-down modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-color">
@@ -10,7 +10,10 @@
       	<div id="modalControlPlaceholders">Fetching...</div>
       </div>
       <div class="modal-footer py-1 bg-outline-color">
-        <button type="button" class="btn btn-color" id="trigger">Save<i class="bi bi-file-earmark-plus ms-2"></i></button>
+        <button type="button" class="btn btn-color" id="trigger">
+          Simpan
+          <i class="bi bi-file-earmark-plus ms-1"></i>
+        </button>
       </div>
     </div>
   </div>

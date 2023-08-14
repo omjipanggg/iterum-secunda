@@ -8,7 +8,6 @@
     <li class="breadcrumb-item" aria-current="page">@yield('title')</li>
   </ol>
 </nav>
-
 {{--
 @unless($breadcrumbs->isEmpty())
 <nav aria-label="breadcrumb">

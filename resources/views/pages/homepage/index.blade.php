@@ -2,14 +2,13 @@
 @section('title', 'Home')
 @section('content')
 @include('components.navbar')
-<section id="patria">
+<section id="patria" class="mb-12">
     <div class="container">
         <div class="row">
             <div class="col-lg-5 offset-lg-1 d-flex flex-column align-items-center justify-content-center order-lg-1 order-2 mb-lg-31">
                 <h4 class="fw-bold display-6 text-center">Wujudkan Pekerjaan Impianmu Bersama <abbr class="text-color" title="Selection &amp; Recruitment Alihdaya">{{ config('app.name', 'SELENA') }}™</abbr></h4>
                 <p class="text-center">Kirimkan CV Anda, dan lamar pekerjaan di sini!</p>
-                <form action="{{ route('portal.index') }}" method="POST" class="w-100 mt-lg-31">
-                    @csrf
+                <form action="{{ route('portal.index') }}" method="GET" class="w-100 mt-lg-31">
                     <div class="filter w-100 d-flex flex-column flex-sm-row">
                         <div class="position-relative flex-fill">
                             <i class="bi bi-briefcase icon-floating position-absolute"></i>
@@ -30,8 +29,7 @@
     </div>
 </section>
 
-<div class="mb-12">
-</div>
+<div id="vacancies"></div>
 
 <section id="list-of-vacancy">
     <div class="w-100 bg-brighter-color py-6">
@@ -40,7 +38,7 @@
                 <div class="col">
                     <div class="text-center">
                         <h2 class="section-title">
-                            <a href="{{ route('portal.index') }}" class="dotted">Lowongan Pekerjaan</a>
+                            <a href="#vacancies" class="dotted">Lowongan Pekerjaan</a>
                         </h2>
                         <p class="section-subtitle text-muted">Telusuri dan lamar pekerjaan impianmu di sini</p>
                     </div>
@@ -51,7 +49,7 @@
                 <div class="col-lg-8 offset-lg-2">
                     <div class="d-flex flex-column gap-4 vacancy-container">
                         @forelse ($vacancies as $vacancy)
-                        <div class="card vacancy-item">
+                        <div class="card vacancy-item pointer" onclick="window.location.href = '{{ route('portal.show', $vacancy->slug) }}';">
                             <div class="card-body position-relative py-4">
                                 <div class="row">
                                     <div class="col d-block d-lg-none">
@@ -75,7 +73,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 align-self-center">
+                                    <div class="col-lg-5 offset-lg-1 align-self-center">
                                         <p class="m-0">
                                             <i class="bi bi-geo-alt me-1"></i>
                                             @if ($vacancy->hidden_placement)
@@ -85,7 +83,6 @@
                                             @endif
                                         </p>
                                     </div>
-
                                     <div class="col-lg-2 d-none d-lg-flex flex-wrap justify-content-lg-end">
                                         <div class="d-flex flex-wrap flex-column justify-content-between align-items-end">
                                             <div class="wrap"><i class="bi bi-people-fill me-1"></i>{{ $vacancy->candidates_count }}</div>
@@ -94,12 +91,6 @@
                                             </span>
                                         </div>
                                     </div>
-                                    {{--
-                                    <div class="col-lg-2 align-self-center d-none d-lg-block">
-                                    </div>
-                                    <div class="col-lg-2 align-self-center d-none d-lg-flex justify-content-lg-end">
-                                    </div>
-                                    --}}
                                 </div>
                             </div>
                             <div class="card-footer text-bg-brighter-color">
@@ -137,4 +128,53 @@
     </div>
 </section>
 
+@include('components.big-quote')
+
+<div class="mb-12-on" id="tutoria"></div>
+
+<section class="tutoria">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">
+                <a href="#tutoria" class="dotted">Tata Cara Melamar</a>
+            </h2>
+            <p class="section-subtitle text-muted">Ikuti petunjuknya di sini</p>
+        </div>
+
+        <div class="row pt-6 hr-top position-relative align-items-center">
+            <div class="col-lg-4 offset-lg-2 text-lg-start text-center px-5 px-lg-0">
+                <div class="position-relative how-step wrap pe-0 pe-lg-5 pb-3">
+                    <span class="position-relative text-center number-container d-none d-lg-inline">
+                        <span class="how-to-number rounded-circle position-absolute">1</span>
+                    </span>
+                    <div class="wrap ps-6">
+                        <h4 class="m-0 text-color">Pendaftaran akun</h4>
+                        <p class="text-muted">Lakukan pendaftaran akun melalui <a href="{{ route('register') }}" class="underlined">tautan berikut ini</a>.</p>
+                    </div>
+                </div>
+                <div class="position-relative how-step wrap pe-0 pe-lg-5 pb-3">
+                    <span class="position-relative text-center number-container d-none d-lg-inline">
+                        <span class="how-to-number rounded-circle position-absolute">2</span>
+                    </span>
+                    <div class="wrap ps-6">
+                        <h4 class="m-0 text-color">Cari pekerjaan</h4>
+                        <p class="text-muted">Telusuri pekerjaan impianmu <a href="{{ route('portal.index') }}" class="underlined">di sini</a>.</p>
+                    </div>
+                </div>
+                <div class="position-relative how-step wrap pe-0 pe-lg-5 pb-3">
+                    <span class="position-relative text-center number-container d-none d-lg-inline">
+                        <span class="how-to-number rounded-circle position-absolute">3</span>
+                    </span>
+                    <div class="wrap ps-6">
+                        <h4 class="m-0 text-color">Lakukan pelamaran</h4>
+                        <p class="text-muted">Lengkapi biodatamu, dan mulailah melamar!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block">
+                <img src="{{ asset('img/idea.webp') }}" alt="Logo" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
 @endsection

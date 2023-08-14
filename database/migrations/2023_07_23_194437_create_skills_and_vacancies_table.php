@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('skills_and_vacancies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('skill_id')->cascadeOnUpdate()->constrained('skills');
-            $table->foreignUuid('vacancy_id')->cascadeOnUpdate()->constrained('vacancies');
+            $table->unsignedBigInteger('skill_id');
+            $table->char('vacancy_id', 36);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();

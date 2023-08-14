@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
         'partner.only' => \App\Http\Middleware\PartnerOnly::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+        'relaxed' => \App\Http\Middleware\ToBeRelaxed::class,
         'restricted' => \App\Http\Middleware\RestrictedArea::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,

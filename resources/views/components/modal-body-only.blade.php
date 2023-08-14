@@ -1,7 +1,7 @@
 <div class="modal fade" id="modalBodyOnly" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="modalBodyOnlyLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-fullscreen-lg-down modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header bg-color">
+      <div class="modal-header text-bg-color">
         <i class="bi bi-database me-3"></i>
         <h5 class="modal-title" id="modalBodyOnlyLabel">Table</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -9,7 +9,7 @@
       <div class="modal-body" id="modalBodyOnlyBody">
       	<div id="modalBodyOnlyPlaceholders">Fetching...</div>
       </div>
-      <div class="modal-footer bg-outline-color">
+      <div class="modal-footer text-bg-outline-color">
         Footer.
       </div>
     </div>

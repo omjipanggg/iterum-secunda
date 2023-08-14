@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ActivityLog as Log;
-
 use App\Models\Role;
 use App\Models\User;
 
@@ -24,7 +22,7 @@ class UserController extends Controller
     {
         $context = [
             'users' => User::orderByDesc('created_at')->get()
-            // 'users' => User::withTrashed()->orderByDesc()->get()
+            // 'users' => User::withTrashed()->orderByDesc('created_at')->get()
         ];
         return view('pages.master.user.index', $context);
     }
@@ -88,7 +86,7 @@ class UserController extends Controller
             }
         }
 
-        Log::create('User updated—' . $user->id);
+        \Log::create('User updated—' . $user->id);
         Alert::success('Sukses', 'Data Pengguna berhasil diubah.');
         return redirect()->back();
     }
@@ -101,7 +99,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->email = strtotime("now") . '_' . $user->email;
         $user->save();
-        Log::create('User deleted—' . $user->id);
+        \Log::create('User deleted—' . $user->id);
         // $user->roles()->detach();
         $user->delete();
         Alert::success('Sukses', 'Data Pengguna berhasil dihapus.');

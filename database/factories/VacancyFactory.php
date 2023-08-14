@@ -23,7 +23,7 @@ class VacancyFactory extends Factory
         $projects = Project::pluck('id')->toArray();
         return [
             'header_number' => fake()->numerify('DIR-KP/PKWT-#/HQ-JBT'),
-            'job_title_id' => fake()->numberBetween(1, 6),
+            'job_title_id' => fake()->numberBetween(1, 13),
             'name' => $name,
             'project_id' => fake()->randomElement($projects),
             'placement' => fake()->city(),
@@ -37,7 +37,7 @@ class VacancyFactory extends Factory
             'hidden_partner' => fake()->boolean(),
             'hidden_placement' => fake()->boolean(),
             'vacancy_type_id' => fake()->numberBetween(1, 6),
-            'slug' => Str::slug($name),
+            'slug' => Str::slug($name) . '-' . strtotime(now()),
             'published_at' => fake()->dateTimeBetween('-1 week', 'now'),
             'created_by' => '00000000-0000-0000-0000-000000000000',
             'updated_by' => '00000000-0000-0000-0000-000000000000'

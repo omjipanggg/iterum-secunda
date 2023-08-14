@@ -18,7 +18,8 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        return "Candidate";
+        $context = [];
+        return view('pages.candidate.index', $context);
     }
 
     /**

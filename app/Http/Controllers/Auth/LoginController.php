@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Helpers\ActivityLog;
-
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
@@ -30,7 +28,21 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    // protected $redirectTo = RouteServiceProvider::HOME;
+
+    protected function redirectTo() {
+        \Log::create('Login');
+        if (auth()->user()->hasRole(1)) {
+            return 'master';
+        } else if (auth()->user()->hasRole(7)) {
+            return 'profile';
+        } else if (auth()->user()->hasRole(8)) {
+            return 'partner';
+        } else {
+            return 'dashboard';
+        }
+        return 'dashboard';
+    }
 
     /**
      * Create a new controller instance.
@@ -58,7 +70,7 @@ class LoginController extends Controller
                 $request->session()->put('auth.password_confirmed_at', time());
             }
 
-            ActivityLog::create('Login');
+            \Log::create('Login');
             return $this->sendLoginResponse($request);
         }
 
@@ -69,7 +81,7 @@ class LoginController extends Controller
 
     protected function logout(Request $request) {
         if ($this->guard()->check()) {
-            ActivityLog::create('Logout');
+            \Log::create('Logout');
             $this->guard()->logout();
         }
 

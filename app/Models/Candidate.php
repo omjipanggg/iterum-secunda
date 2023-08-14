@@ -14,6 +14,6 @@ class Candidate extends Model
     protected $guarded = [];
 
     public function appliedTo() {
-    	return $this->belongsToMany(Vacancy::class, 'candidates_and_vacancies')->orderByDesc('created_at');
+    	return $this->belongsToMany(Vacancy::class, 'candidates_and_vacancies')->orderByDesc('created_at')->withPivot(['status']);
     }
 }

@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendSubscription;
 use App\Jobs\UploadFile;
 
+use App\Mail\SendSubscription as SendMailable;
+
 use App\Models\User;
+use App\Models\Profile;
 use App\Models\Vacancy;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
+
+use RealRashid\SweetAlert\Facades\Alert;
 
 class HomeController extends Controller
 {
@@ -32,7 +39,10 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::all();
-        $vacancies = Vacancy::withCount('candidates')->orderByDesc('published_at')->take(5)->get();
+        $vacancies = Vacancy::withCount('candidates')->where([
+            ['closing_date', '>=', today()],
+            ['active', true]
+        ])->orderByDesc('published_at')->take(5)->get();
         $context = [
             'users' => $users,
             'vacancies' => $vacancies
@@ -67,24 +77,37 @@ class HomeController extends Controller
     }
 
     public function settings() {
-        return view('pages.homepage.settings');
+        $context = [];
+        return view('pages.homepage.settings', $context);
     }
 
     public function sitemap() {
         return view('pages.homepage.sitemap');
     }
 
-    public function subscription(Request $request) {
-        dd($request->all());
-        // return redirect()->back();
+    public function subscribe(Request $request) {
+        SendSubscription::dispatch($request->email);
+        // Mail::to($request->email)->send(new SendMailable($request->email));
+        Alert::success('Sukses', 'Terima kasih telah berlangganan!');
+        return redirect()->back();
+    }
+
+    public function unsubscribe(Request $request, string $email) {
+        Alert::success('Sukses', 'Layanan telah dihentikan.');
+        return redirect()->route('home.index');
     }
 
     public function lounge() {
         $context = [];
-        return view('pages.dashboard.lounge', $context);
+        return view('pages.homepage.lounge', $context);
     }
 
     public function search(Request $request) {
         dd($request->all());
+    }
+
+    public function faq() {
+        $context = [];
+        return view('pages.dashboard.faq', $context);
     }
 }

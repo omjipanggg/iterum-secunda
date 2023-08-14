@@ -3,13 +3,25 @@
     <div class="sb-sidenav-menu">
         <div class="nav my-12">
             {{-- <div class="sb-sidenav-menu-heading">Core</div> --}}
+            @if (auth()->user()->hasRole(1))
+            <a class="nav-link @if (url()->current() == route('master.index')) active @endif" href="{{ route('master.index') }}">
+                <div class="sb-nav-link-icon"><i class="bi bi-house-exclamation"></i></div>
+                Master
+            </a>
+            <a class="nav-link @if (url()->current() == route('user.index')) active @endif" href="{{ route('user.index') }}">
+                <div class="sb-nav-link-icon"><i class="bi bi-people-fill"></i></div>
+                Akun Terdaftar
+            </a>
+            @else
             <a class="nav-link @if(url()->current() == route('home.lounge') || url()->current() == route('dashboard.index')) active @endif" href="{{ route('dashboard.index') }}">
-                <div class="sb-nav-link-icon"><i class="bi bi-speedometer"></i></div>
+                <div class="sb-nav-link-icon"><i class="bi bi-house"></i></div>
                 Dashboard
             </a>
+            @endif
             @if (menu()->count() > 0 && !auth()->user()->hasRole(2))
             @foreach (menu() as $menu)
                 @if($menu->has_child)
+                    @if ($menu->parent_id == 0)
                     <a class="nav-link collapsed" href="{{ route($menu->route) }}" data-bs-toggle="collapse" data-bs-target="#menu{{ $menu->id }}" aria-expanded="false" aria-controls="menu{{ $menu->id }}">
                         <div class="sb-nav-link-icon">
                             <i class="bi {{ $menu->icon }}"></i>
@@ -35,6 +47,8 @@
                             @endif
                         @endforeach
                     </div>
+                    @else
+                    @endif
                 @else
                     @if($menu->parent_id == 0)
                         @if(isset($menu->model))
@@ -49,14 +63,21 @@
                 @endif
             @endforeach
             @endif
-            <a class="nav-link" href="/">
+            @if (auth()->user()->hasRole(1))
+            <a class="nav-link" href="{{ route('master.generateTable') }}" onclick="plsConfirm(event)">
+                <div class="sb-nav-link-icon"><i class="bi bi-sliders"></i></div>
+                Generator
+            </a>
+            @endif
+            <a class="nav-link" href="{{ route('portal.index') }}">
                 <div class="sb-nav-link-icon"><i class="bi bi-newspaper"></i></div>
                 Portal
             </a>
-            <a class="nav-link" href="/">
-                <div class="sb-nav-link-icon"><i class="bi bi-question-circle-fill"></i></div>
+            <a class="nav-link @if(url()->current() == route('dashboard.faq')) active @endif" href="{{ route('dashboard.faq') }}">
+                <div class="sb-nav-link-icon"><i class="bi bi-question-circle"></i></div>
                 FAQ
             </a>
+
         </div>
     </div>
     <div class="sb-sidenav-footer">

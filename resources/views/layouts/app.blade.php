@@ -41,6 +41,7 @@
 </head>
 <body class="d-flex flex-column h-100">
     @include('components.modal')
+    @include('components.modal-delete')
     @include('components.loader')
     @include('components.mover')
     @include('sweetalert::alert')
@@ -55,7 +56,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
-
     {{--
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -63,13 +63,13 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
     --}}
 
-    {!! ReCaptcha::htmlScriptTagJsApi() !!}
+    <script src="https://cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
 
+    {!! ReCaptcha::htmlScriptTagJsApi() !!}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/id.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.min.js"></script>
 
-    {{-- CUSTOM --}}
     <script src="{{ asset('js/compiled.js') }}"></script>
 </body>
 </html>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vacancy;
+
 use Illuminate\Http\Request;
 
 class PortalController extends Controller
@@ -11,8 +13,34 @@ class PortalController extends Controller
      */
     public function index(Request $request)
     {
-        dd($request->all());
-        return view('pages.portal.index');
+        $vacancies = Vacancy::where([
+            ['closing_date', '>=', today()],
+            ['active', true]
+        ])
+        ->withCount('candidates')
+        ->orderByDesc('published_at')
+        ->orderByDesc('created_at')
+        ->orderByDesc('closing_date')
+        ->paginate(6);
+
+        $keyword = $request->get('keyword');
+        if (!empty($keyword)) {
+            $vacancies = Vacancy::filter($keyword)
+            ->where([
+                ['closing_date', '>=', today()],
+                ['active', true]
+            ])
+            ->withCount('candidates')
+            ->orderByDesc('published_at')
+            ->orderByDesc('created_at')
+            ->orderByDesc('closing_date')
+            ->paginate(6);
+        }
+
+        $context = [
+            'vacancies' => $vacancies
+        ];
+        return view('pages.portal.index', $context);
     }
 
     /**
@@ -34,14 +62,30 @@ class PortalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        dd($id);
-        return view('pages.portal.show');
+        $vacancy = Vacancy::where('slug', $slug)->withCount('candidates')->first();
+        $context = [
+            'vacancy' => $vacancy
+        ];
+        return view('pages.portal.show', $context);
     }
 
     public function filter(Request $request) {
-        dd($request->all());
+        $vacancies = [];
+        if (!empty($request->keyword)) {
+            $vacancies = Vacancy::filter($request->keyword)
+                ->where([
+                    ['closing_date', '>=', today()],
+                    ['active', true]
+                ])
+                ->withCount('candidates')
+                ->orderByDesc('published_at')
+                ->orderByDesc('created_at')
+                ->orderByDesc('closing_date')
+                ->paginate(6);
+        }
+        return response()->json($vacancies);
     }
 
     /**

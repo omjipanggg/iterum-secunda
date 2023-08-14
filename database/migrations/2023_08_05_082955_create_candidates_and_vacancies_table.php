@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('candidates_and_vacancies', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('candidate_id')->cascadeOnUpdate()->constrained('candidates');
-            $table->foreignUuid('vacancy_id')->cascadeOnUpdate()->constrained('vacancies');
+            $table->char('candidate_id', 36);
+            $table->char('vacancy_id', 36);
+            $table->unsignedTinyInteger('status')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();

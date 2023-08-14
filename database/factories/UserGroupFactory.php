@@ -23,7 +23,7 @@ class UserGroupFactory extends Factory
         $roles = Role::pluck('id')->toArray();
         return [
             'menu_id' => fake()->randomElement($menus),
-            'role_id' => fake()->randomElement($roles),
+            'role_id' => fake()->randomElement($roles)
         ];
     }
 }

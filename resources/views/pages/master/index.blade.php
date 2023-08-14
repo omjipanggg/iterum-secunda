@@ -3,20 +3,39 @@
 @section('content')
 <div class="container-fluid px-12">
 	<div class="row">
+		<div class="col-12">
+			<div class="mb-4">
+				<h3>Dashboard</h3>
+				{{ Breadcrumbs::render('master.index') }}
+			</div>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col">
-			<h3>Dashboard</h3>
-			@include('components.breadcrumbs')
 			<div class="card">
-				<div class="card-header">
+				<div class="card-header text-bg-color">
 					<i class="bi bi-database-lock me-2"></i>
 					@yield('title')
 				</div>
 				<div class="card-body">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum corporis quasi nemo voluptates architecto rerum suscipit incidunt soluta dolores eum nisi deserunt similique libero voluptatem a corrupti eos temporibus, quia inventore. Error, enim vero ipsa iusto ipsam sed eaque, quaerat consequatur deleniti quisquam esse. Officia corrupti ratione quo, voluptatibus iste totam velit, voluptates, perferendis inventore excepturi earum. Voluptates, voluptas a sit et aliquid blanditiis, hic, neque molestias, animi praesentium minima. Numquam iste, ex aliquam sequi nulla, voluptate doloribus dignissimos enim dolor debitis, ad ea quisquam animi ipsum totam corporis. Eaque eveniet recusandae est debitis natus dolorum quibusdam veritatis voluptas sint.
+					<div class="d-flex flex-wrap justify-content-start align-items-center gap-1">
+					@forelse ($tables as $table)
+						<span class="badge text-bg-color">
+							<a href="{{ route('master.fetch', $table->code) }}" class="dotted">
+								{{ $table->name }}
+							</a>
+						</span>
+					@empty
+					<p class="m-0">Mohon segera lakukan konfigurasi, <a href="{{ route('master.generateTable') }}" class="dotted">di sini</a>.</p>
+					@endforelse
+					</div>
+				</div>
+				<div class="card-footer text-bg-brighter-color">
+					<i class="bi bi-info-circle me-2"></i>
+					Laporkan kesalahan melalui <a href="{{ route('home.index') }}" class="underlined">tautan ini</a>.
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="mb-3"></div>
 @endsection

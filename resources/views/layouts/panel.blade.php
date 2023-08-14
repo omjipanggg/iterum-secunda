@@ -39,6 +39,7 @@
 <body class="sb-nav-fixed">
     @include('sweetalert::alert')
 	@include('components.modal')
+    @include('components.modal-delete')
     @include('components.loader')
     @include('components.mover')
     @include('components.navbar-dashboard')
@@ -61,6 +62,8 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/id.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.min.js"></script>
 
+    <script src="https://cdn.ckeditor.com/4.6.2/basic/ckeditor.js"></script>
+
     {{-- {!! ReCaptcha::htmlScriptTagJsApi() !!} --}}
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -68,6 +71,7 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
+    <script src="{{ asset('js/rps.js') }}"></script>
     <script src="{{ asset('js/compiled.js') }}"></script>
 </body>
 </html>

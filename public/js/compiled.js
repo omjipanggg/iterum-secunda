@@ -39,6 +39,14 @@ $(document).ready(function(event) {
         }
     });
 
+    // CKEDITOR-FUCNTIONALITY
+    // ================================================================================
+    if (document.body.querySelectorAll('.editor')) {
+        [...document.querySelectorAll('.editor')].map((item) => {
+            CKEDITOR.replace(item);
+        });
+    }
+
     // SELECT-2-FUCNTIONALITY
     // ================================================================================
     if (document.body.querySelector('.select2-multiple')) {
@@ -48,6 +56,7 @@ $(document).ready(function(event) {
                 placeholder: 'Ketikkan jika tidak ada',
                 width: '100%',
                 dropdownAutoWidth: true,
+                theme: 'bootstrap-5',
                 language: 'id',
                 allowClear: true,
                 tags: true,
@@ -62,6 +71,7 @@ $(document).ready(function(event) {
             $(item).select2({
                 placeholder: 'Pilih satu',
                 width: '100%',
+                theme: 'bootstrap-5',
                 dropdownAutoWidth: true,
                 language: 'id',
                 allowClear: true,
@@ -75,19 +85,22 @@ $(document).ready(function(event) {
     // ================================================================================
     if ($('table.fetch')) {
         let tables = [...document.body.querySelectorAll('table.fetch')];
-        let objDataTable = $('table.fetch').dataTable({
-            language: {
-                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
-                paginate: {
-                    previous: '<i class="bi bi-caret-left-fill"></i>',
-                    next: '<i class="bi bi-caret-right-fill"></i>'
-                },
-                infoFiltered: '',
-                lengthMenu: '_MENU_',
-                search: '',
-                searchPlaceholder: "Pencarian",
-                emptyTable: "Data tidak ditemukan"
-            }
+        tables.map((item) => {
+            $(item).DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                    paginate: {
+                        previous: '<i class="bi bi-caret-left-fill"></i>',
+                        next: '<i class="bi bi-caret-right-fill"></i>'
+                    },
+                    infoFiltered: '',
+                    lengthMenu: '_MENU_',
+                    search: '',
+                    searchPlaceholder: "Pencarian",
+                    emptyTable: "Data tidak ditemukan",
+                    processing: "Mohon menunggu..."
+                }
+            });
         });
         // $('.dataTables_length select').addClass('mb-2');
         // $('.dataTables_filter').addClass('mb-2');
@@ -104,6 +117,7 @@ $(document).ready(function(event) {
                 type: 'GET',
                 success: (response) => {
                     let columns = response.columns;
+                    let columnTypes = response.columnTypes;
                     let columnDefs = [];
 
                     for (let i = 0; i < columns.length; i++) {
@@ -111,14 +125,14 @@ $(document).ready(function(event) {
                             columnDefs.push({
                                 data: columns[2],
                                 render: function(data, type, row, meta) {
-                                    return '<a href="/master/'+ meta.settings.oInit.meta.code +'/edit/'+ row.id +'" onclick="event.preventDefault();" class="dotted" data-bs-route="/master/'+ meta.settings.oInit.meta.code +'/edit/'+ row.id +'" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="'+ meta.settings.oInit.meta.table +'" data-bs-type="Edit"><i class="bi bi-pencil-square"></i></a>';
+                                    return '<a href="/master/'+ meta.settings.oInit.meta.code +'/edit/'+ row.id +'" onclick="event.preventDefault();" class="dotted" data-bs-route="/master/'+ meta.settings.oInit.meta.code +'/edit/'+ row.id +'" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-code="'+ meta.settings.oInit.meta.code +'" data-bs-table="'+ meta.settings.oInit.meta.table +'" data-bs-type="Edit"><i class="bi bi-pencil-square"></i></a>';
                                 }
                             });
                         } else if (columns[i] == 'delete') {
                             columnDefs.push({
                                 data: columns[2],
                                 render: function(data, type, row, meta) {
-                                    return '<a href="/master/'+ meta.settings.oInit.meta.code +'/delete/'+ row.id +'" class="dotted" data-bs-id="'+ row.id +'" data-bs-table="'+ meta.settings.oInit.meta.table +'" onclick="deleteConfirmation(event);"><i class="bi bi-trash"></i></a>';
+                                    return '<a href="/master/'+ meta.settings.oInit.meta.code +'/delete/'+ row.id +'" class="dotted btn-delete" data-bs-id="'+ row.id +'" data-bs-code="'+ meta.settings.oInit.meta.code +'" data-bs-table="'+ meta.settings.oInit.meta.table +'"><i class="bi bi-trash"></i></a>';
                                 }
                             });
                         } else if (columns[i] == 'on_image' || columns[i] == 'off_image' || columns[i] == 'user_agent') {
@@ -128,7 +142,25 @@ $(document).ready(function(event) {
                                 orderable: true,
                                 searchable: true
                             });
-                        } else if (columns[i] == 'url') {
+                        } else if (columns[i] == 'name') {
+                            columnDefs.push({
+                                data: columns[i],
+                                render: function(data, type, row) {
+                                    return data.toUpperCase();
+                                },
+                                orderable: true,
+                                searchable: true
+                            });
+                        } else if (columns[i] == 'icon') {
+                            columnDefs.push({
+                                data: columns[i],
+                                render: function(data, type, row) {
+                                    return '<i class="bi '+ data + '"></i>';
+                                },
+                                orderable: true,
+                                searchable: true
+                            });
+                        } else if (columnTypes[i] == 'text') {
                             columnDefs.push({
                                 data: columns[i],
                                 render: function(data, type, row) {
@@ -137,9 +169,27 @@ $(document).ready(function(event) {
                                 orderable: true,
                                 searchable: true
                             });
+                        } else if (columnTypes[i] == 'date' || columnTypes[i] == 'datetime') {
+                                columnDefs.push({
+                                    data: columns[i],
+                                    render: function(data, type, row) {
+                                        if (data == null || data == '') {
+                                            return '<em>null</em>';
+                                        }
+                                        return dateFormat(data);
+                                    },
+                                    orderable: true,
+                                    searchable: true
+                                });
                         } else {
                             columnDefs.push({
                                 data: columns[i],
+                                render: function(data, type, row) {
+                                    if (data == null || data == '') {
+                                        data = '<em>null</em>';
+                                    }
+                                    return data;
+                                },
                                 orderable: true,
                                 searchable: true
                             });
@@ -159,7 +209,8 @@ $(document).ready(function(event) {
                             lengthMenu: '_MENU_',
                             search: '',
                             searchPlaceholder: "Pencarian",
-                            emptyTable: "Data tidak ditemukan"
+                            emptyTable: "Data tidak ditemukan",
+                            processing: ""
                         },
                         ajax: href,
                         scrollX: true,
@@ -177,29 +228,30 @@ $(document).ready(function(event) {
 
     // DELETE-FUNCTIONALITY
     // ================================================================================
-    $('.btn-delete').click(function(event) {
+    $(document).on('click', '.btn-delete', function(event) {
         event.preventDefault();
         let id = $(this).data('bsId');
-        console.log(event, $(this));
+        let code = $(this).data('bsCode');
+
+        $('#vanisher').attr('action', `/master/${code}/delete/${id}`);
 
         Swal.fire({
-            title: id,
-            text: "Hapus data ini?",
+            title: 'Konfirmasi',
+            text: `Hapus data ini?`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak',
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Gak jadi',
             reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-
-                })
+                $('#loader').fadeIn();
+                $('#vanisher').submit();
             }
         });
     });
 
-    // TRIGGERING-FROM-ANY-MODAL
+    // TRIGGERING-ANY-MODAL
     // ================================================================================
     $(document).on('click', '#trigger', (event) => {
         $('#btn-modal').trigger('click');
@@ -230,10 +282,11 @@ $(document).ready(function(event) {
                     $('#modalControlPlaceholders').html(result);
                 },
                 complete: () => {
-                    console.log('Fetched successfully...');
+                    // ABLE-TO-DEFINE-NEW-ARTICLES
                     $('.select2-multiple-modal').select2({
                         placeholder: 'Ketikkan jika tidak ada',
                         tags: true,
+                        theme: 'bootstrap-5',
                         width: '100%',
                         dropdownAutoWidth: true,
                         dropdownParent: modalControl,
@@ -241,9 +294,93 @@ $(document).ready(function(event) {
                         allowClear: true,
                         debug: true
                     });
+
+                    // INCAPABLE-OF-DEFINING-NEW-ARTICLES
+                    $('.select2-single-modal').select2({
+                        placeholder: 'Pilih satu',
+                        theme: 'bootstrap-5',
+                        width: '100%',
+                        dropdownAutoWidth: true,
+                        dropdownParent: modalControl,
+                        cache: true,
+                        allowClear: true,
+                        debug: true
+                    });
+
+                    // STATUS
+                    console.log('Fetched successfully...');
                 },
-                timeout: 6000
+                timeout: 4296
             });
+        });
+    }
+
+    // SELECT-2-FUNCTIONALITY
+    // ====================================================================================
+    $('.select2-ajax-school').select2({
+        placeholder: 'Pilih satu',
+        minimumInputLength: 3,
+        theme: 'bootstrap-5',
+        width: '100%',
+        dropdownAutoWidth: true,
+        allowClear: true,
+        cache: true,
+        debug: true,
+        tags: true,
+        ajax: {
+            url: function(params) {
+                return 'https://api-sekolah-indonesia.vercel.app/sekolah/s?sekolah=' + params.term
+            },
+            type: 'GET',
+            dataType: 'json',
+            delay: 250,
+            processResults: function(response) {
+                return {
+                    results: response.dataSekolah.map(function(item) {
+                        return {
+                            id: item.id,
+                            text: item.sekolah
+                        }
+                    })
+                };
+            },
+            cache: true
+        }
+    });
+
+    if ($('.select2-server')) {
+        let table = $('.select2-server').data('bsTable');
+        $('.select2-server').select2({
+            placeholder: 'Pilih satu',
+            // minimumInputLength: 3,
+            theme: 'bootstrap-5',
+            width: '100%',
+            dropdownAutoWidth: true,
+            allowClear: true,
+            cache: true,
+            debug: true,
+            ajax: {
+                url: '/server/' + table,
+                data: function(params) {
+                    return {
+                        keyword: params.term
+                    }
+                },
+                type: 'GET',
+                dataType: 'json',
+                delay: 250,
+                processResults: function(response) {
+                    return {
+                        results: response.map(function(item) {
+                            return {
+                                id: item.id,
+                                text: item.name
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
         });
     }
 });
@@ -267,47 +404,43 @@ function resendEmailVerification(event) {
     event.target.submit();
 }
 
-function deleteConfirmation(event) {
-    event.preventDefault();
-    let href = event.currentTarget.getAttribute('href');
-    let id = event.currentTarget.dataset['bsId'];
-    let table = event.currentTarget.dataset['bsTable'];
-    let token = $("meta[name='csrf-token']").attr("content");
+function dateFormat(date) {
+    let dateString = new Date(date);
+    let day = dateString.getDay();
+    let dateOfDate = dateString.getDate();
+    let month = dateString.getMonth();
+    let yearOfDate = dateString.getYear();
 
+    // VARIABLE
+    // ================================================================================
+    let dayTuple = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    let monthTuple = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','Nopember','Desember'];
+
+    let year = (yearOfDate < 1000) ? yearOfDate + 1900 : yearOfDate;
+
+    if (dateOfDate < 10) {
+        dateOfDate = '0' + dateOfDate;
+    }
+
+    return dateOfDate + ' ' + monthTuple[month] + ' ' + year;
+}
+
+function plsConfirm(event) {
+    event.preventDefault();
+    let go = event.currentTarget.getAttribute('href');
+    console.log(event, go);
     Swal.fire({
         title: 'Konfirmasi',
-        text: 'Hapus data ini?',
+        text: `Ingin melanjutkan?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Ya',
         cancelButtonText: 'Tidak',
-        reverseButtons: true
-    }).then((response) => {
-        console.log(response)
-        if (response.isConfirmed) {
-            $.ajax({
-                url: href,
-                type: 'DELETE',
-                data: {
-                    '_method': 'DELETE',
-                    '_token': token
-                },
-                async: true,
-                beforeSend: (result) => {
-                    $('#loader').fadeIn();
-                },
-                success: (result) => {
-                    Swal.fire('Berhasil', 'Data berhasil dihapus.', 'success');
-                },
-                complete: (result) => {
-                    $('#loader').fadeOut();
-                    console.log(result);
-                    // window.location.reload();
-                },
-                error: (xhr, status, error) => {
-                    Swal.fire('Kesalahan', 'Mohon coba lagi nanti.', 'error');
-                }
-            });
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#loader').fadeIn();
+            window.location.href = go;
         }
     });
 }
