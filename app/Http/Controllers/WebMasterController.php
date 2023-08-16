@@ -32,7 +32,7 @@ class WebMasterController extends Controller
 
     public function generateTable() {
         $this->table_codes = generate_table_code();
-        Alert::success('Sukses', 'Konfigurasi selesai.');
+        Alert::success('Sukses', 'Konfigurasi tabel selesai.');
         return redirect()->route('master.index');
     }
 
@@ -40,7 +40,8 @@ class WebMasterController extends Controller
     {
         $context = [
             'tables' => TableCode::all(),
-            'users' => User::all()
+            'users' => User::all(),
+            'quotes' => get_random_quotes()
         ];
         return view('pages.master.index', $context);
     }
@@ -166,7 +167,9 @@ class WebMasterController extends Controller
 
         \Log::create('Deleted—'. $table->name .' ('. Str::upper($id) .')');
 
+        Schema::disableForeignKeyConstraints();
         $query = DB::table($table->name)->where('id', $id)->delete();
+        Schema::enableForeignKeyConstraints();
 
         if ($request->ajax()) {
             if (!$query) {

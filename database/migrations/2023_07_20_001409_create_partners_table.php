@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->char('prefix', 3)->nullable();
-            $table->unsignedBigInteger('city')->index();
+            $table->foreignId('city_id')->cascadeOnUpdate()->constrained('cities');
             $table->string('address');
             $table->string('person_in_charge');
             $table->string('phone_number');
@@ -24,16 +24,16 @@ return new class extends Migration
             $table->string('field')->nullable();
             $table->unsignedBigInteger('total_employees')->nullable();
             $table->text('description')->nullable();
-            $table->string('picture')->default('landscape.png')->nullable();
+            $table->string('picture')->default('landscape.webp')->nullable();
             $table->string('slug')->nullable();
             $table->boolean('active')->default(0);
             $table->unsignedTinyInteger('status')->default(0);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->char('created_by', 36)->nullable()->index();
+            $table->foreignUuid('created_by')->nullable()->cascadeOnUpdate()->constrained('users');
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->char('updated_by', 36)->nullable()->index();
+            $table->foreignUuid('updated_by')->nullable()->cascadeOnUpdate()->constrained('users');
             $table->softDeletes();
-            $table->char('deleted_by', 36)->nullable()->index();
+            $table->foreignUuid('deleted_by')->nullable()->cascadeOnUpdate()->constrained('users');
         });
     }
 

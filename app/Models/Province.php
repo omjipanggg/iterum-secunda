@@ -6,14 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Candidate extends Model
+class Province extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'candidates';
+    protected $table = 'provinces';
     protected $guarded = [];
-
-    public function appliedTo() {
-    	return $this->belongsToMany(Vacancy::class, 'proposals')->orderByDesc('created_at')->withPivot(['status']);
-    }
 }

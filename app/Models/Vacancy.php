@@ -37,11 +37,15 @@ class Vacancy extends Model
     }
 
     public function candidates() {
-    	return $this->belongsToMany(Candidate::class, 'candidates_and_vacancies')->orderByDesc('created_at')->withPivot(['status']);
+    	return $this->belongsToMany(Candidate::class, 'proposals')->orderByDesc('created_at')->withPivot(['status']);
     }
 
     public function project() {
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function city() {
+        return $this->belongsTo(City::class, 'city_id');
     }
 
     public function scopeFilter($query, $filter) {

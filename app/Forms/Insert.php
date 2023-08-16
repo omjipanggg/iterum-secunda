@@ -38,11 +38,11 @@ class Insert extends Form
             if ($this->isForeign($this->model, $column)) {
                 if (($column === 'created_by') || ($column === 'updated_by') || ($column === 'deleted_by')) {}
                 else {
-                    $child = Str::plural(Str::replace('_id', '', $column));
+                    $child = '\\App\\Models\\' . Str::studly(Str::singular(Str::replace('_id', '', $column)));
                     $this->add($column, 'select', [
                         'label' => Str::replace('_id', '', $column),
                         'label_show' => true,
-                        'choices' => DB::table($child)->orderBy('id')->pluck('name', 'id')->toArray(),
+                        'choices' => $child::orderBy('id')->pluck('name', 'id')->toArray(),
                         'empty_value' => 'Pilih satu',
                         'attr' => [
                             'class' => 'form-select form-select-sm select2-multiple-modal',

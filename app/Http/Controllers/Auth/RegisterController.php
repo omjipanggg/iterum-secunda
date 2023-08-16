@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Profile;
 use App\Models\User;
-
-use App\Helpers\ActivityLog;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -101,7 +100,7 @@ class RegisterController extends Controller
 
     public function registered(Request $request, $user) {
         if ($this->guard()->check()) {
-            ActivityLog::create('Register');
+            \Log::create('Register');
             $this->guard()->logout();
         }
 

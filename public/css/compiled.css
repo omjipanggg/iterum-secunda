@@ -471,7 +471,7 @@ ol.breadcrumb {
 /* ===================================================================== */
 #portal .accordion-button {
     font-size: var(--normal-size);
-    font-weight: 500;
+    font-weight: bold;
 }
 #portal .box-info > div {
     flex-basis: 47%;
@@ -505,6 +505,10 @@ ol.breadcrumb {
 }
 
 #portal .summary-content {
+    margin: 0;
+}
+
+#portal .card-partner p {
     margin: 0;
 }
 
@@ -653,16 +657,16 @@ div.dataTables_info {
 .form-select-defined-floating .select2-selection--single,
 .form-select-floating .select2-selection--single {
     border: var(--bs-border-width) solid var(--bs-border-color);
-    padding-top: 28px;
-    padding-left: 7px;
-    padding-bottom: 28px;
+    padding-top: 28px !important;
+    padding-left: 7px !important;
+    padding-bottom: 28px !important;
 }
 
 .form-select-defined-floating .select2-selection--multiple,
 .form-select-floating .select2-selection--multiple {
     border: var(--bs-border-width) solid var(--bs-border-color);
-    padding-top: 30px;
-    padding-bottom: 10px;
+    padding-top: 30px !important;
+    padding-bottom: 10px !important;
 }
 
 .form-select-floating .select2-container .select2-selection--single .select2-selection__rendered {
@@ -691,9 +695,9 @@ div.dataTables_info {
 
 .form-date-floating input {
     border: var(--bs-border-width) solid var(--bs-border-color);
-    padding-top: 24px;
-    padding-left: 8px;
-    padding-bottom: 10px;
+    padding-top: 24px !important;
+    padding-left: 8px !important;
+    padding-bottom: 10px !important;
 }
 
 /* FORM ON MODAL */

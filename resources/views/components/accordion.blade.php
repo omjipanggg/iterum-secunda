@@ -1,7 +1,7 @@
 <div id="layoutSidenav_nav">
 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
     <div class="sb-sidenav-menu">
-        <div class="nav my-12">
+        <div class="nav my-4">
             {{-- <div class="sb-sidenav-menu-heading">Core</div> --}}
             @if (auth()->user()->hasRole(1))
             <a class="nav-link @if (url()->current() == route('master.index')) active @endif" href="{{ route('master.index') }}">

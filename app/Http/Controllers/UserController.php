@@ -8,6 +8,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+
 use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
@@ -86,8 +90,8 @@ class UserController extends Controller
             }
         }
 
-        \Log::create('User updated—' . $user->id);
-        Alert::success('Sukses', 'Data Pengguna berhasil diubah.');
+        \Log::create('User updated—' . Str::upper($user->id));
+        Alert::success('Sukses', 'Data diubah.');
         return redirect()->back();
     }
 
@@ -99,10 +103,15 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->email = strtotime("now") . '_' . $user->email;
         $user->save();
-        \Log::create('User deleted—' . $user->id);
+
+        \Log::create('User deleted—' . Str::upper($user->id));
+
         // $user->roles()->detach();
+        Schema::disableForeignKeyConstraints();
         $user->delete();
-        Alert::success('Sukses', 'Data Pengguna berhasil dihapus.');
+        Schema::enableForeignKeyConstraints();
+
+        Alert::success('Sukses', 'Data dihapus.');
         return redirect()->back();
     }
 }

@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('candidates_and_vacancies', function (Blueprint $table) {
+        Schema::create('cities', function (Blueprint $table) {
             $table->id();
-            $table->char('candidate_id', 36);
-            $table->char('vacancy_id', 36);
-            $table->unsignedTinyInteger('status')->nullable();
+            $table->string('name');
+            $table->foreignId('province_id')->cascadeOnUpdate()->constrained('provinces');
+            $table->unsignedTinyInteger('type')->nullable()->index();
+            $table->char('zip_code', 5);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidates_and_vacancies');
+        Schema::dropIfExists('cities');
     }
 };

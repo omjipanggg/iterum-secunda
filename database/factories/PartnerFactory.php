@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 /**
@@ -16,11 +18,12 @@ class PartnerFactory extends Factory
      */
     public function definition(): array
     {
+        $cities = City::all();
         $name = fake()->name();
         return [
             'name' => $name,
             'prefix' => fake()->regexify('[A-F]{3}'),
-            'city' => fake()->numberBetween(37, 82),
+            'city_id' => fake()->randomElement($cities),
             'address' => fake()->address(),
             'person_in_charge' => fake()->name(),
             'phone_number' => fake()->phoneNumber(),

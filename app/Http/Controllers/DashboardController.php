@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TableCode;
+
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -21,7 +23,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $context = [];
+        $context = [
+            'tables' => TableCode::all(),
+        ];
         return view('pages.dashboard.index', $context);
     }
 

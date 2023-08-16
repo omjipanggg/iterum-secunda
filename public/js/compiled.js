@@ -411,8 +411,6 @@ function dateFormat(date) {
     let month = dateString.getMonth();
     let yearOfDate = dateString.getYear();
 
-    // VARIABLE
-    // ================================================================================
     let dayTuple = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
     let monthTuple = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','Nopember','Desember'];
 
@@ -428,7 +426,6 @@ function dateFormat(date) {
 function plsConfirm(event) {
     event.preventDefault();
     let go = event.currentTarget.getAttribute('href');
-    console.log(event, go);
     Swal.fire({
         title: 'Konfirmasi',
         text: `Ingin melanjutkan?`,
@@ -443,4 +440,11 @@ function plsConfirm(event) {
             window.location.href = go;
         }
     });
+}
+
+// VARIABLE
+// ================================================================================
+
+function applyJob(event) {
+    event.preventDefault();
 }

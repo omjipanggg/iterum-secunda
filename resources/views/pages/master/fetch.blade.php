@@ -31,9 +31,17 @@
 						<table class="table table-sm table-bordered server-side m-0">
 							<thead>
 								<tr>
+									<th colspan="2">Aksi</th>
 									@foreach($columns as $column)
-										<th>{{ Str::ucfirst($column) }}</th>
+										@if ($column == 'edit' || $column == 'delete')
+										@else
+										<th rowspan="2">{{ Str::ucfirst($column) }}</th>
+										@endif
 									@endforeach
+								</tr>
+								<tr>
+									<th>Edit</th>
+									<th>Delete</th>
 								</tr>
 							</thead>
 							<tbody></tbody>

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('city')->index();
             $table->string('job_field');
             $table->text('job_description')->nullable();
-            $table->date('started_date');
-            $table->date('ended_date')->nullable();
+            $table->date('starting_date');
+            $table->date('ending_date')->nullable();
             $table->string('manager_name')->nullable();
             $table->string('manager_contact')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));

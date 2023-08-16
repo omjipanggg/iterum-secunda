@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('categories_and_products', function (Blueprint $table) {
             $table->id();
-            $table->char('product_id', 36);
-            $table->unsignedBigInteger('product_category_id');
+            $table->foreignUuid('product_id')->cascadeOnUpdate()->constrained('products');
+            $table->foreignId('product_category_id')->cascadeOnUpdate()->constrained('product_categories');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();

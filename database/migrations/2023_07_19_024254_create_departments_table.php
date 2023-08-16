@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('contracts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            // $table->foreignUuid('offering_letter_id')->cascadeOnUpdate()->constrained('offering_letters');
-            $table->string('header_number');
-            $table->string('initial_card_number');
-            $table->unsignedBigInteger('generated_count')->default(0)->nullable();
-            $table->unsignedTinyInteger('status')->default(0);
+        Schema::create('departments', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contracts');
+        Schema::dropIfExists('departments');
     }
 };

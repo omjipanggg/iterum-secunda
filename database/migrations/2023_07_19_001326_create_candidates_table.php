@@ -13,24 +13,13 @@ return new class extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('national_number');
-            $table->string('name');
-            $table->unsignedBigInteger('gender')->index();
-            $table->string('place_of_birth');
-            $table->date('date_of_birth');
-            $table->string('current_address');
-            $table->string('national_address');
-            $table->unsignedBigInteger('city')->index();
-            $table->unsignedTinyInteger('marital_status')->nullable()->index();
-            $table->unsignedTinyInteger('blood_type')->nullable()->index();
-            $table->unsignedTinyInteger('ready_to_work')->nullable();
-            $table->unsignedBigInteger('expected_salary')->default(0);
+            $table->foreignUuid('profile_id')->cascadeOnUpdate()->constrained('profiles');
+            $table->string('ready_to_work')->nullable();
+            $table->unsignedBigInteger('expected_salary')->default(0)->nullable();
             $table->string('expected_facility')->nullable();
-            $table->string('resume');
-            $table->text('motivation');
-            $table->string('picture')->default('default.webp')->nullable();
-            $table->foreignUuid('user_id')->cascadeOnUpdate()->constrained('users');
-            $table->unsignedTinyInteger('status')->default(0);
+            $table->string('resume')->nullable();
+            $table->text('motivation')->nullable();
+            $table->unsignedTinyInteger('status')->default(0)->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();

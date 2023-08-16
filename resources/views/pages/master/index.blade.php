@@ -3,10 +3,14 @@
 @section('content')
 <div class="container-fluid px-12">
 	<div class="row">
-		<div class="col-12">
+		<div class="col">
 			<div class="mb-4">
-				<h3>Dashboard</h3>
-				{{ Breadcrumbs::render('master.index') }}
+				<div class="card">
+					<div class="card-body">
+						<h3>Dashboard</h3>
+						{{ Breadcrumbs::render('master.index') }}
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -26,13 +30,18 @@
 							</a>
 						</span>
 					@empty
-					<p class="m-0">Mohon segera lakukan konfigurasi, <a href="{{ route('master.generateTable') }}" class="dotted">di sini</a>.</p>
+					<p class="m-0">Mohon segera lakukan konfigurasi tabel melalui <a href="{{ route('master.generateTable') }}" class="dotted">tautan ini</a>.</p>
 					@endforelse
 					</div>
 				</div>
 				<div class="card-footer text-bg-brighter-color">
-					<i class="bi bi-info-circle me-2"></i>
-					Laporkan kesalahan melalui <a href="{{ route('home.index') }}" class="underlined">tautan ini</a>.
+					<div class="d-flex align-items-center justify-content-between flex-wrap">
+					<div class="wrap">
+						<i class="bi bi-info-circle me-2"></i>
+						{{ $quotes['quote'] }}
+					</div>
+					{{ $quotes['by'] }}
+					</div>
 				</div>
 			</div>
 		</div>

@@ -14,4 +14,8 @@ class Partner extends Model
 
     protected $table = 'partners';
     protected $guarded = [];
+
+    public function city() {
+    	return $this->belongsTo(City::class, 'city_id');
+    }
 }

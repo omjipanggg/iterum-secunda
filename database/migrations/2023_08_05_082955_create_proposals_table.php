@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::create('proposals', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('province')->index();
-            $table->unsignedTinyInteger('city_type')->nullable();
-            $table->char('zip_code', 5);
+            $table->foreignUuid('candidate_id')->cascadeOnUpdate()->constrained('candidates');
+            $table->foreignUuid('vacancy_id')->cascadeOnUpdate()->constrained('vacancies');
+            $table->unsignedTinyInteger('status')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cities');
+        Schema::dropIfExists('proposals');
     }
 };
