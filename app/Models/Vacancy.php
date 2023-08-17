@@ -37,7 +37,7 @@ class Vacancy extends Model
     }
 
     public function candidates() {
-    	return $this->belongsToMany(Candidate::class, 'proposals')->orderByDesc('created_at')->withPivot(['status']);
+    	return $this->belongsToMany(Candidate::class, 'proposals')->orderByDesc('created_at')->withPivot(['description', 'resume', 'status']);
     }
 
     public function project() {
@@ -52,8 +52,10 @@ class Vacancy extends Model
         $query->when($filter ?? false, function($query, $search) {
             return $query->where('name', 'like', '%'. $search .'%')
                 ->orWhere('placement', 'like', '%'. $search .'%')
+                /*
                 ->orWhere('description', 'like', '%'. $search .'%')
                 ->orWhere('qualification', 'like', '%'. $search .'%')
+                */
                 ->orWhereHas('project', function($query) use($search) {
                     $query->where('project_number', 'like', '%'. $search .'%');
                 })

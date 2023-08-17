@@ -92,7 +92,7 @@
                                 <input class="form-check-input" type="checkbox" onchange="eyeOpen(event);" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="remember">Tampilkan kata sandi</label>
                             </div>
-                            <div class="d-flex flex-wrap justify-content-end align-items-start align-items-md-end flex-column">
+                            <div class="d-flex flex-wrap justify-content-end align-items-start flex-column">
                                 @error('g-recaptcha-response')
                                     <span class="invalid-feedback d-block m-0" role="alert">
                                         <strong>Mohon centang kolom di bawah ini.</strong>

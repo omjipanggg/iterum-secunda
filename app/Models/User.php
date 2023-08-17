@@ -33,6 +33,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function profile() {
+        return $this->hasOne(Profile::class, 'user_id');
+    }
+
     public function roles() {
         return $this->belongsToMany(Role::class, 'roles_and_users')->orderBy('roles.name')->withPivot(['expired_date']);
     }

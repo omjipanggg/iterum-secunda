@@ -15,4 +15,15 @@ class Profile extends Model
     protected $table = 'profiles';
 
     protected $guarded = [];
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function candidate() {
+        return $this->hasOne(Candidate::class, 'profile_id');
+    }
+
+    public function employee() {
+        return $this->hasOne(Employee::class, 'profile_id');
+    }
 }

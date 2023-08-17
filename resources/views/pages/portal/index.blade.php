@@ -21,7 +21,7 @@
                     <div class="filter w-100 d-flex flex-column flex-sm-row">
                         <div class="position-relative flex-fill">
                             <i class="bi bi-briefcase icon-floating position-absolute"></i>
-                            <input type="text" class="form-control py-3" name="keyword" autocomplete="off" placeholder="Pencarian" id="query">
+                            <input type="text" class="form-control py-3" name="keyword" autocomplete="off" placeholder="Pencarian" id="query" value="{{ request()->get('keyword') ?? old('keyword') }}">
                             <label for="query" class="visually-hidden">Pencarian</label>
                         </div>
                         <button type="submit" class="btn btn-color px-4">
@@ -40,7 +40,7 @@
                 <div class="d-flex flex-wrap gap-4 vacancy-container justify-content-between">
                     @forelse ($vacancies as $vacancy)
                     <div class="card vacancy-item flex-fill pointer" onclick="window.location.href = '{{ route('portal.show', $vacancy->slug) }}';">
-                        <div class="card-body position-relative py-4">
+                        <div class="card-body position-relative">
                             <div class="row">
                                 <div class="col">
                                     <span class="badge text-bg-color">
@@ -63,14 +63,18 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 align-self-center">
+                                <div class="col-12 align-self-center">
                                     <p class="m-0">
-                                        <i class="bi bi-geo-alt me-1"></i>
+                                        <i class="bi bi-geo me-1"></i>
                                         @if ($vacancy->hidden_placement)
                                             Disembunyikan
                                         @else
                                             {{ $vacancy->placement }}
                                         @endif
+                                    </p>
+                                    <p class="m-0">
+                                        <i class="bi bi-people me-1"></i>
+                                        {{ $vacancy->candidates_count }}
                                     </p>
                                 </div>
                             </div>
@@ -78,7 +82,7 @@
                         <div class="card-footer text-bg-brighter-color">
                             <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                                 <div class="wrap">
-                                    <i class="bi bi-clock me-2"></i>
+                                    <i class="bi bi-clock me-1"></i>
                                     {{ $vacancy->published_at->locale('id')->diffForHumans() }}
                                     {{-- {{ date_indo_format($vacancy->closing_date) }} --}}
                                 </div>
@@ -90,9 +94,9 @@
                         </div>
                     </div>
                     @empty
-                    <div class="card">
+                    <div class="card flex-fill">
                         <div class="card-body">
-                            <p class="m-0 text-center">Tidak ada data tersedia.</p>
+                            <p class="m-0 text-center">Tidak ada data dengan kata kunci <strong>"{{ request()->get('keyword') }}"</strong></p>
                         </div>
                     </div>
                     @endforelse

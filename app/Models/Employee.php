@@ -16,4 +16,8 @@ class Employee extends Model
     public function region() {
     	return $this->belongsTo(Region::class, 'region_id');
     }
+
+    public function profile() {
+        return $this->belongsTo(Profile::class, 'profile_id');
+    }
 }

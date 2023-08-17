@@ -24,15 +24,15 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             @if (auth()->user()->hasRole(1))
-                                <a class="dropdown-item text-start text-lg-end" href="{{ route('master.index') }}">Konfigurasi</a>
+                                <a class="dropdown-item" href="{{ route('master.index') }}">Konfigurasi</a>
                             @elseif(auth()->user()->hasRole(7))
-                                <a class="dropdown-item text-start text-lg-end" href="{{ route('candidate.index') }}">Profil</a>
+                                <a class="dropdown-item" href="{{ route('candidate.index') }}">Profile</a>
                             @else
-                                <a class="dropdown-item text-start text-lg-end" href="{{ route('dashboard.index') }}">Dashboard</a>
+                                <a class="dropdown-item" href="{{ route('dashboard.index') }}">Dashboard</a>
                             @endif
-                            <a href="{{ route('home.settings') }}" class="dropdown-item text-start text-lg-end">Pengaturan</a>
+                            <a href="{{ route('home.settings') }}" class="dropdown-item">Pengaturan</a>
                             <hr class="navbar-divider my-1">
-                            <a class="dropdown-item text-start text-lg-end" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>

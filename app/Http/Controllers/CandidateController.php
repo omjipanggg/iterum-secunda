@@ -72,6 +72,12 @@ class CandidateController extends Controller
 
     public function profile()
     {
-        return 'Candidate';
+        return 'PROFILe';
     }
+
+    public function apply(Request $request)
+    {
+        dd($request->all());
+    }
+
 }

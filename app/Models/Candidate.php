@@ -14,6 +14,10 @@ class Candidate extends Model
     protected $guarded = [];
 
     public function appliedTo() {
-    	return $this->belongsToMany(Vacancy::class, 'proposals')->orderByDesc('created_at')->withPivot(['status']);
+    	return $this->belongsToMany(Vacancy::class, 'proposals')->orderByDesc('created_at')->withPivot(['description', 'resume', 'status']);
+    }
+
+    public function profile() {
+        return $this->belongsTo(Profile::class, 'profile_id');
     }
 }

@@ -58,6 +58,7 @@ Route::delete('master/delete/random', [Master::class, 'destroyThem'])->name('mas
 
 // CANDIDATE
 Route::get('profile', [Candidate::class, 'index'])->name('candidate.index');
+Route::post('apply', [Candidate::class, 'apply'])->name('candidate.apply');
 
 // USER
 Route::resource('user', User::class);

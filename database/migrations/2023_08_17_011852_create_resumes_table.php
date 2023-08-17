@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('proposals', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('candidate_id')->cascadeOnUpdate()->constrained('candidates');
-            $table->foreignUuid('vacancy_id')->cascadeOnUpdate()->constrained('vacancies');
-            $table->string('resume')->nullable();
-            $table->text('description')->nullable();
-            $table->unsignedTinyInteger('status')->default(1)->nullable();
+        Schema::create('resumes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('proposals');
+        Schema::dropIfExists('resumes');
     }
 };

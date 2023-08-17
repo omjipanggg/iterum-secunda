@@ -85,10 +85,10 @@
                                     </div>
                                     <div class="col-lg-2 d-none d-lg-flex flex-wrap justify-content-lg-end">
                                         <div class="d-flex flex-wrap flex-column justify-content-between align-items-end">
-                                            <div class="wrap"><i class="bi bi-people-fill me-1"></i>{{ $vacancy->candidates_count }}</div>
-                                            <span class="badge text-bg-color">
+                                            <span class="badge text-bg-color py-1 px-2">
                                                 {{ $vacancy->type->name }}
                                             </span>
+                                            <div class="wrap"><i class="bi bi-people-fill me-1"></i>{{ $vacancy->candidates_count }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                             <div class="card-footer text-bg-brighter-color">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                                     <div class="wrap">
-                                        <i class="bi bi-clock me-2"></i>
+                                        <i class="bi bi-clock me-1"></i>
                                         {{ $vacancy->published_at->locale('id')->diffForHumans() }}
                                         {{-- {{ date_indo_format($vacancy->closing_date) }} --}}
                                     </div>
@@ -110,7 +110,7 @@
                         @empty
                         <div class="card">
                             <div class="card-body">
-                                <p class="m-0 text-center">Tidak ada data tersedia.</p>
+                                <p class="m-0 text-center">Tidak ada data tersedia</p>
                             </div>
                         </div>
                         @endforelse
@@ -119,7 +119,7 @@
 
                 <div class="col-12 d-flex align-items-center justify-content-center py-4">
                     <a href="{{ route('portal.index') }}" class="btn btn-lg btn-color rounded-0 px-4">
-                        Lowongan Lainnya
+                        Telusuri Lowongan Lainnya
                         <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>

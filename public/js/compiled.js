@@ -395,7 +395,6 @@ $(window).on('scroll', function() {
     $('#move').css({ width: (scrollPercentage) + '%' });
 });
 
-
 // USER-DEFINED-FUCNTIONS
 // ====================================================================================
 function resendEmailVerification(event) {
@@ -403,6 +402,16 @@ function resendEmailVerification(event) {
     $('#loader').fadeIn();
     event.target.submit();
 }
+
+function chooseResume() {
+    $('#resumeOnModal').trigger('click');
+}
+
+$("[type=file]").on("change", function() {
+    let file = this.files[0].name;
+    if($(this).val()!=""){ $(this).next().text(file); }
+    else { $(this).next().text("Tidak ada berkas terpilih"); }
+});
 
 function dateFormat(date) {
     let dateString = new Date(date);

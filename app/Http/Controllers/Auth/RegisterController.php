@@ -91,6 +91,12 @@ class RegisterController extends Controller
 
         $user = $this->create($request->all());
 
+        Profile::create([
+            'user_id' => $user->id,
+            'name' => $request->name,
+            'primary_email' => $request->email,
+        ]);
+
         event(new Registered($user));
 
         $this->guard()->login($user);
