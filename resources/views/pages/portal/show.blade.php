@@ -52,8 +52,8 @@
                                 </div>
                                 <div class="border position-relative">
                                     <span class="icon-box-floating position-absolute d-none d-sm-block"><i class="bi bi-clock-fill"></i></span>
-                                    <small class="text-muted small">Batas Akhir Pelamaran</small>
-                                    <p class="m-0 fw-semibold">{{ date_indo_format($vacancy->closing_date) }}</p>
+                                    <small class="text-muted small">Dipublikasikan</small>
+                                    <p class="m-0 fw-semibold">{{ $vacancy->published_at->locale('id')->diffForHumans() }}</p>
                                 </div>
                             </div>
                             {{--
@@ -154,8 +154,8 @@
                                     </div>
                                 </div>
                                 <div class="border-top position-relative">
-                                    <p class="summary-content text-muted">Dipublikasikan</p>
-                                    <p class="summary-header">{{ $vacancy->published_at->locale('id')->diffForHumans() }}</p>
+                                    <p class="summary-content text-muted">Batas Akhir Pelamaran</p>
+                                    <p class="summary-header">{{ date_indo_format($vacancy->closing_date) }}</p>
                                 </div>
                             </div>
                         </div>

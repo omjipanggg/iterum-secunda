@@ -38,4 +38,8 @@ class Profile extends Model
     public function skills() {
         return $this->belongsToMany(Skill::class, 'capabilities')->withPivot(['certificate', 'rate']);
     }
+
+    public function family() {
+        return $this->hasMany(Relative::class, 'profile_id')->orderBy('relatives.close_relation_id');
+    }
 }

@@ -1,4 +1,4 @@
-<div class="tab-pane fade show active" id="pills-family" role="tabpanel" aria-labelledby="pills-family-tab" tabindex="0">
+<div class="tab-pane fade" id="pills-family" role="tabpanel" aria-labelledby="pills-family-tab" tabindex="0">
 	<div class="card">
 		<div class="card-header text-bg-brighter-color">
 			<div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">
@@ -18,16 +18,30 @@
 					<thead>
 						<tr>
 							<th>No</th>
+							<th>Status hubungan</th>
+							<th>Nama</th>
+							<th>No. Telepon</th>
+							<th>Tempat/Tanggal lahir</th>
 						</tr>
 					</thead>
 					<tbody>
+						@foreach (auth()->user()->profile->family as $family)
 						<tr>
-							<td>1</td>
+							<td>{{ $loop->iteration }}</td>
+							<td>{{ Str::upper($family->relation->name) }}</td>
+							<td>{{ Str::upper($family->name) }}</td>
+							<td>{{ $family->phone_number }}</td>
+							<td>{{ Str::upper($family->place_of_birth) }}, {{ Str::upper(date_indo_format($family->date_of_birth)) }}</td>
 						</tr>
+						@endforeach
 					</tbody>
 					<tfoot>
 						<tr>
 							<th>No</th>
+							<th>Status hubungan</th>
+							<th>Nama</th>
+							<th>No. Telepon</th>
+							<th>Tempat/Tanggal lahir</th>
 						</tr>
 					</tfoot>
 				</table>

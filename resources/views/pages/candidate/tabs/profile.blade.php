@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+<div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
 	<div class="card">
 		<div class="card-header text-bg-brighter-color py-15">
 			<i class="bi bi-person-fill me-2"></i>
@@ -11,13 +11,13 @@
 
 				<div class="row g-2">
 					{{-- ROW --}}
-					<div class="col-12">
+					<div class="col-12 col-md-12 col-lg-6">
 						<div class="form-group">
 							<label for="email" class="small fw-semibold">Alamat email</label>
 							<input type="email" class="form-control disabled" disabled="" name="primary_email" autocomplete="off" id="email" value="{{ Str::lower(auth()->user()->email) }}">
 						</div>
 					</div>
-					<div class="col-12 col-md-12 col-lg-5">
+					<div class="col-12 col-md-12 col-lg-6">
 						<div class="form-group">
 							<label for="name" class="small fw-semibold">Nama lengkap</label>
 							<input type="text" required="" class="form-control @error('name') is-invalid @enderror" name="name" autocomplete="off" id="name" value="{{ old('name') ?? Str::headline(auth()->user()->name) }}">
@@ -26,7 +26,7 @@
 						<span class="badge text-bg-danger">Kolom nama wajib diisi</span>
 						@enderror
 					</div>
-					<div class="col-12 col-md-6 col-lg-3">
+					<div class="col-12 col-md-12 col-lg-7">
 						<div class="form-group">
 							<label for="gender" class="small fw-semibold">Jenis kelamin</label>
 							<select name="gender_id" id="gender" class="form-select select2-single @error('gender_id') is-invalid @enderror">
@@ -37,7 +37,7 @@
 							</select>
 						</div>
 					</div>
-					<div class="col-12 col-md-6 col-lg-4">
+					<div class="col-12 col-md-12 col-lg-5">
 						<div class="form-group">
 							<label for="phone_number" class="small fw-semibold">No. Telepon</label>
 							<input type="text" onkeyup="numericOnly(event);" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" id="phone_number" autocomplete="off" value="{{ auth()->user()->profile->phone_number ?? '' }}">

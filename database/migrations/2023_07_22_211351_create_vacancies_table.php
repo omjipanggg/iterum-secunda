@@ -23,6 +23,8 @@ return new class extends Migration
             $table->unsignedBigInteger('quantity')->default(1);
             $table->date('opening_date');
             $table->date('closing_date');
+            $table->unsignedBigInteger('min_limit')->nullable();
+            $table->unsignedBigInteger('max_limit')->nullable();
             $table->char('template_id', 36)->index();
             $table->boolean('active')->default(0);
             $table->boolean('hidden_partner')->default(0);

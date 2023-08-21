@@ -207,7 +207,12 @@ class ProfileController extends Controller
             $result = $request->file('certificate')->storeAs('profiles/certificates/', $filename, 'public');
         }
 
-        $profile->skills()->attach($skill_id, ['certificate' => $filename, 'rate' => $request->rate]);
+        $profile->skills()->attach(
+            $skill_id, [
+                'certificate' => $filename,
+                'rate' => $request->rate
+            ]
+        );
 
         alert()->success('Sukses', 'Data Keahlian berhasil diperbarui.');
         return redirect()->back();

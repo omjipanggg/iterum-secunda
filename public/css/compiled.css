@@ -27,8 +27,12 @@
     --muted-color: hsla(223deg, 10%, 15%, .45);
 
     /* SIZES */
+    --title-size: 14px;
     --normal-size: 12.4px;
+    --default-size: 16px;
     --smaller-size: 11px;
+    --smallest-size: 9px;
+    --icon-floating-size: 2em;
 }
 
 /* BASE */
@@ -500,7 +504,7 @@ ol.breadcrumb {
 }
 #portal .icon-box-floating {
     right: 1rem;
-    font-size: 2em;
+    font-size: var(--icon-floating-size);
     top: 50%;
     transform: translateY(-50%);
     color: var(--muted-color);
@@ -514,7 +518,7 @@ ol.breadcrumb {
 #portal .summary-header {
     font-weight: 600;
     margin: 0;
-    font-size: 16px;
+    font-size: var(--default-size);
 }
 
 #portal .summary-content {
@@ -625,7 +629,7 @@ ol.breadcrumb {
 }
 
 .text-smaller {
-    font-size: 9px;
+    font-size: var(--smallest-size);
 }
 
 /* VACANCY */
@@ -878,6 +882,13 @@ ul.pagination {
     z-index: -1;
     position: absolute;
 }
+
+/* SWAL */
+/* ===================================================================== */
+/*
+.swal2-title { font-size: var(--title-size) !important; }
+.swal2-html-container { font-size: var(--normal-size) !important; }
+*/
 
 /* RPS */
 /* ===================================================================== */
