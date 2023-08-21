@@ -23,8 +23,6 @@ class CityFactory extends Factory
         return [
             'name' => fake()->city(),
             'province_id' => fake()->randomElement($provinces),
-            'type' => fake()->numberBetween(1, 2),
-            'zip_code' => fake()->postcode()
         ];
     }
 }

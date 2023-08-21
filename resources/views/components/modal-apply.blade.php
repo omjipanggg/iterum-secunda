@@ -29,18 +29,33 @@
                 <p class="m-0 fw-bold">Hak akses terbatas.</p>
             @endif
             @else
-                <p class="m-0"><a href="{{ route('login') }}" class="underlined">Daftar/Masuk</a> untuk melamar.</p>
+                <p class="m-0">Silakan <a href="{{ route('login') }}" class="underlined">Daftar/Masuk</a> untuk melamar.</p>
             @endauth
 
             </div>
-            <div class="modal-footer py-1 text-bg-brighter-color">
             @auth
             @if (auth()->user()->hasRole(7))
+            <div class="modal-footer py-1 text-bg-brighter-color">
                 <button type="submit" class="btn btn-color px-3">
                     Kirim
                     <i class="bi bi-send ms-1"></i>
                 </button>
+            </div>
+            @else
+            <div class="modal-footer py-1 text-bg-brighter-color justify-content-start">
+                <small class="text-align-start small justify-content-start">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Perhatian!</strong> Fitur ini ditujukan hanya untuk Para Pencari Kerja.
+                </small>
+            </div>
             @endif
+            @else
+            <div class="modal-footer py-1 text-bg-brighter-color justify-content-start">
+                <small class="text-align-start small justify-content-start">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Perhatian!</strong> Fitur ini ditujukan hanya untuk Para Pencari Kerja.
+                </small>
+            </div>
             @endauth
             </div>
             </form>

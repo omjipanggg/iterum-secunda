@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('profile_id')->cascadeOnUpdate()->constrained('profiles');
+            $table->foreignUuid('profile_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('profiles');
             $table->string('ready_to_work')->nullable();
             $table->unsignedBigInteger('expected_salary')->default(0)->nullable();
             $table->string('expected_facility')->nullable();

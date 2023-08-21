@@ -86,6 +86,7 @@
                         --}}
                     </div>
 
+                    @if (!$vacancy->hidden_partner)
                     <div class="card card-related">
                         <div class="card-header text-bg-color">
                             Lowongan Serupa
@@ -120,6 +121,8 @@
                             </a>
                         </div>
                     </div>
+                    @else
+                    @endif
                 </div>
             </div>
             <div class="col-lg-4">
@@ -157,7 +160,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-bg-brighter-color">
-                            <button type="button" class="btn btn-lg btn-color w-100" data-bs-toggle="modal" data-bs-target="#modalApply">
+                            <button type="button" class="btn btn-lg btn-color w-100 breathing" data-bs-toggle="modal" data-bs-target="#modalApply">
                                 Lamar
                                 <i class="bi bi-send ms-1"></i>
                             </button>
@@ -208,6 +211,41 @@
                                     <p>-</p>
                                 @endisset
                             </div>
+                        </div>
+                    </div>
+                    @else
+                    <div class="card card-related order-1 order-lg-2">
+                        <div class="card-header text-bg-color">
+                            Lowongan Serupa
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                            @forelse ($related as $relate)
+                              @if ($relate->hidden_placement)
+                                <a href="{{ route('portal.show', $relate->slug) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                                        {{ $relate->name }}
+                                        <span class="badge text-bg-color">Disembunyikan</span>
+                                    </div>
+                                </a>
+                              @else
+                                <a href="{{ route('portal.show', $relate->slug) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex flex-wrap align-items-center justify-content-between">
+                                        {{ $relate->name }}
+                                        <span class="badge text-bg-color">{{ ($relate->placement) }}</span>
+                                    </div>
+                                </a>
+                              @endif
+                            @empty
+                            <div class="list-group-item">Tidak ada data</div>
+                            @endforelse
+                            </div>
+                        </div>
+                        <div class="card-footer text-bg-brighter-color">
+                            <a href="{{ route('portal.index') }}" class="dotted d-flex justify-content-between align-items-center gap-2">
+                                Telusuri Lowongan Lainnya
+                                <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
                         </div>
                     </div>
                     @endif

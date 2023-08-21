@@ -15,7 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->char('prefix', 3)->nullable();
-            $table->foreignId('city_id')->cascadeOnUpdate()->constrained('cities');
+            $table->unsignedBigInteger('city_id')->nullable()->index();
+            // $table->foreignId('city_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('cities');
             $table->string('address');
             $table->string('person_in_charge');
             $table->string('phone_number');
@@ -29,11 +30,11 @@ return new class extends Migration
             $table->boolean('active')->default(0);
             $table->unsignedTinyInteger('status')->default(0);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->foreignUuid('created_by')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('created_by', 36)->nullable()->index();
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->foreignUuid('updated_by')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('updated_by', 36)->nullable()->index();
             $table->softDeletes();
-            $table->foreignUuid('deleted_by')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('deleted_by', 36)->nullable()->index();
         });
     }
 

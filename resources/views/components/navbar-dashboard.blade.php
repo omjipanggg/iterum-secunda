@@ -1,4 +1,4 @@
-<nav class="sb-topnav navbar navbar-expand-lg bg-body-tertiary shadow">
+d<nav class="sb-topnav navbar navbar-expand-lg bg-body-tertiary shadow">
     <div class="container-fluid px-12">
         <div class="wrap d-flex align-items-center">
             <button class="btn btn-sm btn-link ps-0" id="sidebarToggle">
@@ -10,7 +10,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-person d-inline-block d-lg-none"></i>
-                    <span class="d-none d-lg-inline-block">{{ Auth::user()->email }}</span>
+                    <span class="d-none d-lg-inline-block">{{ Str::lower(auth()->user()->email) }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-end" href="{{ route('home.settings') }}">Pengaturan</a></li>

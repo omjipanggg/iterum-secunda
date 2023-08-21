@@ -12,4 +12,12 @@ class Experience extends Model
 
     protected $table = 'experiences';
     protected $guarded = [];
+
+    public function profile() {
+    	return $this->belongsTo(Profile::class, 'profile_id');
+    }
+
+    public function city() {
+    	return $this->belongsTo(City::class, 'city_id');
+    }
 }

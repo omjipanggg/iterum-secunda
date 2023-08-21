@@ -1,0 +1,15 @@
+@-webkit-keyframes breathing {
+  0% { -webkit-transform: scale(1); transform: scale(1); }
+  25% { -webkit-transform: scale(0.92); transform: scale(0.92); }
+  50% { -webkit-transform: scale(1.02); transform: scale(1.02); }
+  75% { -webkit-transform: scale(0.92); transform: scale(0.92); }
+  100% { -webkit-transform: scale(1); transform: scale(1); }
+}
+
+@keyframes breathing {
+  0% { -webkit-transform: scale(1); -ms-transform: scale(1); transform: scale(1); }
+  25% { -webkit-transform: scale(0.92); -ms-transform: scale(0.92); transform: scale(0.92); }
+  50% { -webkit-transform: scale(1.02); -ms-transform: scale(1.02); transform: scale(1.02); }
+  75% { -webkit-transform: scale(0.92); -ms-transform: scale(0.92); transform: scale(0.92); }
+  100% { -webkit-transform: scale(1); -ms-transform: scale(1); transform: scale(1); }
+}

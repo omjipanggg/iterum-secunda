@@ -21,15 +21,14 @@ class ServerSideController extends Controller
         //
     }
 
-    public function selectProvider(Request $request, $table) {
-    	$tuples = [];
-
+    public function selectProvider(Request $request, string $table) {
+        // $tuples = DB::table($table)->select('id', 'name')->orderBy('name')->groupBy('name')->take(5)->get();
+        $tuples = DB::table($table)->select('id', 'name')->orderBy('name')->groupBy('name')->get();
         if ($request->ajax()) {
             if ($request->has('keyword')) {
-                $tuples = DB::table($table)->select('id', 'name')->where('name', 'like', "%{$request->keyword}%")->orderBy('name')->get();
+                $tuples = DB::table($table)->select('id', 'name')->where('name', 'like', "%{$request->keyword}%")->orderBy('name')->groupBy('name')->get();
             }
         }
-
     	return response()->json($tuples);
     }
 }

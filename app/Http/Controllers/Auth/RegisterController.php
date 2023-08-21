@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Candidate;
 use App\Models\Profile;
 use App\Models\User;
 
@@ -91,7 +92,7 @@ class RegisterController extends Controller
 
         $user = $this->create($request->all());
 
-        Profile::create([
+        $profile = Profile::create([
             'user_id' => $user->id,
             'name' => $request->name,
             'primary_email' => $request->email,
@@ -100,6 +101,12 @@ class RegisterController extends Controller
         event(new Registered($user));
 
         $this->guard()->login($user);
+
+        if ($request->type == 7) {
+            Candidate::create(['profile_id' => $profile->id]);
+        } else if ($request->type == 8) {
+            Employee::create(['profile_id' => $profile->id]);
+        } else {}
 
         return $this->registered($request, $user);
     }

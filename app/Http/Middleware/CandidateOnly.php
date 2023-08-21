@@ -16,10 +16,10 @@ class CandidateOnly
      */
     public function handle(Request $request, Closure $next): Response
     {
-		if (auth()->check() && !auth()->user()->hasRole(7)) {
-        	alert()->error('Kesalahan', 'Akses ditolak.');
-    		return redirect()->route('home.index');
+		if (auth()->check() && auth()->user()->hasRole(7)) {
+    	    return $next($request);
     	}
-	    return $next($request);
+    	alert()->error('Kesalahan', 'Akses ditolak.');
+		return redirect()->route('home.index');
     }
 }

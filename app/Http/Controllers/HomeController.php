@@ -68,11 +68,7 @@ class HomeController extends Controller
         $fileName = $file->getClientOriginalName();
 
         $path = $file->storeAs($directory, $fileName, 'public');
-        /*
-        if (file_exists($path)) {
-            unlink($path)
-        }
-        */
+
         return redirect()->back()->with($path);
     }
 
@@ -109,5 +105,28 @@ class HomeController extends Controller
     public function faq() {
         $context = [];
         return view('pages.dashboard.faq', $context);
+    }
+
+    public function download(string $path, string $file) {
+        $path = implode('/', json_decode($path));
+        $target = storage_path('app/public/' . $path . '/' . $file);
+        return response()->download($target);
+    }
+
+    public function downloadResume(string $id) {
+        // $path = public_path('storage/candidate' . $directory . '/' . $id);
+        $path = storage_path('app/public/profiles/resumes/' . $id);
+        if (!file_exists($path)) {
+            alert()->error('Kesalahan', 'Berkas tidak ditemukan.');
+            return redirect()->back()->with('code', 403);
+        }
+
+        if (pathinfo($id, PATHINFO_EXTENSION) == 'pdf' || pathinfo($id, PATHINFO_EXTENSION) == 'PDF') {
+            return response()->file($path, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $id . '"'
+            ]);
+        }
+        return response()->download($path);
     }
 }

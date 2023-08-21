@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('interview_schedules', function (Blueprint $table) {
             $table->id();
+            $table->foreignUuid('proposal_id')->cascadeOnUpdate()->noActionOnDelete()->constrained('proposals');
             $table->date('interview_date');
             $table->time('interview_time');
             $table->unsignedTinyInteger('interview_type');

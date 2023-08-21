@@ -26,4 +26,16 @@ class Profile extends Model
     public function employee() {
         return $this->hasOne(Employee::class, 'profile_id');
     }
+
+    public function lastEducation() {
+        return $this->hasMany(LastEducation::class, 'profile_id')->orderByDesc('graduation_year');
+    }
+
+    public function experience() {
+        return $this->hasMany(Experience::class, 'profile_id')->orderByDesc('starting_date');
+    }
+
+    public function skills() {
+        return $this->belongsToMany(Skill::class, 'capabilities')->withPivot(['certificate', 'rate']);
+    }
 }

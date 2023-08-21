@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->date('starting_date');
             $table->date('ending_date');
-            $table->char('partner_id', 36)->index();
+            $table->foreignUuid('partner_id')->cascadeOnUpdate()->noActionOnDelete()->constrained('partners');
             $table->string('person_in_charge');
             $table->string('phone_number');
             $table->unsignedTinyInteger('status')->default(0);

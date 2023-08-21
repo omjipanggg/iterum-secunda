@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('experiences', function (Blueprint $table) {
             $table->id();
+            $table->foreignUuid('profile_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('profiles');
+            $table->unsignedBigInteger('city_id')->nullable()->index();
+            // $table->foreignId('city_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('cities');
             $table->string('company_name');
-            $table->unsignedBigInteger('city')->index();
-            $table->string('job_field');
+            $table->string('job_title');
             $table->text('job_description')->nullable();
             $table->date('starting_date');
             $table->date('ending_date')->nullable();

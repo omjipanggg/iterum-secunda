@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::create('capabilities', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('province_id')->cascadeOnUpdate()->constrained('provinces');
-            $table->unsignedTinyInteger('type')->nullable()->index();
-            $table->char('zip_code', 5);
+            $table->foreignId('skill_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('skills');
+            $table->foreignUuid('profile_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('profiles');
+            $table->unsignedTinyInteger('rate')->nullable();
+            $table->string('certificate')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cities');
+        Schema::dropIfExists('capabilities');
     }
 };

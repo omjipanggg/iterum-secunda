@@ -94,6 +94,12 @@ function generate_table_code() {
     return $result;
 }
 
+function publish_sftp_now() {}
+
+function money_indo_format($nominal) {
+    return number_format($nominal, 0, ',', '.');
+}
+
 function quotes() {
     return [
         [

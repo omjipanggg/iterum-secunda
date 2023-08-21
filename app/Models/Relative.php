@@ -12,4 +12,8 @@ class Relative extends Model
 
     protected $table = 'relatives';
     protected $guarded = [];
+
+    public function relation() {
+    	return $this->belongsTo(Relation::class, 'close_relation_id');
+    }
 }

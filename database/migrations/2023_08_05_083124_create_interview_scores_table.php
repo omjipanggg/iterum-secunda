@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('interview_scores', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('interview_schedule_id')->index();
+            $table->foreignId('interview_schedule_id')->cascadeOnUpdate()->noActionOnDelete()->constrained('interview_schedules');
             $table->string('header_number')->nullable();
             $table->unsignedTinyInteger('personality')->nullable();
             $table->unsignedTinyInteger('comperhension')->nullable();
@@ -34,11 +34,11 @@ return new class extends Migration
             $table->text('reason')->nullable();
             $table->unsignedTinyInteger('status')->default(0);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->foreignUuid('created_by')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('created_by', 36)->nullable()->index();
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
-            $table->foreignUuid('updated_by')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('updated_by', 36)->nullable()->index();
             $table->softDeletes();
-            $table->foreignUuid('deleted_by')->nullable()->cascadeOnUpdate()->constrained('users');
+            $table->char('deleted_by', 36)->nullable()->index();
         });
     }
 

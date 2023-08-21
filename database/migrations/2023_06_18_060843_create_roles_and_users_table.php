@@ -16,8 +16,8 @@ return new class extends Migration
     {
         Schema::create('roles_and_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('user_id')->cascadeOnUpdate()->constrained('users');
-            $table->foreignId('role_id')->cascadeOnUpdate()->constrained('roles');
+            $table->foreignUuid('user_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('users');
+            $table->foreignId('role_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('roles');
             $table->dateTime('expired_date')->default('2025-12-31 23:59:59');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('proposals', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('candidate_id')->cascadeOnUpdate()->constrained('candidates');
-            $table->foreignUuid('vacancy_id')->cascadeOnUpdate()->constrained('vacancies');
+            $table->foreignUuid('candidate_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('candidates');
+            $table->foreignUuid('vacancy_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('vacancies');
             $table->string('resume')->nullable();
             $table->text('description')->nullable();
             $table->unsignedTinyInteger('status')->default(1)->nullable();

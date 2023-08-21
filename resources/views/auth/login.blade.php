@@ -59,11 +59,11 @@
                 <div class="card-footer text-bg-brighter-color">
                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                         <div class="group">
-                            {{ __('Belum memiliki akun?') }}
-                            <a href="{{ route('register') }}" class="dotted">{{ __('Register') }}</a>
+                            Belum memiliki akun?
+                            <a href="{{ route('register') }}" class="underlined">{{ __('Register') }}</a>
                         </div>
                         @if (Route::has('password.request'))
-                            <a class="dotted" href="{{ route('password.request') }}">Lupa kata sandi?</a>
+                            <a href="{{ route('password.request') }}" class="underlined">Lupa kata sandi?</a>
                         @endif
                     </div>
                 </div>

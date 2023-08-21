@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('query')->nullable();
             $table->string('affected_table')->nullable();
             $table->string('user_agent')->nullable();
-            $table->char('user_id', 36);
+            $table->char('user_id', 36)->nullable()->index();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();

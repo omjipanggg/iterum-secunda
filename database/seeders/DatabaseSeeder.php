@@ -2,13 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\City;
 use App\Models\Education;
 use App\Models\JobTitle;
 use App\Models\Menu;
 use App\Models\Partner;
 use App\Models\Project;
-use App\Models\Province;
 use App\Models\Skill;
 use App\Models\VacancyCategory as Category;
 use App\Models\Vacancy;
@@ -26,8 +24,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(28)->create();
-        Province::factory(4)->create();
-        City::factory(16)->create();
         JobTitle::factory(13)->create();
         Menu::factory(20)->create();
         Partner::factory(8)->create();

@@ -26,7 +26,7 @@
                             @if (auth()->user()->hasRole(1))
                                 <a class="dropdown-item" href="{{ route('master.index') }}">Konfigurasi</a>
                             @elseif(auth()->user()->hasRole(7))
-                                <a class="dropdown-item" href="{{ route('candidate.index') }}">Profile</a>
+                                <a class="dropdown-item" href="{{ route('profile.index') }}">Profile</a>
                             @else
                                 <a class="dropdown-item" href="{{ route('dashboard.index') }}">Dashboard</a>
                             @endif

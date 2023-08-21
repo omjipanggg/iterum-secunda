@@ -87,7 +87,7 @@
                         </div>
                         --}}
 
-                        <div class="mt-2 d-flex flex-wrap align-items-start justify-content-between">
+                        <div class="mt-2 d-flex flex-wrap flex-column align-items-start justify-content-between">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" onchange="eyeOpen(event);" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="remember">Tampilkan kata sandi</label>
@@ -112,7 +112,8 @@
             </div>
         </div>
         <div class="card-footer text-bg-brighter-color">
-            {{ __('Sudah memiliki akun?') }} <a href="{{ route('login') }}" class="dotted">Masuk</a>
+            Sudah memiliki akun?
+            <a href="{{ route('login') }}" class="underlined">{{ __('Login') }}</a>
         </div>
     </div>
 </div>

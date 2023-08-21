@@ -30,7 +30,7 @@
 							</a>
 						</span>
 					@empty
-					<p class="m-0">Mohon segera lakukan konfigurasi tabel melalui <a href="{{ route('master.generateTable') }}" class="dotted">tautan ini</a>.</p>
+					<p class="m-0">Mohon segera lakukan konfigurasi tabel.</p>
 					@endforelse
 					</div>
 				</div>

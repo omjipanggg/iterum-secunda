@@ -13,7 +13,6 @@
 					<div class="wrap">
 						<i class="bi bi-database me-2"></i>
 						<span id="table-name">@yield('title')</span>
-						<span id="table-id" class="d-none">{{ $table->id }}</span>
 					</div>
 					<div class="wrap">
 						<a class="btn btn-sm btn-outline-color" href="{{ route('master.import', $table->code) }}" data-bs-toggle="modal" data-bs-placement="top" data-bs-target="#modalControl" data-bs-table="{{ $table->label }}" data-bs-type="Unggah" onclick="event.preventDefault()" title="Unggah">
@@ -31,7 +30,7 @@
 						<table class="table table-sm table-bordered server-side m-0">
 							<thead>
 								<tr>
-									<th colspan="2">Aksi</th>
+									<th colspan="2">Action</th>
 									@foreach($columns as $column)
 										@if ($column == 'edit' || $column == 'delete')
 										@else

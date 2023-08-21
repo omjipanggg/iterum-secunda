@@ -80,6 +80,13 @@ body.sb-nav-fixed {
     cursor: pointer;
 }
 
+/* ANIMATION */
+/* ===================================================================== */
+.breathing {
+    -webkit-animation: breathing 7280ms ease-out infinite normal;
+    animation: breathing 7280ms ease-out infinite normal;
+}
+
 /* NAVBAR */
 /* ===================================================================== */
 .navbar {
@@ -138,8 +145,9 @@ hr.dropdown-divider {
 }
 
 #layoutSidenav #layoutSidenav_content {
-    top: unset !important;
-    padding-top: 80px;
+    /*top: unset !important;*/
+    top: 37px !important;
+    padding-top: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -380,6 +388,11 @@ ol.breadcrumb {
     padding-right: 8rem;
 }
 
+.py-15 {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
 .py-20 {
     padding-top: 8rem;
     padding-bottom: 8rem;
@@ -552,6 +565,10 @@ ol.breadcrumb {
     color: var(--primary-bright-color) !important;
 }
 
+.btn-close:focus {
+    box-shadow: none;
+}
+
 /* LAYOUTS */
 /* ===================================================================== */
 .w-90 {
@@ -619,11 +636,15 @@ ol.breadcrumb {
 
 /* TABLE */
 /* ===================================================================== */
+table.fetch,
 .dataTable {
     width: inherit !important;
     margin: 0 !important;
 }
 
+table.fetch th,
+table.fetch td,
+.dataTable th,
 .dataTable td {
     white-space: nowrap;
     vertical-align: middle;
@@ -635,6 +656,10 @@ div.dataTables_info {
     padding: 0 !important;
 }
 
+table.fetch ul {
+    margin: 0;
+    padding-left: 1rem;
+}
 
 /* FORM */
 /* ===================================================================== */
@@ -700,7 +725,7 @@ div.dataTables_info {
     border: var(--bs-border-width) solid var(--bs-border-color);
     padding-top: 24px !important;
     padding-left: 8px !important;
-    padding-bottom: 10px !important;
+    padding-bottom: 14px !important;
 }
 
 /* FORM ON MODAL */
@@ -756,6 +781,14 @@ div.dataTables_info {
     left: 1.8rem;
     transform: translateY(-50%);
     z-index: 2;
+}
+
+/* FLATPICKR */
+/* ===================================================================== */
+.flatpickr-hand {
+    background-color: var(--white-color);
+    position: relative;
+    cursor: pointer;
 }
 
 /* PAGINATION */

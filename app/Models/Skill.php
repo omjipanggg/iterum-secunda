@@ -12,4 +12,8 @@ class Skill extends Model
 
     protected $table = 'skills';
     protected $guarded = [];
+
+    public function profile() {
+    	return $this->belongsToMany(Profile::class, 'capabilities')->withPivot(['certificate', 'rate']);
+    }
 }

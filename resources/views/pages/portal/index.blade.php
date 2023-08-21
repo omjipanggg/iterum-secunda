@@ -96,7 +96,7 @@
                     @empty
                     <div class="card flex-fill">
                         <div class="card-body">
-                            <p class="m-0 text-center">Tidak ada data dengan kata kunci <strong>"{{ request()->get('keyword') }}"</strong></p>
+                            <p class="m-0 text-center">Data tidak ditemukan dengan kata kunci: <strong>"{{ request()->get('keyword') }}"</strong></p>
                         </div>
                     </div>
                     @endforelse
