@@ -3,7 +3,7 @@
     <div class="container-fluid px-12">
         <div class="d-flex align-items-center justify-content-between small">
             <div class="wrap">
-                <a href="#" class="dotted pe-2">Help</a>&middot;<a href="#" class="dotted ps-2">Sitemap</a>
+                <a href="{{ route('dashboard.faq') }}" class="dotted pe-2">Bantuan</a>&middot;<a href="{{ route('home.report') }}" class="dotted ps-2">Laporkan</a>
             </div>
             <div class="text-muted">{{ config('app.name') }} &copy; {{ date('Y') }}</div>
         </div>

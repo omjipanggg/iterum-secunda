@@ -4,7 +4,7 @@
     --shadow-active-color: rgba(0, 0, 0, .25);
     --fixed-background-color: rgba(245, 245, 245, .82);
     --background-color: hsla(223deg, 10%, 15%, 1);
-    --border-color: hsla(223deg, 47%, 36%, .9);
+    --border-color: hsla(223deg, 47%, 36%, .8);
     --primary-color: hsla(223deg, 47%, 36%, 1);
     --primary-mid-color: hsla(223deg, 47%, 31%, 1);
     --primary-darker-color: hsla(223deg, 47%, 25%, 1);
@@ -12,6 +12,8 @@
     --primary-bright-color: hsla(223deg, 94%, 90%, 1);
     --primary-brighter-color: hsla(223deg, 99%, 97%, 1);
     --secondary-color: hsla(223deg, 35%, 60%, 1);
+    --secondary-border-color: hsla(223deg, 35%, 60%, .8);
+    --secondary-darker-color: hsla(223deg, 35%, 54%, 1);
     --secondary-bright-color: hsla(223deg, 86%, 90%, 1);
     --tertiary-color: hsla(223deg, 47%, 21%, 1);
     --tertiary-darker-color: hsla(223deg, 47%, 21%, .8);
@@ -25,6 +27,7 @@
     --red-color: hsla(342deg, 48%, 36%, 1);
     --form-focus-color: hsla(223deg, 47%, 36%, .25);
     --muted-color: hsla(223deg, 10%, 15%, .45);
+    --disabled-color: hsla(223deg, 2%, 42%, 1);
 
     /* SIZES */
     --title-size: 14px;
@@ -33,6 +36,7 @@
     --smaller-size: 11px;
     --smallest-size: 9px;
     --icon-floating-size: 2em;
+    --swal2-title-size: 24px;
 }
 
 /* BASE */
@@ -41,6 +45,7 @@
 *::before,
 *::after {
     /*outline: 1px solid var(--pinky-color);*/
+    box-shadow: none !important;
 }
 
 *::selection {
@@ -155,12 +160,13 @@ hr.dropdown-divider {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 100vh;
+    /*min-height: 100vh;*/
 }
 
 #sidebarToggle {
     color: var(--primary-darker-color);
 }
+
 #sidebarToggle:focus,
 #sidebarToggle:hover {
     outline: 0;
@@ -170,6 +176,7 @@ hr.dropdown-divider {
 .sb-topnav .navbar-brand {
     width: auto;
 }
+
 .sb-topnav .navbar-brand,
 .sb-topnav .navbar-nav .nav-link {
     color: var(--primary-color);
@@ -198,8 +205,18 @@ hr.dropdown-divider {
 .sb-sidenav-menu-nested {
     margin-left: 0!important;
 }
+
 .sb-sidenav-menu-nested .nav {
-    margin-left: 32px!important;
+    background-color: var(--secondary-darker-color);
+}
+
+.sb-sidenav-menu-nested .nav-link {
+    /*position: relative;*/
+    /*padding-left: 24px !important;*/
+}
+.sb-sidenav-menu-nested .nav .nav-link {
+    /*position: relative;*/
+    /*padding-left: 32px !important;*/
 }
 .sb-sidenav-menu-heading {
     padding: 12px 1rem 0!important;
@@ -210,8 +227,8 @@ hr.dropdown-divider {
 .sb-sidenav .sb-sidenav-menu .collapse.show {
     background-color: var(--primary-mid-color);
 }
-.sb-sidenav-menu .nav-link.last:last-child {
-    margin-bottom: 1.5rem;
+.sb-sidenav-menu .nav-link:last-child {
+    /*margin-bottom: 1.5rem;*/
 }
 
 .sb-nav-link-icon {
@@ -221,7 +238,7 @@ hr.dropdown-divider {
 .sb-sidenav-menu .nav-link.disabled {
     text-decoration: line-through;
     background-color: var(--primary-darkened-color);
-    color: var(--muted-color);
+    color: var(--disabled-color);
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
     color: var(--primary-bright-color);
@@ -231,6 +248,7 @@ hr.dropdown-divider {
 #navigator {
     z-index: 1050;
 }
+
 .spacing {
     height: 56px;
 }
@@ -341,6 +359,10 @@ ul.square {
     padding-left: 1rem;
 }
 
+ul.dual {
+    columns: 2;
+}
+
 ol.breadcrumb {
     margin: 0;
 }
@@ -390,6 +412,10 @@ ol.breadcrumb {
 .px-20 {
     padding-left: 8rem;
     padding-right: 8rem;
+}
+
+.pt-32 {
+    padding-top: 32px !important;
 }
 
 .py-15 {
@@ -534,6 +560,12 @@ ol.breadcrumb {
 
 /* BUTTONS */
 /* ===================================================================== */
+.btn {
+    font-size: var(--normal-size) !important;
+    /*padding-left: 1rem;*/
+    /*padding-right: 1rem;*/
+}
+
 .btn-color {
     background-color: var(--primary-color) !important;
     color: var(--primary-bright-color) !important;
@@ -547,7 +579,7 @@ ol.breadcrumb {
 
 .btn-outline-color {
     background-color: var(--primary-brighter-color) !important;
-    border: 1px solid var(--primary-color) !important;
+    border: 1px solid var(--border-color) !important;
     color: var(--primary-color) !important;
     font-weight: bold;
 }
@@ -566,11 +598,24 @@ ol.breadcrumb {
 .btn-dual:focus,
 .btn-dual:hover {
     background-color: var(--primary-darkened-color) !important;
+    color: var(--primary-brighter-color) !important;
+}
+
+.btn-dual-color {
+    background-color: var(--secondary-color) !important;
+    border: 1px solid var(--secondary-border-color) !important;
+    color: var(--primary-brighter-color) !important;
+    font-weight: bold;
+}
+
+.btn-dual-color:focus,
+.btn-dual-color:hover {
+    background-color: var(--secondary-darker-color) !important;
     color: var(--primary-bright-color) !important;
 }
 
 .btn-close:focus {
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 /* LAYOUTS */
@@ -586,8 +631,14 @@ ol.breadcrumb {
     height: 64vh;
 }
 
+.h-270 {
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 .h-100 {
-    min-height: 100vh;
+    min-height: 100vh !important;
 }
 
 .text-bg-color {
@@ -632,11 +683,21 @@ ol.breadcrumb {
     font-size: var(--smallest-size);
 }
 
+.text-code {
+    font-family: 'Consolas', monospace !important;
+}
+
 /* VACANCY */
 /* ===================================================================== */
 .vacancy-container {}
 
-.vacancy-item .card-body {}
+.vacancy-item .card-body {
+}
+
+.vacancy-single {
+    flex-grow: 1;
+    flex-basis: 48%;
+}
 
 /* TABLE */
 /* ===================================================================== */
@@ -665,12 +726,15 @@ table.fetch ul {
     padding-left: 1rem;
 }
 
+table tr.deleted td {
+    background-color: var(--pinky-bright-color) !important;
+    color: var(--pinky-color);
+}
+
 /* FORM */
 /* ===================================================================== */
-.btn {
-    font-size: var(--normal-size) !important;
-    padding-left: 1rem;
-    padding-right: 1rem;
+.form-floating > label {
+    top: 4px;
 }
 
 .form-control,
@@ -885,10 +949,11 @@ ul.pagination {
 
 /* SWAL */
 /* ===================================================================== */
-/*
-.swal2-title { font-size: var(--title-size) !important; }
-.swal2-html-container { font-size: var(--normal-size) !important; }
-*/
+
+.swal2-title { font-size: var(--swal2-title-size) !important; }
+.swal2-html-container { font-size: var(--default-size) !important; }
+.swal2-styled { font-size: var(--title-size) !important; }
+
 
 /* RPS */
 /* ===================================================================== */

@@ -31,7 +31,6 @@ class LoginController extends Controller
     // protected $redirectTo = RouteServiceProvider::HOME;
 
     protected function redirectTo() {
-        \Log::create('Login');
         if (auth()->user()->hasRole(1)) {
             return 'master';
         } else if (auth()->user()->hasRole(7)) {
@@ -39,7 +38,7 @@ class LoginController extends Controller
         } else if (auth()->user()->hasRole(8)) {
             return 'partner';
         } else {
-            return 'dashboard';
+            return RouteServiceProvider::HOME;
         }
         return 'dashboard';
     }
@@ -71,6 +70,7 @@ class LoginController extends Controller
             }
 
             \Log::create('Login');
+            $request->session()->regenerateToken();
             return $this->sendLoginResponse($request);
         }
 
@@ -86,7 +86,6 @@ class LoginController extends Controller
         }
 
         $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
         if ($response = $this->loggedOut($request)) {
             return $response;

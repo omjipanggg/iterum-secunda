@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'email_verified_at'
     ];
 
     protected $hidden = [
@@ -33,12 +34,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function token() {
+        return $this->hasOne(RequestToken::class, 'user_id');
+    }
+
     public function profile() {
         return $this->hasOne(Profile::class, 'user_id');
     }
 
     public function roles() {
-        return $this->belongsToMany(Role::class, 'roles_and_users')->orderBy('roles.name')->withPivot(['expired_date']);
+        return $this->belongsToMany(Role::class, 'roles_and_users')->orderBy('roles.name')->withPivot(['expired_at']);
     }
 
     public function hasRole($id) {

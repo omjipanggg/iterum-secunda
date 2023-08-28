@@ -17,9 +17,9 @@ return new class extends Migration
             $table->char('prefix', 3)->nullable();
             $table->unsignedBigInteger('city_id')->nullable()->index();
             // $table->foreignId('city_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('cities');
-            $table->string('address');
-            $table->string('person_in_charge');
-            $table->string('phone_number');
+            $table->string('address')->nullable();
+            $table->string('person_in_charge')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('website')->nullable();
             $table->year('established_year')->nullable();
             $table->string('field')->nullable();

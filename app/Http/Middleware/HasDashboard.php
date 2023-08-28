@@ -22,6 +22,8 @@ class HasDashboard
     	} else if (auth()->check() && auth()->user()->hasRole(7) && !auth()->user()->hasRole(1)) {
             alert()->error('Kesalahan', 'Akses ditolak.');
             return redirect()->route('home.index');
+        } else if (auth()->check() && auth()->user()->hasRole(8) && !auth()->user()->hasRole(1)) {
+            return redirect()->route('partner.index');
         } else {
             return $next($request);
         }

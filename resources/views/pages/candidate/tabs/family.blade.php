@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="pills-family" role="tabpanel" aria-labelledby="pills-family-tab" tabindex="0">
+<div class="tab-pane fade @if (session('tab') == 'family') show active @endif" id="pills-family" role="tabpanel" aria-labelledby="pills-family-tab" tabindex="0">
 	<div class="card">
 		<div class="card-header text-bg-brighter-color">
 			<div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">

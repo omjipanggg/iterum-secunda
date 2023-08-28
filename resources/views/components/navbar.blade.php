@@ -9,11 +9,36 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             {{-- <ul class="navbar-nav me-auto"></ul> --}}
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto gap-1">
                 @guest
+                {{--
+                <li class="nav-item">
+                <div class="input-group">
+                  <a class="btn btn-outline-color px-3 rounded-0" href="{{ route('register') }}">Daftar</a>
+                  <button type="button" class="btn btn-outline-color rounded-0 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ route('register.createPartner') }}">Pemberi kerja</a></li>
+                    <li><a class="dropdown-item" href="{{ route('register') }}">Pencari kerja</a></li>
+                  </ul>
+                </div>
+                </li>
+                --}}
+                @if (Route::has('register'))
+                <li class="nav-item dropdown">
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        {{ __('Register') }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Pencari kerja</a>
+                        <a class="dropdown-item" href="{{ route('register.createPartner') }}"><i class="bi bi-briefcase me-2"></i>Pemberi kerja</a>
+                    </div>
+                </li>
+                @endif
                 @if (Route::has('login'))
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('login') }}">Masuk<i class="bi bi-box-arrow-in-right ms-1"></i></a>
+                    <a class="btn btn-dual-color px-3 rounded-0" href="{{ route('login') }}">Masuk<i class="bi bi-box-arrow-in-right ms-1"></i></a>
                 </li>
                 @endif
                 @else
@@ -24,9 +49,11 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             @if (auth()->user()->hasRole(1))
-                                <a class="dropdown-item" href="{{ route('master.index') }}">Konfigurasi</a>
+                                <a class="dropdown-item" href="{{ route('master.index') }}">Dashboard</a>
                             @elseif(auth()->user()->hasRole(7))
                                 <a class="dropdown-item" href="{{ route('profile.index') }}">Profile</a>
+                            @elseif(auth()->user()->hasRole(8))
+                                <a class="dropdown-item" href="{{ route('partner.index') }}">Dashboard</a>
                             @else
                                 <a class="dropdown-item" href="{{ route('dashboard.index') }}">Dashboard</a>
                             @endif

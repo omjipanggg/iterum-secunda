@@ -37,53 +37,58 @@
 
         <div class="row position-relative">
             <div class="col-12">
-                <div class="d-flex flex-wrap gap-4 vacancy-container justify-content-between">
+                @if(request()->get('keyword'))
+                    <p class="mb-4">Menampilkan data dengan kata kunci: <strong>"{{ request()->get('keyword') }}"</strong></p>
+                @endif
+            </div>
+            <div class="col-12">
+                <div class="d-flex flex-wrap gap-3 vacancy-container justify-content-between">
                     @forelse ($vacancies as $vacancy)
-                    <div class="card vacancy-item flex-fill pointer" onclick="window.location.href = '{{ route('portal.show', $vacancy->slug) }}';">
+                    <div class="card vacancy-single pointer" onclick="window.location.href = '{{ route('portal.show', $vacancy->slug) }}';">
                         <div class="card-body position-relative">
                             <div class="row">
-                                <div class="col">
-                                    <span class="badge text-bg-color">
+                                <div class="col-12 col-lg-9 mb-3">
+                                    <span class="badge text-bg-color mb-3">
                                         {{ $vacancy->type->name }}
                                     </span>
-                                </div>
-                                <div class="col-12">
-                                    <div class="wrap py-3">
+                                    <div class="wrap">
                                         <h4 class="fw-semibold mb-0">
                                             <a href="{{ route('portal.show', $vacancy->slug) }}" class="dotted">
                                                 {{ $vacancy->name }}
                                             </a>
                                         </h4>
-                                        <p class="text-muted m-0">
+                                        <p class="text-muted mb-0">
                                             @if ($vacancy->hidden_partner)
-                                                Disembunyikan
+                                                &nbsp;
                                             @else
                                                 {{ $vacancy->project->partner->name }}
                                             @endif
                                         </p>
                                     </div>
                                 </div>
-                                <div class="col-12 align-self-center">
-                                    <p class="m-0">
-                                        <i class="bi bi-geo me-1"></i>
-                                        @if ($vacancy->hidden_placement)
-                                            Disembunyikan
-                                        @else
-                                            {{ $vacancy->placement }}
-                                        @endif
-                                    </p>
-                                    <p class="m-0">
-                                        <i class="bi bi-people me-1"></i>
-                                        {{ $vacancy->candidates_count }}
+                                @if(!$vacancy->hidden_salary)
+                                <div class="col-12">
+                                    <p class="mb-0">
+                                        <i class="bi bi-cash-coin me-1"></i>
+                                        {{ 'Rp' . money_indo_format($vacancy->min_limit) }}&mdash;{{ 'Rp' . money_indo_format($vacancy->max_limit) }}
                                     </p>
                                 </div>
+                                @endif
+                                @if (!$vacancy->hidden_placement)
+                                <div class="col-12">
+                                    <p class="mb-0">
+                                        <i class="bi bi-geo-alt me-1"></i>
+                                        {{ $vacancy->placement }}
+                                    </p>
+                                </div>
+                                @endif
                             </div>
                         </div>
                         <div class="card-footer text-bg-brighter-color">
                             <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                                 <div class="wrap">
                                     <i class="bi bi-clock me-1"></i>
-                                    {{ $vacancy->published_at->locale('id')->diffForHumans() }}
+                                    Dipublikasikan sejak {{ $vacancy->published_at->locale('id')->diffForHumans() }}
                                     {{-- {{ date_indo_format($vacancy->closing_date) }} --}}
                                 </div>
                                 <a href="{{ route('portal.show', $vacancy->slug) }}" class="btn btn-color px-3">

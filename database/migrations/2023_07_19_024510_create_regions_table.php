@@ -27,8 +27,8 @@ return new class extends Migration
             [
                 'id' => 'dc46669e-c640-462b-ac6f-bbf8b22e9f29',
                 'code' => '01',
-                'name' => 'Serikat',
-                'slug' => 'serikat',
+                'name' => 'Indonesia',
+                'slug' => 'idn',
                 'description' => 'Kolom ini sengaja dikosongkan.'
             ],
             [

@@ -38,17 +38,23 @@ class Insert extends Form
             if ($this->isForeign($this->model, $column)) {
                 if (($column === 'created_by') || ($column === 'updated_by') || ($column === 'deleted_by')) {}
                 else {
-                    $child = '\\App\\Models\\' . Str::studly(Str::singular(Str::replace('_id', '', $column)));
+                    // $child = '\\App\\Models\\' . Str::studly(Str::singular(Str::replace('_id', '', $column)));
+                    $plural = Str::plural(Str::replace('_id', '', $column));
+                    if (Schema::hasTable($plural)) { $child = DB::table($plural); }
+
+                    $singular = Str::singular(Str::replace('_id', '', $column));
+                    if (Schema::hasTable($singular)) { $child = DB::table($singular); }
+
                     $this->add($column, 'select', [
                         'label' => Str::replace('_id', '', $column),
                         'label_show' => true,
-                        'choices' => $child::orderBy('id')->pluck('name', 'id')->toArray(),
+                        'choices' => $child->orderBy('id')->pluck('name', 'id')->toArray(),
                         'empty_value' => 'Pilih satu',
                         'attr' => [
-                            'class' => 'form-select form-select-sm select2-multiple-modal',
+                            'class' => 'form-select form-select-sm select2-single-modal',
                         ],
                         'wrapper' => [
-                            'class' => 'form-select-floating my-1'
+                            'class' => 'form-select-floating my-2'
                         ]
                     ])->getField($column)->setValue(null);
                 }

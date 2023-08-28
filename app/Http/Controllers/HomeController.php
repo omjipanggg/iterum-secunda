@@ -10,6 +10,7 @@ use App\Mail\SendSubscription as SendMailable;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Vacancy;
+use App\Models\VacancyCategory as Category;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -39,11 +40,13 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::all();
+        $categories = Category::withCount('vacancies')->take(8)->get();
         $vacancies = Vacancy::withCount('candidates')->where([
             ['closing_date', '>=', today()],
             ['active', true]
         ])->orderByDesc('published_at')->take(5)->get();
         $context = [
+            'categories' => $categories,
             'users' => $users,
             'vacancies' => $vacancies
         ];
@@ -83,7 +86,6 @@ class HomeController extends Controller
 
     public function subscribe(Request $request) {
         SendSubscription::dispatch($request->email);
-        // Mail::to($request->email)->send(new SendMailable($request->email));
         Alert::success('Sukses', 'Terima kasih telah berlangganan!');
         return redirect()->back();
     }
@@ -114,7 +116,6 @@ class HomeController extends Controller
     }
 
     public function downloadResume(string $id) {
-        // $path = public_path('storage/candidate' . $directory . '/' . $id);
         $path = storage_path('app/public/profiles/resumes/' . $id);
         if (!file_exists($path)) {
             alert()->error('Kesalahan', 'Berkas tidak ditemukan.');
@@ -128,5 +129,10 @@ class HomeController extends Controller
             ]);
         }
         return response()->download($path);
+    }
+
+    public function report() {
+        alert()->success('Terima Kasih', 'Laporan Anda telah kami terima.');
+        return redirect()->back();
     }
 }

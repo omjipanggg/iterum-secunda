@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Menu;
-
 use App\Models\TableCode;
 
 use Illuminate\Support\Carbon;
@@ -16,13 +15,20 @@ function menu() {
     	$menu = Menu::whereHas('roles', function($query) use($roles) {
             $query->whereIn('role_id', $roles);
         })->where('active', 1)->orderBy('order_number')->get();
-        $render = [];
         foreach ($menu as $element) {
             $parent_id = $element->parent_id;
             $render[$parent_id][] = $element;
         }
     }
 	return $menu;
+}
+
+function table_has_generated() {
+    return TableCode::count() > 0;
+}
+
+function list_of_table() {
+    return TableCode::all();
 }
 
 function elapsed_date($date) {

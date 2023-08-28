@@ -25,8 +25,8 @@ class UserController extends Controller
     public function index()
     {
         $context = [
-            'users' => User::orderByDesc('created_at')->get()
-            // 'users' => User::withTrashed()->orderByDesc('created_at')->get()
+            // 'users' => User::orderByDesc('created_at')->get()
+            'users' => User::withTrashed()->orderByDesc('created_at')->get()
         ];
         return view('pages.master.user.index', $context);
     }
@@ -82,16 +82,15 @@ class UserController extends Controller
 
         $user->roles()->detach();
         foreach ($request->roles as $role) {
-            if (is_numeric($role)) {
-                $user->roles()->attach($role);
-            } else {
-                $roles = Role::create(['name' => $role]);
-                $user->roles()->attach($roles);
+            $data = $role;
+            if (!is_numeric($role)) {
+                $data = Role::create(['name' => $role]);
             }
+            $user->roles()->attach($data);
         }
 
-        \Log::create('User updated—' . Str::upper($user->id));
-        Alert::success('Sukses', 'Data diubah.');
+        \Log::create('Updated users—' . Str::upper($user->id));
+        Alert::success('Sukses', 'Data Pengguna diubah.');
         return redirect()->back();
     }
 
@@ -104,14 +103,14 @@ class UserController extends Controller
         $user->email = strtotime("now") . '_' . $user->email;
         $user->save();
 
-        \Log::create('User deleted—' . Str::upper($user->id));
+        \Log::create('Deleted users—' . Str::upper($user->id));
 
         // $user->roles()->detach();
         Schema::disableForeignKeyConstraints();
         $user->delete();
         Schema::enableForeignKeyConstraints();
 
-        Alert::success('Sukses', 'Data dihapus.');
+        Alert::success('Sukses', 'Data Pengguna dihapus.');
         return redirect()->back();
     }
 }

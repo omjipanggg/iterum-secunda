@@ -76,6 +76,10 @@ class ProfileController extends Controller
         //
     }
 
+    public function destroyData(string $id) {
+        return redirect()->back()->with('code', 200);
+    }
+
     public function updatePersonalData(Request $request, string $id) {
         $request->validate([
             'name' => 'required',
@@ -116,7 +120,7 @@ class ProfileController extends Controller
         User::find($profile->user->id)->update(['name' => $request->name]);
 
         alert()->success('Sukses', 'Data Diri berhasil diperbarui.');
-        return redirect()->back()->with('code', 200);
+        return redirect()->back()->with('tab', 'personal');
     }
 
     public function editEducationData(string $id) {
@@ -157,7 +161,7 @@ class ProfileController extends Controller
         $last->save();
 
         alert()->success('Sukses', 'Data Pendidikan berhasil diperbarui.');
-        return redirect()->back();
+        return redirect()->back()->with('tab', 'education');
     }
 
     public function editExperienceData(string $id) {
@@ -184,7 +188,7 @@ class ProfileController extends Controller
         $experience->save();
 
         alert()->success('Sukses', 'Data Pengalaman berhasil diperbarui.');
-        return redirect()->back();
+        return redirect()->back()->with('tab', 'experience');
     }
 
     public function editSkillData(string $id) {
@@ -215,7 +219,7 @@ class ProfileController extends Controller
         );
 
         alert()->success('Sukses', 'Data Keahlian berhasil diperbarui.');
-        return redirect()->back();
+        return redirect()->back()->with('tab', 'skill');
     }
 
     public function editFamilyData(string $id) {
@@ -226,6 +230,6 @@ class ProfileController extends Controller
     public function updateFamilyData(Request $request, string $id) {
         Relative::create($request->all());
         alert()->success('Sukses', 'Data Keluarga berhasil diperbarui.');
-        return redirect()->back();
+        return redirect()->back()->with('tab', 'family');
     }
 }

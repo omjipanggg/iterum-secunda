@@ -7,6 +7,9 @@
 	.how-step + .how-step::before {
 		display: none;
 	}
+	.vacancy-single {
+	    flex-basis: 64%;
+	}
 }
 
 @media all and (max-width: 767.98px) {
@@ -14,7 +17,7 @@
 }
 
 @media all and (max-width: 575.98px) {
-	ul.two-columns { columns: 1; }
+	ul.dual { columns: 1; }
 	.filter button,
 	.filter input {
 		width: 100%;

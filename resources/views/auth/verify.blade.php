@@ -26,7 +26,7 @@
                         <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1">
                             <div class="text-center px-5">
                             Silakan aktivasi akun Anda melalui tautan yang kami kirimkan melalui email, jika tidak menerimanya,
-                            <form method="POST" action="{{ route('verification.resend') }}" onsubmit="resendEmailVerification(event);" id="form-resend" class="d-inline">
+                            <form method="POST" action="{{ route('verification.resend') }}" onsubmit="loadingOnSubmit(event);" id="form-resend" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-link align-baseline p-0 m-0 dotted text-decoration-underline">tekan di sini</button>
                             </form>

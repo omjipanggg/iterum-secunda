@@ -12,11 +12,21 @@ use NcJoes\OfficeConverter\OfficeConverter;
 class ContractController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware(['auth', 'has.dashboard', 'verified']);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('pages.contract.index');
     }
 
     /**
@@ -88,6 +98,18 @@ class ContractController extends Controller
         }
 
         return response()->download(storage_path($zipName))->deleteFileAfterSend(true);
+    }
+
+    public function signed() {
+        return view('pages.contract.signed');
+    }
+
+    public function signedContract(Request $request) {
+        return 'Validate';
+    }
+
+    public function offering() {
+        return 'Offering';
     }
 
     /**

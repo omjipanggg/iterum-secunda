@@ -30,6 +30,11 @@ Breadcrumbs::for('home.index', function (BreadcrumbTrail $trail) {
     $trail->push('Home', route('home.index'));
 });
 
+Breadcrumbs::for('master.createMenu', function (BreadcrumbTrail $trail) {
+    $trail->parent('master.index');
+    $trail->push('Hak Akses', route('master.createMenu'));
+});
+
 Breadcrumbs::for('user.index', function (BreadcrumbTrail $trail) {
     $trail->parent('master.index');
     $trail->push('Akun Terdaftar', route('user.index'));
@@ -40,9 +45,34 @@ Breadcrumbs::for('portal.index', function (BreadcrumbTrail $trail) {
     $trail->push('Portal', route('portal.index'));
 });
 
+Breadcrumbs::for('vacancy.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Lowongan Kerja', route('vacancy.index'));
+});
+
+Breadcrumbs::for('vacancy.show', function (BreadcrumbTrail $trail, Vacancy $vacancy) {
+    $trail->parent('vacancy.index');
+    $trail->push($vacancy->project->project_number, route('vacancy.show', $vacancy));
+});
+
+Breadcrumbs::for('vacancy.edit', function (BreadcrumbTrail $trail, Vacancy $vacancy) {
+    $trail->parent('vacancy.show', $vacancy);
+    $trail->push('Sunting', route('vacancy.edit', $vacancy));
+});
+
+Breadcrumbs::for('contract.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Generate PKWT', route('contract.index'));
+});
+
+Breadcrumbs::for('contract.signed', function (BreadcrumbTrail $trail) {
+    $trail->parent('contract.index');
+    $trail->push('Validasi PKWT', route('contract.signed'));
+});
+
 Breadcrumbs::for('portal.show', function (BreadcrumbTrail $trail, Vacancy $vacancy) {
     $trail->parent('portal.index');
-    $trail->push(Str::headline($vacancy->name), route('portal.show', $vacancy));
+    $trail->push($vacancy->name, route('portal.show', $vacancy));
 });
 
 Breadcrumbs::for('category.index', function (BreadcrumbTrail $trail) {
@@ -52,6 +82,6 @@ Breadcrumbs::for('category.index', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('category.show', function (BreadcrumbTrail $trail, VacancyCategory $category) {
     $trail->parent('category.index');
-    $trail->push(Str::headline($category->name), route('category.show', $category));
+    $trail->push($category->name, route('category.show', $category));
 });
 

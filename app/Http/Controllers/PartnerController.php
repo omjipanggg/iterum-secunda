@@ -17,7 +17,13 @@ class PartnerController extends Controller
      */
     public function index()
     {
-        return "Partner";
+        $data = Partner::where('person_in_charge', auth()->user()->name)->get();
+
+        $context = [
+            'data' => $data
+        ];
+
+        return view('pages.partner.index', $context);
     }
 
     /**

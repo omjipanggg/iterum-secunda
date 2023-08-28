@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignUuid('user_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('users');
             $table->foreignId('role_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('roles');
-            $table->dateTime('expired_date')->default('2025-12-31 23:59:59');
+            $table->dateTime('expired_at')->default('2025-12-31 23:59:59');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
@@ -26,7 +26,7 @@ return new class extends Migration
 
         DB::table('roles_and_users')->insert([
             'user_id' => '00000000-0000-0000-0000-000000000000',
-            'role_id' => 1, 'expired_date' => '2049-12-31 23:59:59'
+            'role_id' => 1, 'expired_at' => '2049-12-31 23:59:59'
         ]);
     }
 

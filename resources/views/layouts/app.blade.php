@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="{{ asset('css/animation.css') }}">
 
 </head>
-<body class="d-flex flex-column h-100">
+<body class="d-flex flex-column min-vh-100">
     @include('components.modal')
     @include('components.modal-delete')
     @include('components.loader')

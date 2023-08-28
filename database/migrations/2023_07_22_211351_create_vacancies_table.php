@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('vacancies', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('header_number')->nullable();
-            $table->char('project_id', 36);
+            $table->foreignUuid('project_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('projects');
             $table->foreignId('job_title_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('job_titles');
             $table->string('name')->nullable();
             $table->string('placement')->nullable();
@@ -22,16 +22,17 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('quantity')->default(1);
             $table->date('opening_date');
-            $table->date('closing_date');
+            $table->date('closing_date')->nullable();
             $table->unsignedBigInteger('min_limit')->nullable();
             $table->unsignedBigInteger('max_limit')->nullable();
-            $table->char('template_id', 36)->index();
+            $table->char('template_id', 36)->nullable()->index();
+            $table->foreignUuid('region_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('regions');
             $table->boolean('active')->default(0);
             $table->boolean('hidden_partner')->default(0);
             $table->boolean('hidden_placement')->default(0);
+            $table->boolean('hidden_salary')->default(0);
             $table->foreignId('vacancy_type_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('vacancy_types');
-            $table->string('slug');
-            $table->char('region_id', 36)->index();
+            $table->string('slug')->nullable();
             $table->dateTime('published_at')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
             $table->char('created_by', 36)->nullable()->index();

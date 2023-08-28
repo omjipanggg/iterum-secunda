@@ -35,7 +35,7 @@ class SendSubscription extends Mailable implements ShouldQueue
             markdown: 'mail.send-subscription',
             with: [
                 'email' => $this->email,
-            ],
+            ]
         );
     }
 

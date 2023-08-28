@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Daftar')
+@section('title', 'Daftar—Pencari Kerja')
 @section('content')
 @include('components.navbar')
 <div class="container">
@@ -16,8 +16,8 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
-
-                        <div class="d-flex gap-2 flex-wrap">
+                        @method('POST')
+                        <div class="d-flex gap-2 flex-wrap mb-2">
                             <div class="group flex-fill">
                                 {{--
                                 <div class="form-floating">
@@ -58,6 +58,8 @@
                             <label for="type-floating">Tipe</label>
                         </div>
                         --}}
+                        <input type="hidden" name="type" value="7">
+                        {{--
                         <div class="my-2">
                             <label for="type-floating" class="visually-hidden">Tipe</label>
                             <select class="form-select select2-single" id="type-floating" name="type">
@@ -66,6 +68,7 @@
                                 <option value="2" @if(old('type') == 2) selected="" @endif>Lainnya</option>
                             </select>
                         </div>
+                        --}}
                         {{--
                         <div class="form-floating">
                             <input id="password" type="password" class="password form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password" placeholder="Kata sandi">

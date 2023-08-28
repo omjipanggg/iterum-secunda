@@ -40,6 +40,14 @@ class PortalController extends Controller
         return view('pages.portal.index', $context);
     }
 
+    public function home() {
+        return 'HOME';
+    }
+
+    public function question() {
+        return 'Question';
+    }
+
     public function create()
     {
         //

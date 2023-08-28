@@ -24,6 +24,10 @@ class Vacancy extends Model
         'closing_date' => 'datetime'
     ];
 
+    public function position() {
+        return $this->belongsTo(JobTitle::class, 'job_title_id');
+    }
+
     public function type() {
     	return $this->belongsTo(VacancyType::class, 'vacancy_type_id');
     }
@@ -78,5 +82,17 @@ class Vacancy extends Model
     public function hasCategory($id) {
         if (!is_array($id)) { $id = [$id]; }
         return $this->categories()->whereIn('vacancy_category_id', $id)->exists();
+    }
+
+    public function creator() {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function editor() {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function terminator() {
+        return $this->belongsTo(User::class, 'deleted_by');
     }
 }

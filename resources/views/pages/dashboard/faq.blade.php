@@ -4,9 +4,11 @@
 <div class="container-fluid px-12">
 	<div class="row">
 		<div class="col">
-			<div class="mb-4">
-				<h3>Dashboard</h3>
-				{{ Breadcrumbs::render('dashboard.faq') }}
+			<div class="card mb-4">
+				<div class="card-body">
+					<h3>Dashboard</h3>
+					{{ Breadcrumbs::render('dashboard.faq') }}
+				</div>
 			</div>
 			<div class="card">
 				<div class="card-header text-bg-brighter-color">
@@ -28,7 +30,7 @@
 						<div class="accordion-item">
 					    <h2 class="accordion-header">
 					      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-					        Bagaimana cara mendaftar?
+					        Bagaimana cara mendaftar di SELENA™?
 					      </button>
 					    </h2>
 					    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
@@ -38,7 +40,7 @@
 						<div class="accordion-item">
 					    <h2 class="accordion-header">
 					      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-					        Bagaimana cara menambahkan data?
+					        Bagaimana cara menambahkan data di SELENA™?
 					      </button>
 					    </h2>
 					    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">

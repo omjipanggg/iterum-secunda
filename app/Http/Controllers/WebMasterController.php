@@ -7,14 +7,21 @@ use App\Forms\Edit;
 
 use App\Imports\Spreadsheet;
 
+use App\Jobs\SendRegister;
+
+use App\Models\Menu;
+use App\Models\RequestToken;
+use App\Models\Role;
 use App\Models\TableCode;
 use App\Models\User;
 
 use DataTables;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 use Kris\LaravelFormBuilder\FormBuilder;
@@ -23,7 +30,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class WebMasterController extends Controller
 {
-    protected $table_codes;
+    protected $tables;
 
     public function __construct()
     {
@@ -31,18 +38,28 @@ class WebMasterController extends Controller
     }
 
     public function generateTable() {
-        $this->table_codes = generate_table_code();
+        $this->tables = generate_table_code();
         Alert::success('Sukses', 'Konfigurasi tabel selesai.');
         return redirect()->route('master.index');
     }
 
+    public function sendRegisterLink(Request $request) {
+        foreach ($request->recipients as $recipient) {
+            $token = RequestToken::create([
+                'email' => $recipient,
+                'hash' => Str::random(36),
+                'expired_at' => Carbon::now()->addMinutes(60)
+            ]);
+            SendRegister::dispatch($token);
+        }
+
+        Alert::success('Sukses', "Berhasil mengirim " . count($request->recipients) . " pesan.");
+        return redirect()->back();
+    }
+
     public function index(FormBuilder $builder)
     {
-        $context = [
-            'tables' => TableCode::all(),
-            'users' => User::all(),
-            'quotes' => get_random_quotes()
-        ];
+        $context = [];
         return view('pages.master.index', $context);
     }
 
@@ -144,6 +161,27 @@ class WebMasterController extends Controller
         }
 
         return redirect()->route('master.fetch', $code);
+    }
+
+    public function createMenu() {
+        $menu = Menu::where('active', 1)->orderBy('order_number')->get();
+        $roles = Role::all();
+        $context = [
+            'menu' => $menu,
+            'roles' => $roles
+        ];
+        return view('pages.master.menu.index', $context);
+    }
+
+    public function storeMenu(Request $request) {
+        foreach ($request->roles as $role) {
+            Role::find($role)->menu()->detach();
+            foreach ($request->menu as $menu) {
+                Role::find($role)->menu()->attach($menu);
+            }
+        }
+        Alert::success('Sukses', 'Hak akses disesuaikan.');
+        return redirect()->back()->with(['code' => 200, 'message' => 'Done.']);
     }
 
     public function show(string $table, string $id)

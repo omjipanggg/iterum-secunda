@@ -44,7 +44,7 @@ class CategoryController extends Controller
         $category = Category::where('slug', $slug)->with('vacancies')->withCount('vacancies')->first();
         $vacancies = Vacancy::whereHas('categories', function($query) use($slug) {
             $query->where('slug', $slug);
-        })->paginate(3);
+        })->paginate(6);
         $context = [
             'data' => $category,
             'vacancies' => $vacancies

@@ -1,14 +1,21 @@
-<div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+<div class="tab-pane fade @if (session('tab') == 'personal' || session()->missing('tab')) show active @endif" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
 	<div class="card">
-		<div class="card-header text-bg-brighter-color py-15">
-			<i class="bi bi-person-fill me-2"></i>
-			Pribadi
-		</div>
-		<div class="card-body">
-			<form action="{{ route('profile.updatePersonalData', auth()->user()->profile->id) }}" method="POST" enctype="multipart/form-data">
-				@csrf
-				@method('POST')
-
+		<form action="{{ route('profile.updatePersonalData', auth()->user()->profile->id) }}" method="POST" enctype="multipart/form-data">
+			@csrf
+			@method('POST')
+			<div class="card-header text-bg-brighter-color">
+				<div class="d-flex flex-wrap align-items-center justify-content-between">
+					<div class="wrap">
+						<i class="bi bi-person-fill me-2"></i>
+						Pribadi
+					</div>
+					<button type="submit" class="btn btn-color px-3">
+						Simpan
+						<i class="bi bi-send ms-1"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
 				<div class="row g-2">
 					{{-- ROW --}}
 					<div class="col-12 col-md-12 col-lg-6">
@@ -178,27 +185,21 @@
 						@endif
 					@endauth
 
-					<hr class="my-3">
-
 					{{-- ROW --}}
-					<div class="col-12 mt-0">
+					{{--
+					<div class="col-12 col-lg-6">
 						<button type="submit" class="btn btn-color px-3 rounded-0">
 							Simpan
 							<i class="bi bi-send ms-1"></i>
 						</button>
 					</div>
+					--}}
 				</div>
-				{{--
-				<div class="form-select-floating">
-					<select name="user" id="user" class="select2-server form-select" data-bs-table="users"></select>
-					<label for="user">Pengguna</label>
-				</div>
-				--}}
-			</form>
-		</div>
-		<div class="card-footer text-bg-brighter-color">
-			<i class="bi bi-info-circle me-2"></i>
-			Mohon pastikan bahwa data yang Anda kirimkan sudah benar dan sesuai.
-		</div>
+			</div>
+			<div class="card-footer text-bg-brighter-color">
+				<i class="bi bi-info-circle me-2"></i>
+				Mohon pastikan bahwa data yang Anda kirimkan sudah benar dan sesuai.
+			</div>
+		</form>
 	</div>
 </div>

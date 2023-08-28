@@ -1,21 +1,27 @@
 <?php
-
+use App\Http\Controllers\Auth\RegisterController as Register;
 use App\Http\Controllers\CandidateController as Candidate;
 use App\Http\Controllers\CategoryController as Category;
+use App\Http\Controllers\ContractController as Contract;
 use App\Http\Controllers\DashboardController as Dashboard;
 use App\Http\Controllers\HomeController as Home;
 use App\Http\Controllers\PartnerController as Partner;
 use App\Http\Controllers\PortalController as Portal;
 use App\Http\Controllers\ProfileController as Profile;
+use App\Http\Controllers\RecruitmentController as Recruitment;
+use App\Http\Controllers\ScoreController as Score;
 use App\Http\Controllers\ServerSideController as Server;
 use App\Http\Controllers\TemplateController as Template;
 use App\Http\Controllers\UserController as User;
+use App\Http\Controllers\VacancyController as Vacancy;
 use App\Http\Controllers\WebMasterController as Master;
 
 use Illuminate\Support\Facades\Route;
 
 // AUTHENTICATION
 Auth::routes(['verify' => true]);
+Route::get('register/partner', [Register::class, 'createPartner'])->name('register.createPartner');
+Route::get('register/partner/{hash}', [Register::class, 'createInternal'])->name('register.createInternal');
 
 // HOME
 Route::get('/', [Home::class, 'index'])->name('home.index');
@@ -26,7 +32,8 @@ Route::get('settings', [Home::class, 'settings'])->name('home.settings');
 Route::get('sitemap', [Home::class, 'sitemap'])->name('home.sitemap');
 Route::post('subscribe', [Home::class, 'subscribe'])->name('home.subscribe');
 Route::get('unsubscribe/{email}', [Home::class, 'unsubscribe'])->name('home.unsubscribe');
-Route::get('resumes/{id}', [Home::class, 'downloadResume'])->name('home.downloadResume');
+Route::get('resume/{id}', [Home::class, 'downloadResume'])->name('home.downloadResume');
+Route::get('report', [Home::class, 'report'])->name('home.report');
 Route::get('lounge', [Home::class, 'lounge'])->name('home.lounge')->middleware(['auth', 'relaxed', 'verified']);
 
 // DASHBOARD
@@ -36,7 +43,25 @@ Route::prefix('dashboard')->group(function() {
 });
 
 // TEMPLATE
+Route::prefix('contract')->group(function() {
+	Route::get('/', [Contract::class, 'index'])->name('contract.index');
+	Route::get('offering', [Contract::class, 'offering'])->name('contract.offering');
+	Route::get('list', [Contract::class, 'list'])->name('contract.list');
+	Route::post('generate', [Contract::class, 'generate'])->name('contract.generate');
+	Route::get('signed', [Contract::class, 'signed'])->name('contract.signed');
+	Route::post('signed', [Contract::class, 'signedContract'])->name('contract.signedContract');
+});
+
+// TEMPLATE
 Route::resource('template', Template::class);
+
+// VACANCY
+Route::prefix('vacancy')->group(function() {
+	Route::get('question', [Vacancy::class, 'question'])->name('vacancy.question');
+	Route::get('{vacancy}/publish', [Vacancy::class, 'publish'])->name('vacancy.publish');
+	Route::get('{vacancy}/archive', [Vacancy::class, 'archive'])->name('vacancy.archive');
+});
+Route::resource('vacancy', Vacancy::class);
 
 // PORTAL
 Route::prefix('portal')->group(function() {
@@ -46,27 +71,20 @@ Route::prefix('portal')->group(function() {
 	Route::get('{slug}', [Portal::class, 'show'])->name('portal.show');
 });
 
-// SUPERUSER
-Route::prefix('master')->group(function() {
-	Route::get('/', [Master::class, 'index'])->name('master.index');
-	Route::get('random/generate', [Master::class, 'generateTable'])->name('master.generateTable');
-	Route::delete('random/delete', [Master::class, 'destroyThem'])->name('master.destroyThem');
-	Route::get('{code}', [Master::class, 'fetch'])->name('master.fetch');
-	Route::get('{code}/fetch', [Master::class, 'fetchOnServer'])->name('master.fetchOnServer');
-	Route::get('{code}/import', [Master::class, 'import'])->name('master.import');
-	Route::post('{code}/import', [Master::class, 'importOnServer'])->name('master.importOnServer');
-	Route::get('{code}/fetch/{id}', [Master::class, 'show'])->name('master.show');
-	Route::get('{code}/create', [Master::class, 'create'])->name('master.create');
-	Route::post('{code}/store', [Master::class, 'store'])->name('master.store');
-	Route::get('{code}/edit/{id}', [Master::class, 'edit'])->name('master.edit');
-	Route::put('{code}/update/{id}', [Master::class, 'update'])->name('master.update');
-	Route::delete('{code}/delete/{id}', [Master::class, 'destroy'])->name('master.destroy');
-});
-
 // CANDIDATE
 Route::prefix('candidate')->group(function() {
 	Route::get('/', [Candidate::class, 'index'])->name('candidate.index');
 	Route::post('apply', [Candidate::class, 'apply'])->name('candidate.apply');
+});
+
+// SCORING
+Route::prefix('score')->group(function() {
+	Route::get('/', [Score::class, 'index'])->name('score.index');
+});
+
+// RECRUITMENT
+Route::prefix('recruitment')->group(function() {
+	Route::get('/', [Recruitment::class, 'index'])->name('recruitment.index');
 });
 
 // PROFILE
@@ -96,5 +114,26 @@ Route::prefix('partner')->group(function() {
 	Route::get('/', [Partner::class, 'index'])->name('partner.index');
 });
 
+// MASTER
+Route::prefix('master')->group(function() {
+	Route::get('/', [Master::class, 'index'])->name('master.index');
+	Route::get('group', [Master::class, 'createMenu'])->name('master.createMenu');
+	Route::post('group', [Master::class, 'storeMenu'])->name('master.storeMenu');
+	Route::post('send/register', [Master::class, 'sendRegisterLink'])->name('master.sendRegisterLink');
+	Route::get('random/generate', [Master::class, 'generateTable'])->name('master.generateTable');
+	Route::delete('random/delete', [Master::class, 'destroyThem'])->name('master.destroyThem');
+	Route::get('{code}/show', [Master::class, 'fetch'])->name('master.fetch');
+	Route::get('{code}/show/fetch', [Master::class, 'fetchOnServer'])->name('master.fetchOnServer');
+	Route::get('{code}/import', [Master::class, 'import'])->name('master.import');
+	Route::post('{code}/import', [Master::class, 'importOnServer'])->name('master.importOnServer');
+	Route::get('{code}/fetch/{id}', [Master::class, 'show'])->name('master.show');
+	Route::get('{code}/create', [Master::class, 'create'])->name('master.create');
+	Route::post('{code}/store', [Master::class, 'store'])->name('master.store');
+	Route::get('{code}/edit/{id}', [Master::class, 'edit'])->name('master.edit');
+	Route::put('{code}/update/{id}', [Master::class, 'update'])->name('master.update');
+	Route::delete('{code}/delete/{id}', [Master::class, 'destroy'])->name('master.destroy');
+});
+
 // SERVER
+Route::get('server/vacancies/fetch', [Server::class, 'fetchVacancy'])->name('server.fetchVacancy');
 Route::get('server/{table}', [Server::class, 'selectProvider'])->name('server.selectProvider');

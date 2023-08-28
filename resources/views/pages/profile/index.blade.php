@@ -18,19 +18,19 @@
 				<div class="card-body">
 				<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
 				  <li class="nav-item" role="presentation">
-				    <button class="nav-link px-5 active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Pribadi</button>
+				    <button class="nav-link px-5 @if (session('tab') == 'personal' || session()->missing('tab')) active @endif" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Pribadi</button>
 				  </li>
 				  <li class="nav-item" role="presentation">
-				    <button class="nav-link px-5" id="pills-education-tab" data-bs-toggle="pill" data-bs-target="#pills-education" type="button" role="tab" aria-controls="pills-education" aria-selected="false">Pendidikan</button>
+				    <button class="nav-link px-5 @if (session('tab') == 'education') active @endif" id="pills-education-tab" data-bs-toggle="pill" data-bs-target="#pills-education" type="button" role="tab" aria-controls="pills-education" aria-selected="false">Pendidikan</button>
 				  </li>
 				  <li class="nav-item" role="presentation">
-				    <button class="nav-link px-5" id="pills-experience-tab" data-bs-toggle="pill" data-bs-target="#pills-experience" type="button" role="tab" aria-controls="pills-experience" aria-selected="false">Pengalaman</button>
+				    <button class="nav-link px-5 @if (session('tab') == 'experience') active @endif" id="pills-experience-tab" data-bs-toggle="pill" data-bs-target="#pills-experience" type="button" role="tab" aria-controls="pills-experience" aria-selected="false">Pengalaman</button>
 				  </li>
 				  <li class="nav-item" role="presentation">
-				    <button class="nav-link px-5" id="pills-skill-tab" data-bs-toggle="pill" data-bs-target="#pills-skill" type="button" role="tab" aria-controls="pills-skill" aria-selected="false">Keahlian</button>
+				    <button class="nav-link px-5 @if (session('tab') == 'skill') active @endif" id="pills-skill-tab" data-bs-toggle="pill" data-bs-target="#pills-skill" type="button" role="tab" aria-controls="pills-skill" aria-selected="false">Keahlian</button>
 				  </li>
 				  <li class="nav-item" role="presentation">
-				    <button class="nav-link px-5" id="pills-family-tab" data-bs-toggle="pill" data-bs-target="#pills-family" type="button" role="tab" aria-controls="pills-family" aria-selected="false">Keluarga</button>
+				    <button class="nav-link px-5 @if (session('tab') == 'family') active @endif" id="pills-family-tab" data-bs-toggle="pill" data-bs-target="#pills-family" type="button" role="tab" aria-controls="pills-family" aria-selected="false">Keluarga</button>
 				  </li>
 				</ul>
 				</div>

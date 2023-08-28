@@ -4,9 +4,11 @@
 <div class="container-fluid px-12">
 	<div class="row">
 		<div class="col">
-			<div class="mb-4">
-				<h3>Dashboard</h3>
-				{{ Breadcrumbs::render('dashboard.index') }}
+			<div class="card mb-4">
+				<div class="card-body">
+					<h3>Dashboard</h3>
+					{{ Breadcrumbs::render('dashboard.index') }}
+				</div>
 			</div>
 			<div class="card">
 				<div class="card-header text-bg-color">

@@ -12,7 +12,6 @@
 		<select name="roles[]" id="roles-on-modal" class="form-select select2-single-modal" multiple="" required="">
 			@foreach ($roles as $role)
 				@php($selected = false)
-
 				@forelse ($user->roles as $each)
 					@if ($role->id == $each->id)
 						@php($selected = true)

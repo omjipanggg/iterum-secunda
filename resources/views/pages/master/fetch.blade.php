@@ -5,8 +5,12 @@
 	<div class="row">
 		<div class="col">
 			<div class="mb-4">
+			<div class="card">
+				<div class="card-body">
 				<h3>Dashboard</h3>
 				{{ Breadcrumbs::render('master.fetch', $table) }}
+				</div>
+			</div>
 			</div>
 			<div class="card">
 				<div class="card-header text-bg-color d-flex align-items-center justify-content-between">

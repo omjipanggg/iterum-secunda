@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ResetPasswordController extends Controller
 {
@@ -26,5 +27,10 @@ class ResetPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    // protected $redirectTo = RouteServiceProvider::HOME;
+    protected function redirectTo() {
+        \Log::create('Reset Password');
+        alert()->success('Sukses', 'Kata sandi berhasil diubah.');
+        return redirect($this->redirectPath())->with('code', 200);
+    }
 }

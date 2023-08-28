@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl modal-fullscreen-lg-down modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header text-bg-color">
-                <h5 class="modal-title" id="modalApplyLabel">Kirim Lamaran</h5>
+                <h5 class="modal-title" id="modalApplyLabel">Kirim Lamaran&mdash;{{ Str::headline($vacancy->name) }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('candidate.apply') }}" method="POST">
@@ -15,6 +15,13 @@
                 <div class="d-flex flex-column gap-2">
                     <small class="text-muted fw-semibold">Surat Lamaran</small>
                     <textarea name="cover_letter" id="coverLetterOnModal" cols="30" rows="10" class="editor"></textarea>
+                    @if (auth()->user()->profile->candidate->resume)
+                        <input type="hidden" name="resume" value="{{ auth()->user()->profile->candidate->resume }}">
+                        <a href="{{ route('home.downloadResume', auth()->user()->profile->candidate->resume) }}" target="_blank" class="dotted small fw-semibold">
+                            Lihat CV Anda
+                            <i class="bi bi-box-arrow-up-right ms-1"></i>
+                        </a>
+                    @else
                     <small class=".text-muted fw-semibold">Unggah CV Anda</small>
                     <div class="wrap d-flex gap-2 flex-wrap align-items-center">
                         <button type="button" class="btn btn-color rounded-0 px-3" onclick="chooseResume()">
@@ -24,6 +31,7 @@
                         <input type="file" class="form-control d-none" name="resume" id="resumeOnModal" onchange="changePlaceholder(event)" accept="image/*, application/pdf, application/msword, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.wordprocessingml.template, application/vnd.ms-word.document.macroEnabled.12, application/vnd.ms-word.template.macroEnabled.12">
                         <label for="resumeOnModal">Tidak ada berkas terpilih</label>
                     </div>
+                    @endif
                 </div>
             @else
                 <p class="m-0 fw-bold">Hak akses terbatas.</p>

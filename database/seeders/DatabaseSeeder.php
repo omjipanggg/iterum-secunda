@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(28)->create();
         JobTitle::factory(13)->create();
-        Menu::factory(20)->create();
+        // Menu::factory(20)->create();
         Partner::factory(8)->create();
         Project::factory(7)->create();
         Skill::factory(15)->create();
@@ -42,9 +42,11 @@ class DatabaseSeeder extends Seeder
         $roles = Role::all();
         $skills = Skill::all();
 
+        /*
         Menu::all()->each(function($query) use($roles) {
             $query->roles()->attach($roles->random(rand(1, 3))->pluck('id')->toArray());
         });
+        */
 
         User::all()->each(function($query) use($roles) {
             $query->roles()->attach($roles->random(rand(1, 3))->pluck('id')->toArray());
