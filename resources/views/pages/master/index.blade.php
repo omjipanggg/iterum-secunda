@@ -32,7 +32,7 @@
 									<input type="email" required="" autocomplete="off" name="recipients[]" class="form-control recipients" placeholder="Alamat email" aria-label="Alamat email" aria-describedby="button-send">
 								</div>
 								<div id="recipients-placeholder"></div>
-								<button class="btn btn-color rounded-0" type="submit" id="button-send">
+								<button class="btn btn-color rounded-0 w-100" type="submit" id="button-send">
 									Kirim
 									<i class="bi bi-send ms-1"></i>
 								</button>
@@ -49,8 +49,15 @@
 		<div class="col-md-8">
 			<div class="card">
 				<div class="card-header text-bg-color">
-					<i class="bi bi-database-lock me-2"></i>
-					@yield('title')&mdash;Konfigurasi Tabel
+					<div class="d-flex flex-wrap align-items-center justify-content-between">
+						<div class="wrap">
+							<i class="bi bi-database-lock me-2"></i>
+							@yield('title')&mdash;Konfigurasi Tabel
+						</div>
+						<a href="{{ route('master.generateTable') }}" onclick="plsConfirm(event);" class="dotted">
+							Reset
+						</a>
+					</div>
 				</div>
 				<div class="card-body">
 					<div class="d-flex flex-wrap justify-content-start align-items-center gap-1">

@@ -12,4 +12,8 @@ class City extends Model
 
     protected $table = 'cities';
     protected $guarded = [];
+
+    public function province() {
+    	return $this->belongsTo(Province::class, 'province_id');
+    }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\CandidateController as Candidate;
 use App\Http\Controllers\CategoryController as Category;
 use App\Http\Controllers\ContractController as Contract;
 use App\Http\Controllers\DashboardController as Dashboard;
+use App\Http\Controllers\ExamController as Exam;
 use App\Http\Controllers\HomeController as Home;
 use App\Http\Controllers\PartnerController as Partner;
 use App\Http\Controllers\PortalController as Portal;
@@ -12,6 +13,7 @@ use App\Http\Controllers\RecruitmentController as Recruitment;
 use App\Http\Controllers\ScoreController as Score;
 use App\Http\Controllers\ServerSideController as Server;
 use App\Http\Controllers\TemplateController as Template;
+use App\Http\Controllers\TestQuestion as Test;
 use App\Http\Controllers\UserController as User;
 use App\Http\Controllers\VacancyController as Vacancy;
 use App\Http\Controllers\WebMasterController as Master;
@@ -46,6 +48,7 @@ Route::prefix('dashboard')->group(function() {
 Route::prefix('contract')->group(function() {
 	Route::get('/', [Contract::class, 'index'])->name('contract.index');
 	Route::get('offering', [Contract::class, 'offering'])->name('contract.offering');
+	Route::post('offering/send', [Contract::class, 'sendOffering'])->name('contract.sendOffering');
 	Route::get('list', [Contract::class, 'list'])->name('contract.list');
 	Route::post('generate', [Contract::class, 'generate'])->name('contract.generate');
 	Route::get('signed', [Contract::class, 'signed'])->name('contract.signed');
@@ -57,11 +60,26 @@ Route::resource('template', Template::class);
 
 // VACANCY
 Route::prefix('vacancy')->group(function() {
+	Route::get('category/create', [Vacancy::class, 'createCategory'])->name('vacancy.createCategory');
+	Route::get('category/store', [Vacancy::class, 'storeCategory'])->name('vacancy.storeCategory');
+
+	Route::get('partner/create', [Vacancy::class, 'createPartner'])->name('vacancy.createPartner');
+	Route::get('partner/store', [Vacancy::class, 'storePartner'])->name('vacancy.storePartner');
+
+	Route::get('project/create', [Vacancy::class, 'createProject'])->name('vacancy.createProject');
+	Route::get('project/store', [Vacancy::class, 'storeProject'])->name('vacancy.storeProject');
+
 	Route::get('question', [Vacancy::class, 'question'])->name('vacancy.question');
 	Route::get('{vacancy}/publish', [Vacancy::class, 'publish'])->name('vacancy.publish');
 	Route::get('{vacancy}/archive', [Vacancy::class, 'archive'])->name('vacancy.archive');
 });
 Route::resource('vacancy', Vacancy::class);
+
+// EXAM
+Route::prefix('exam')->group(function() {
+	Route::resource('question', Test::class);
+});
+Route::resource('exam', Exam::class);
 
 // PORTAL
 Route::prefix('portal')->group(function() {
@@ -85,6 +103,7 @@ Route::prefix('score')->group(function() {
 // RECRUITMENT
 Route::prefix('recruitment')->group(function() {
 	Route::get('/', [Recruitment::class, 'index'])->name('recruitment.index');
+	Route::get('filter', [Recruitment::class, 'filter'])->name('recruitment.filter');
 });
 
 // PROFILE
@@ -135,5 +154,8 @@ Route::prefix('master')->group(function() {
 });
 
 // SERVER
+Route::get('server/preview/{id}', [Server::class, 'showImageOnModal'])->name('server.showImageOnModal');
+Route::get('server/candidates/fetch', [Server::class, 'fetchCandidate'])->name('server.fetchCandidate');
 Route::get('server/vacancies/fetch', [Server::class, 'fetchVacancy'])->name('server.fetchVacancy');
 Route::get('server/{table}', [Server::class, 'selectProvider'])->name('server.selectProvider');
+Route::get('server/{table}/get/{id}', [Server::class, 'getForeignValue'])->name('server.getForeignValue');

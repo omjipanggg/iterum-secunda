@@ -21,7 +21,16 @@
                         <div class="card-header text-bg-color">
                             Lowongan Kerja
                         </div>
-                        <div class="card-body">
+                        <div class="card-body position-relative">
+
+                            @auth
+                            @if (auth()->user()->hasRole([1, 5]))
+                                <a href="{{ route('vacancy.edit', $vacancy->id) }}" class="position-absolute dotted icon-edit-floating">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            @endif
+                            @endauth
+
                             <div class="wrap py-4">
                                 <h3 class="mb-0">{{ Str::headline($vacancy->name) }}</h3>
                                 @if ($vacancy->hidden_partner)
@@ -119,7 +128,9 @@
                                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                                         {{ $relate->name }}
                                         @if (!$relate->hidden_placement)
-                                            <span class="badge text-bg-color">{{ ($relate->placement) }}</span>
+                                            <span class="badge text-bg-color">
+                                                <i class="bi bi-geo-alt-fill me-1"></i>{{ ($relate->placement) }}
+                                            </span>
                                         @endif
                                     </div>
                                 </a>
@@ -257,7 +268,9 @@
                                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                                         {{ $relate->name }}
                                         @if (!$relate->hidden_placement)
-                                            <span class="badge text-bg-color">{{ ($relate->placement) }}</span>
+                                            <span class="badge text-bg-color">
+                                                <i class="bi bi-geo-alt-fill me-1"></i>{{ ($relate->placement) }}
+                                            </span>
                                         @endif
                                     </div>
                                 </a>

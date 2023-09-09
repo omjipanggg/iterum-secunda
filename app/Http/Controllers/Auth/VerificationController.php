@@ -54,6 +54,10 @@ class VerificationController extends Controller
             return redirect()->route('home.index');
         }
 
+        if ($user->hasRole(7)) {
+            Candidate::where('user_id', $id)->update(['status' => 1]);
+        }
+
         $user->email_verified_at = now();
         $user->save();
 

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class ScoreController extends Controller
 {
     public function index() {
-    	return 'SCORE';
+    	return view('pages.score.index');
     }
     public function show() {}
 }

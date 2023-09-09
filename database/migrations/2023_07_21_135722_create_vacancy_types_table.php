@@ -26,7 +26,7 @@ return new class extends Migration
             ['name' => 'Freelance', 'slug' => 'freelance', 'initial' => 'D'],
             ['name' => 'Internship', 'slug' => 'internship', 'initial' => 'C'],
             ['name' => 'Part-time', 'slug' => 'part-time', 'initial' => 'B'],
-            ['name' => 'Full-time', 'slug' => 'full-time', 'initial' => 'A'],
+            ['name' => 'Full-time', 'slug' => 'full-time', 'initial' => 'B'],
             ['name' => 'Contract', 'slug' => 'contract', 'initial' => 'B'],
             ['name' => 'Project', 'slug' => 'project', 'initial' => 'B']
         ]);

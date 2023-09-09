@@ -3,17 +3,16 @@
     <div class="sb-sidenav-menu">
         <div class="nav mb-4">
             {{-- <div class="sb-sidenav-menu-heading">Core</div> --}}
-            @if (auth()->user()->hasRole(1))
+            {{--
             <a class="nav-link pt-32 @if (url()->current() == route('master.index')) active @endif" href="{{ route('master.index') }}">
                 <div class="sb-nav-link-icon"><i class="bi bi-house-exclamation"></i></div>
                 Master
             </a>
-            @else
-            <a class="nav-link pt-32 @if(url()->current() == route('home.lounge') || url()->current() == route('partner.index') || url()->current() == route('dashboard.index')) active @endif" href="{{ route('dashboard.index') }}">
+            --}}
+            <a class="nav-link pt-32 @if(url()->current() == route('home.lounge') || url()->current() == route('partner.index') || url()->current() == route('dashboard.index') || url()->current() == route('master.index')) active @endif" href="{{ route('dashboard.index') }}">
                 <div class="sb-nav-link-icon"><i class="bi bi-house"></i></div>
                 Dashboard
             </a>
-            @endif
             @if (menu()->count() > 0 && !auth()->user()->hasRole(2))
             @foreach (menu() as $menu)
                 @if($menu->has_child)
@@ -28,8 +27,8 @@
                     <div class="collapse" id="menu{{ $menu->id }}" aria-labelledby="heading{{ $loop->iteration }}" data-bs-parent="#sidenavAccordion">
                         @foreach(menu() as $sub)
                             @if($sub->has_child)
-                                @if($sub->parent_id != 0)
-                                <nav class="sb-sidenav-menu-nested nav" id="sidenavAccordionChild">
+                                @if($sub->parent_id == $menu->id)
+                                <nav class="sb-sidenav-menu-nested nav" id="sidenavAccordionChild{{ $sub->parent_id }}">
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#sub{{ $sub->id }}" aria-expanded="false" aria-controls="sub{{ $sub->id }}">
                                         <div class="sb-nav-link-icon">
                                             <i class="bi {{ $sub->icon }}"></i>
@@ -37,7 +36,7 @@
                                         {{ $sub->name }}
                                         <div class="sb-sidenav-collapse-arrow"><i class="bi bi-caret-down-fill"></i></div>
                                     </a>
-                                    <div class="collapse" id="sub{{ $sub->id }}" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionChild">
+                                    <div class="collapse" id="sub{{ $sub->id }}" aria-labelledby="headingOne" data-bs-parent="#menu{{ $sub->parent_id }}">
                                         <nav class="sb-sidenav-menu-nested nav">
                                             @foreach (menu() as $grand)
                                                 @if ($sub->id == $grand->parent_id)
@@ -58,13 +57,9 @@
                             @else
                                 @if($sub->parent_id == $menu->id)
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    @if(isset($sub->model))
-                                        <a class="{{ (url()->current() == route($sub->route, $sub->model)) ? 'active' : '' }} nav-link @if(!$sub->active) disabled @endif" href="#">
-                                    @else
-                                        <a class="{{ (url()->current() == route($sub->route)) ? 'active' : '' }} nav-link @if(!$sub->active) disabled @endif" href="{{ route($sub->route) }}" >
-                                    @endif
-                                    <div class="sb-nav-link-icon"><i class="bi {{ $sub->icon }}"></i></div>
-                                    {{ $sub->name }}
+                                    <a class="{{ (url()->current() == route($sub->route)) ? 'active' : '' }} nav-link @if(!$sub->active) disabled @endif" href="{{ route($sub->route) }}" >
+                                        <div class="sb-nav-link-icon"><i class="bi {{ $sub->icon }}"></i></div>
+                                        {{ $sub->name }}
                                     </a>
                                 </nav>
                                 @else
@@ -76,13 +71,9 @@
                     @endif
                 @else
                     @if($menu->parent_id == 0)
-                        @if(isset($menu->model))
-                            <a class="{{ (url()->current() == route($menu->route, $menu->model)) ? 'active' : '' }} nav-link @if(!$menu->active) disabled @endif" href="#">
-                        @else
-                            <a class="{{ (url()->current() == route($menu->route)) ? 'active' : '' }} nav-link @if(!$menu->active) disabled @endif" href="{{ route($menu->route) }}" >
-                        @endif
-                        <div class="sb-nav-link-icon"><i class="bi {{ $menu->icon }}"></i></div>
-                        {{ $menu->name }}
+                        <a class="{{ (url()->current() == route($menu->route)) ? 'active' : '' }} nav-link @if(!$menu->active) disabled @endif" href="{{ route($menu->route) }}" >
+                            <div class="sb-nav-link-icon"><i class="bi {{ $menu->icon }}"></i></div>
+                            {{ $menu->name }}
                         </a>
                     @endif
                 @endif
@@ -142,7 +133,9 @@
     </div>
     <div class="sb-sidenav-footer">
         <div class="d-flex gap-2">
-        <img src="{{ asset('img/default.webp') }}" alt="Avatar" class="img-fluid img-avatar-small">
+        <a href="{{ route('home.settings') }}">
+            <img src="{{ asset('img/default.webp') }}" alt="Avatar" class="img-fluid img-avatar-small">
+        </a>
         <div class="d-flex flex-column align-items-start justify-content-end">
             <small class="text-smaller">
                 @foreach (auth()->user()->roles as $element)
@@ -150,9 +143,7 @@
                 @endforeach
                 {{ $position }}
             </small>
-            <span class="d-inline-block text-truncate w-90">
-                {{ Str::headline(auth()->user()->name) }}
-            </span>
+            <a href="{{ route('home.settings') }}" class="d-inline-block text-truncate w-90 dotted text-white">{{ Str::upper(auth()->user()->name) }}</a>
         </div>
         </div>
     </div>

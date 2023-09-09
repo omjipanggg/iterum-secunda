@@ -34,7 +34,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach (auth()->user()->profile->lastEducation as $element)
+						@foreach (auth()->user()->profile->last_education as $element)
 							<tr>
 								<td>{{ $loop->iteration }}</td>
 								<td>{{ Str::upper($element->education->name) ?? '' }}</td>
@@ -46,7 +46,7 @@
 								@empty($element->certificate)
 								<td><em>null</em></td>
 								@else
-								<td><a href="{{ route('home.download', [json_encode(['profiles', 'certificates']), $element->certificate]) }}" class="dotted" target="_blank">Buka<i class="bi bi-folder2-open ms-1"></i></a></td>
+								<td><a href="{{ route('home.download', [json_encode(['profiles', 'education']), $element->certificate]) }}" class="dotted" target="_blank">Buka<i class="bi bi-folder2-open ms-1"></i></a></td>
 								@endempty
 							</tr>
 						@endforeach

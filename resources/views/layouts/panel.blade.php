@@ -43,6 +43,7 @@
     @include('sweetalert::alert')
 	@include('components.modal')
     @include('components.modal-delete')
+    @include('components.modal-filter')
     @include('components.loader')
     @include('components.mover')
     @include('components.navbar-dashboard')

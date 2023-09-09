@@ -21,7 +21,7 @@
                             <i class="bi bi-database me-2"></i>
                             @yield('title')
                         </div>
-                        <a href="#" class="btn btn-outline-color px-3">
+                        <a href="{{ route('vacancy.create') }}" class="btn btn-outline-color px-3">
                             Tambah
                             <i class="bi bi-box-arrow-up-right ms-1"></i>
                         </a>
@@ -29,16 +29,17 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table m-0 table-hover table-bordered table-sm vacancy">
+                        <table class="table m-0 table-hover table-bordered table-sm table-vacancy">
                             <thead>
                                 <tr>
                                     <th rowspan="2">Status</th>
-                                    <th rowspan="2">ID</th>
-                                    <th rowspan="2">Nama mitra</th>
+                                    <th rowspan="2">ID Project</th>
+                                    <th rowspan="2">Nama Mitra</th>
                                     <th rowspan="2">Posisi</th>
-                                    <th rowspan="2">Kota penempatan</th>
-                                    <th rowspan="2">Kebutuhan personel</th>
-                                    <th rowspan="2">Total pelamar</th>
+                                    <th rowspan="2">Kota Penempatan</th>
+                                    <th rowspan="2">Regional</th>
+                                    <th rowspan="2">Kebutuhan Personel</th>
+                                    <th rowspan="2">Total Pelamar</th>
                                     <th rowspan="2">Sunting</th>
                                     <th colspan="2">Aksi</th>
                                 </tr>
@@ -51,12 +52,13 @@
                             <tfoot>
                                 <tr>
                                     <th>Status</th>
-                                    <th>ID</th>
-                                    <th>Nama mitra</th>
+                                    <th>ID Project</th>
+                                    <th>Nama Mitra</th>
                                     <th>Posisi</th>
-                                    <th>Kota penempatan</th>
-                                    <th>Kebutuhan personel</th>
-                                    <th>Total pelamar</th>
+                                    <th>Kota Penempatan</th>
+                                    <th>Regional</th>
+                                    <th>Kebutuhan Personel</th>
+                                    <th>Total Pelamar</th>
                                     <th>Sunting</th>
                                     <th>Terbitkan</th>
                                     <th>Arsipkan</th>

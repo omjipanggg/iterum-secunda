@@ -29,8 +29,11 @@ class ProfileController extends Controller
 
     public function index()
     {
-        $avails = ['Segera', 'Dalam satu minggu', 'Dalam 1 - 3 minggu',
-        'Dalam satu bulan', 'Dalam 1 - 3 bulan', 'Konfirmasi dahulu'];
+        $avails = [
+            'SEGERA', 'DALAM SATU MINGGU', 'DALAM 1 - 3 MINGGU',
+            'DALAM SATU BULAN', 'DALAM 1 - 3 BULAN',
+            'KONFIRMASI DAHULU'
+        ];
         $genders = Gender::all();
         $cities = City::orderBy('name')->groupBy('name')->get();
         $maritals = MaritalStatus::all();
@@ -51,7 +54,6 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
         alert()->success('Sukses', 'Profile berhasil ditambahkan.');
         return redirect()->back();
     }
@@ -154,8 +156,8 @@ class ProfileController extends Controller
         $last->education_field_id = $efid;
 
         if ($request->hasFile('certificate')) {
-            $filename = 'IJAZAH_' . Str::snake(Str::upper($profile->name)) . '_' . $heid . '.' . $request->file('certificate')->extension();
-            $result = $request->file('certificate')->storeAs('profiles/certificates/', $filename, 'public');
+            $filename = 'IJAZAH_' . Str::upper(Str::snake($profile->name)) . '_' . $heid . '.' . $request->file('certificate')->extension();
+            $result = $request->file('certificate')->storeAs('profiles/education/', $filename, 'public');
             $last->certificate = $filename;
         }
         $last->save();

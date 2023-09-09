@@ -4,16 +4,17 @@
     --shadow-active-color: rgba(0, 0, 0, .25);
     --fixed-background-color: rgba(245, 245, 245, .82);
     --background-color: hsla(223deg, 10%, 15%, 1);
-    --border-color: hsla(223deg, 47%, 36%, .8);
+    --primary-border-color: hsla(223deg, 47%, 36%, .82);
     --primary-color: hsla(223deg, 47%, 36%, 1);
-    --primary-mid-color: hsla(223deg, 47%, 31%, 1);
+    --primary-mid-color: hsla(223deg, 47%, 30%, 1);
     --primary-darker-color: hsla(223deg, 47%, 25%, 1);
     --primary-darkened-color: hsla(223deg, 47%, 19%, 1);
     --primary-bright-color: hsla(223deg, 94%, 90%, 1);
     --primary-brighter-color: hsla(223deg, 99%, 97%, 1);
-    --secondary-color: hsla(223deg, 35%, 60%, 1);
-    --secondary-border-color: hsla(223deg, 35%, 60%, .8);
-    --secondary-darker-color: hsla(223deg, 35%, 54%, 1);
+    --secondary-color: hsla(223deg, 47%, 60%, 1);
+    --secondary-border-color: hsla(223deg, 47%, 60%, .8);
+    --secondary-mid-color: hsla(223deg, 47%, 40%, 1);
+    --secondary-darker-color: hsla(223deg, 47%, 54%, 1);
     --secondary-bright-color: hsla(223deg, 86%, 90%, 1);
     --tertiary-color: hsla(223deg, 47%, 21%, 1);
     --tertiary-darker-color: hsla(223deg, 47%, 21%, .8);
@@ -30,10 +31,11 @@
     --disabled-color: hsla(223deg, 2%, 42%, 1);
 
     /* SIZES */
+    --big-size: 5.4em;
     --title-size: 14px;
     --normal-size: 12.4px;
     --default-size: 16px;
-    --smaller-size: 11px;
+    --smaller-size: 10px;
     --smallest-size: 9px;
     --icon-floating-size: 2em;
     --swal2-title-size: 24px;
@@ -207,7 +209,7 @@ hr.dropdown-divider {
 }
 
 .sb-sidenav-menu-nested .nav {
-    background-color: var(--secondary-darker-color);
+    background-color: var(--secondary-mid-color);
 }
 
 .sb-sidenav-menu-nested .nav-link {
@@ -288,15 +290,15 @@ hr.dropdown-divider {
 .card:hover {
     transform: translateY(-9.75px);
     box-shadow: 0 .5rem 1rem var(--shadow-color);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--primary-border-color);
 }
 
 .card:hover .card-header {
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--primary-border-color);
 }
 
 .card:hover .card-footer {
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--primary-border-color);
 }
 
 .badge-floating {
@@ -323,6 +325,19 @@ hr.dropdown-divider {
     background-color: transparent;
     transform: translate(-50%, -50%);
     transform-origin: 0 0;
+}
+
+/* DUPLICATES */
+/* ===================================================================== */
+.flex-basis-6 {
+    flex-basis: 270px;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+.flex-basis-4 {
+    flex-basis: 120px;
+    flex-grow: 1;
+    flex-shrink: 0;
 }
 
 /* OTHERS */
@@ -361,6 +376,15 @@ ul.square {
 
 ul.dual {
     columns: 2;
+}
+
+ul.tri {
+    list-style-type: none;
+    columns: 3;
+}
+
+ul.no-square {
+    list-style-type: none;
 }
 
 ol.breadcrumb {
@@ -536,6 +560,10 @@ ol.breadcrumb {
     color: var(--muted-color);
 }
 
+#portal .icon-edit-floating {
+    right: 1rem;
+}
+
 #portal .accordion-button:not(.collapsed) {
     background-color: var(--secondary-bright-color);
     color: var(--primary-color);
@@ -579,7 +607,7 @@ ol.breadcrumb {
 
 .btn-outline-color {
     background-color: var(--primary-brighter-color) !important;
-    border: 1px solid var(--border-color) !important;
+    border: 1px solid var(--primary-border-color) !important;
     color: var(--primary-color) !important;
     font-weight: bold;
 }
@@ -623,6 +651,7 @@ ol.breadcrumb {
 .w-90 {
     width: 160px !important;
 }
+
 .w-100 {
     width: 100% !important;
 }
@@ -656,7 +685,7 @@ ol.breadcrumb {
 }
 
 .text-bg-brighter-color a {
-    color: var(--border-color);
+    color: var(--primary-border-color);
 }
 
 .bg-darker-color {
@@ -687,6 +716,16 @@ ol.breadcrumb {
     font-family: 'Consolas', monospace !important;
 }
 
+/* DASHBOARD */
+/* ===================================================================== */
+.icon-number {
+    font-size: var(--big-size);
+    top: 0;
+    right: 1rem;
+    color: var(--primary-bright-color);
+    opacity: .42;
+}
+
 /* VACANCY */
 /* ===================================================================== */
 .vacancy-container {}
@@ -697,6 +736,18 @@ ol.breadcrumb {
 .vacancy-single {
     flex-grow: 1;
     flex-basis: 48%;
+}
+
+#category-holder {
+    max-height: 232px;
+    margin: 1rem 0 1rem 1rem;
+    padding: 0;
+    overflow: auto;
+}
+
+.vacancy-detail ul {
+    margin-bottom: 0 !important;
+    padding-left: 1rem !important;
 }
 
 /* TABLE */
@@ -761,7 +812,7 @@ table tr.deleted td {
 .form-select-defined-floating .select2-selection--multiple,
 .form-select-floating .select2-selection--multiple {
     border: var(--bs-border-width) solid var(--bs-border-color);
-    padding-top: 30px !important;
+    padding-top: 23px !important;
     padding-bottom: 10px !important;
 }
 
@@ -779,7 +830,8 @@ table tr.deleted td {
     z-index: 12;
 }
 
-.form-date-floating label {
+.form-date-floating label,
+.form-date-floating span {
     position: absolute;
     top: 8px;
     left: 0;
@@ -791,9 +843,9 @@ table tr.deleted td {
 
 .form-date-floating input {
     border: var(--bs-border-width) solid var(--bs-border-color);
-    padding-top: 24px !important;
+    padding-top: 28px !important;
     padding-left: 8px !important;
-    padding-bottom: 14px !important;
+    padding-bottom: 10px !important;
 }
 
 /* FORM ON MODAL */
@@ -840,8 +892,10 @@ table tr.deleted td {
     margin-top: 4px;
 }
 
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
 .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option {
     font-size: var(--normal-size) !important;
+    font-family: monospace, sans-serif;
 }
 
 .icon-floating {
@@ -884,7 +938,7 @@ table tr.deleted td {
 .dataTable-pagination li.active a {
     color: var(--primary-brighter-color);
     background-color: var(--primary-color);
-    border-color: var(--border-color);
+    border-color: var(--primary-border-color);
 }
 
 .page-link:focus,

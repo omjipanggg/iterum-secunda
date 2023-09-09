@@ -3,6 +3,8 @@
 use App\Models\Menu;
 use App\Models\TableCode;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -21,6 +23,10 @@ function menu() {
         }
     }
 	return $menu;
+}
+
+function is_uuid($uuid) {
+    return preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/', $uuid) === 1;
 }
 
 function table_has_generated() {
@@ -48,6 +54,10 @@ function date_time_indo_format($date) {
     return sprintf('%02d', $result['mday']) . ' ' . $months[$result['mon']] . ' ' . $result['year'] . ' ' . sprintf('%02d', $result['hours']) . ':' . sprintf('%02d', $result['minutes']) . ':' . sprintf('%02d', $result['seconds']);
 }
 
+function to_form_date($date) {
+    return date('Y-m-d', strtotime($date));
+}
+
 function get_column_name($table) {
     return Schema::getColumnListing($table);
 }
@@ -73,31 +83,68 @@ function get_column_name_and_type($table) {
   return $new_columns;
 }
 
+function get_relational_table($table) {
+    $data = [];
+    foreach (get_column_name($table) as $column) {
+        if (Str::substr($column, Str::length($column) - 3, 3) === '_id') {
+            $data[] = Str::plural(Str::substr($column, 0, Str::length($column) - 3));
+        }
+    }
+    return $data;
+}
+
+function set_prefix($string) {
+    $string = strtoupper($string);
+    $string = preg_replace('/[^A-Z]/', '', $string);
+
+    $initials = [];
+
+    $words = explode(' ', $string);
+    foreach ($words as $word) {
+        $initials[] = strtoupper(substr($word, 0, 1));
+    }
+
+    while (count($initials) < 3) {
+        $initials[] = chr(rand(65, 90));
+    }
+
+    return implode('', $initials);
+}
+
 function fresh_card_number($prefix, $region, $id) {
-    return $prefix . $region . date('y') . sprintf('%03s', intval(substr($id, -3)) + 1);
+    return $prefix . $region . date('y') . sprintf('%03s', intval(Str::substr($id, -3)) + 1);
 }
 
 function incerement_card_number($id) {
-    return sprintf('%03s', intval(substr($id, -3)) + 1);
+    return sprintf('%03s', intval(Str::substr($id, -3)) + 1);
 }
 
 function randomizer() {
-    $int = rand(0, 25);
+    $number = rand(0, 25);
     $letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    return $letters[$int];
+    // $response = chr(rand(65, 90));
+    $response = $letter[$number];
+    return $response;
 }
 
 function generate_table_code() {
     $tables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
     $result = [];
     TableCode::truncate();
-    foreach ($tables as $key => $value) {
+    foreach ($tables as $key => $table) {
         $result[$key]['code'] = Str::uuid();
-        $result[$key]['name'] = Str::lower($value);
-        $result[$key]['label'] = Str::headline($value);
+        $result[$key]['name'] = Str::lower($table);
+        $result[$key]['label'] = Str::headline($table);
         TableCode::create($result[$key]);
     }
     return $result;
+}
+
+function calculate_age($date) {
+    $birthdate = new DateTime($date);
+    $currentDate = new DateTime();
+    $age = $currentDate->diff($birthdate);
+    return $age->y;
 }
 
 function publish_sftp_now() {}

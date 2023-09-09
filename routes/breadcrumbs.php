@@ -9,7 +9,7 @@ use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Support\Str;
 
 Breadcrumbs::for('master.index', function (BreadcrumbTrail $trail) {
-    $trail->push('Master', route('master.index'));
+    $trail->push('Home', route('master.index'));
 });
 
 Breadcrumbs::for('dashboard.index', function (BreadcrumbTrail $trail) {
@@ -52,7 +52,12 @@ Breadcrumbs::for('vacancy.index', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('vacancy.show', function (BreadcrumbTrail $trail, Vacancy $vacancy) {
     $trail->parent('vacancy.index');
-    $trail->push($vacancy->project->project_number, route('vacancy.show', $vacancy));
+    $trail->push($vacancy->name, route('vacancy.show', $vacancy));
+});
+
+Breadcrumbs::for('vacancy.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('vacancy.index');
+    $trail->push('Tambah', route('vacancy.create'));
 });
 
 Breadcrumbs::for('vacancy.edit', function (BreadcrumbTrail $trail, Vacancy $vacancy) {
@@ -60,13 +65,38 @@ Breadcrumbs::for('vacancy.edit', function (BreadcrumbTrail $trail, Vacancy $vaca
     $trail->push('Sunting', route('vacancy.edit', $vacancy));
 });
 
+Breadcrumbs::for('vacancy.question', function (BreadcrumbTrail $trail) {
+    $trail->parent('vacancy.index');
+    $trail->push('Tes Rekrutmen', route('vacancy.question'));
+});
+
+Breadcrumbs::for('question.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Soal Tes', route('question.index'));
+});
+
+Breadcrumbs::for('recruitment.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Seleksi', route('recruitment.index'));
+});
+
+Breadcrumbs::for('score.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Penilaian', route('score.index'));
+});
+
 Breadcrumbs::for('contract.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
     $trail->push('Generate PKWT', route('contract.index'));
 });
 
+Breadcrumbs::for('contract.offering', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Offering Letter', route('contract.offering'));
+});
+
 Breadcrumbs::for('contract.signed', function (BreadcrumbTrail $trail) {
-    $trail->parent('contract.index');
+    $trail->parent('home.index');
     $trail->push('Validasi PKWT', route('contract.signed'));
 });
 

@@ -18,4 +18,10 @@ class Region extends Model
     public function employees() {
     	return $this->hasMany(Employee::class, 'region_id', 'id');
     }
+
+    /*
+    public function vacancies() {
+        return $this->belongsToMany(Vacancy::class, 'regions_and_vacancies')->orderBy('regions.code');
+    }
+    */
 }

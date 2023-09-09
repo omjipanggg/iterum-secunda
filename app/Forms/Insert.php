@@ -2,6 +2,8 @@
 
 namespace App\Forms;
 
+use App\Models\TableCode;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -30,6 +32,9 @@ class Insert extends Form
                 case 'text':
                     $type = 'textarea';
                     break;
+                case 'timestamp':
+                    $type = 'datetime';
+                    break;
                 default:
                     $type = 'text';
                     break;
@@ -38,23 +43,37 @@ class Insert extends Form
             if ($this->isForeign($this->model, $column)) {
                 if (($column === 'created_by') || ($column === 'updated_by') || ($column === 'deleted_by')) {}
                 else {
-                    // $child = '\\App\\Models\\' . Str::studly(Str::singular(Str::replace('_id', '', $column)));
                     $plural = Str::plural(Str::replace('_id', '', $column));
                     if (Schema::hasTable($plural)) { $child = DB::table($plural); }
 
                     $singular = Str::singular(Str::replace('_id', '', $column));
                     if (Schema::hasTable($singular)) { $child = DB::table($singular); }
 
+                    $this->add(Str::replace('_id', '', $column), 'static', [
+                        'label' => Str::replace('_id', '', $column),
+                        'label_show' => false,
+                        'tag' => 'a',
+                        'attr' => [
+                            'class' => 'small fw-semibold dotted',
+                            'href' => route('master.fetch', $this->getTableCode($column))
+                        ],
+                        'value' => 'Tambah [' . Str::replace('_id', '', $column) . '] baru'
+                    ]);
+
                     $this->add($column, 'select', [
                         'label' => Str::replace('_id', '', $column),
                         'label_show' => true,
+                        'label_attr' => [
+                            'class' => 'form-label',
+                            'for' => $column
+                        ],
                         'choices' => $child->orderBy('id')->pluck('name', 'id')->toArray(),
                         'empty_value' => 'Pilih satu',
                         'attr' => [
-                            'class' => 'form-select form-select-sm select2-single-modal',
+                            'class' => 'form-select form-select-sm select2-single-modal'
                         ],
                         'wrapper' => [
-                            'class' => 'form-select-floating my-2'
+                            'class' => 'form-select-floating mb-1'
                         ]
                     ])->getField($column)->setValue(null);
                 }
@@ -65,6 +84,10 @@ class Insert extends Form
                     $this->add($column, $type, [
                         'label' => $column,
                         'label_show' => true,
+                        'label_attr' => [
+                            'class' => 'form-label',
+                            'for' => $column
+                        ],
                         'attr' => [
                             'class' => 'form-control form-control-sm',
                             'autocomplete' => 'off',
@@ -78,6 +101,10 @@ class Insert extends Form
                     $this->add($column, $type, [
                         'label' => $column,
                         'label_show' => false,
+                        'label_attr' => [
+                            'class' => 'form-label',
+                            'for' => $column
+                        ],
                         'attr' => [
                             'class' => 'form-control form-control-sm',
                             'autocomplete' => 'off',
@@ -101,11 +128,17 @@ class Insert extends Form
         ]);
     }
 
-    public function isForeign(string $table, string $column) {
+    protected function isForeign(string $table, string $column) {
         $columns = Schema::getConnection()->getDoctrineSchemaManager()->listTableForeignKeys($table);
         return collect($columns)->map(function($item) {
             return $item->getColumns();
         })->flatten()->contains($column);
+    }
+
+    protected function getTableCode(string $column) {
+        $table = Str::snake(Str::plural(Str::replace('_id', '', $column)));
+        $code = TableCode::where('name', $table)->first()->code;
+        return $code;
     }
 }
 

@@ -109,7 +109,7 @@ class ContractController extends Controller
     }
 
     public function offering() {
-        return 'Offering';
+        return view('pages.contract.offering');
     }
 
     /**

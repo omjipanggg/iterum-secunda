@@ -24,19 +24,18 @@
         <hr>
         <p class="mb-2">Dapatkan informasi lowongan kerja terbaru!</p>
         <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-            <form action="{{ route('home.subscribe') }}" method="POST" class="w-100">
-              @csrf
-              @method('POST')
-              <div class="input-group">
-              <label for="subscription" class="visually-hidden">Alamat email</label>
-              <input id="subscription" type="email" class="form-control" placeholder="Alamat email" autocomplete="off" name="email" required="">
-              <button class="btn btn-dual px-3 rounded-0" type="submit">
-                {{ __('Kirim') }}
-                <i class="bi bi-send ms-1"></i>
-              </button>
-              </div>
-            </form>
-          </div>
+          <form action="{{ route('home.subscribe') }}" method="POST" class="w-100" onsubmit="loadingOnSubmit(event);">
+            @csrf
+            @method('POST')
+            <div class="input-group">
+            <label for="subscription" class="visually-hidden">Alamat email</label>
+            <input id="subscription" type="email" class="form-control" placeholder="Alamat email" autocomplete="off" name="email" required="">
+            <button class="btn btn-dual px-3 rounded-0" type="submit">
+              {{ __('Kirim') }}
+              <i class="bi bi-send ms-1"></i>
+            </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

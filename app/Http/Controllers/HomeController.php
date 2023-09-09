@@ -40,7 +40,7 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::all();
-        $categories = Category::withCount('vacancies')->take(8)->get();
+        $categories = Category::withCount('vacancies')->take(8)->inRandomOrder()->get();
         $vacancies = Vacancy::withCount('candidates')->where([
             ['closing_date', '>=', today()],
             ['active', true]
@@ -132,7 +132,7 @@ class HomeController extends Controller
     }
 
     public function report() {
-        alert()->success('Terima Kasih', 'Laporan Anda telah kami terima.');
+        alert()->info('Informasi', 'Dalam tahap pengembangan.');
         return redirect()->back();
     }
 }

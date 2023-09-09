@@ -19,11 +19,11 @@
 						<span id="table-name">@yield('title')</span>
 					</div>
 					<div class="wrap">
-						<a class="btn btn-sm btn-outline-color" href="{{ route('master.import', $table->code) }}" data-bs-toggle="modal" data-bs-placement="top" data-bs-target="#modalControl" data-bs-table="{{ $table->label }}" data-bs-type="Unggah" onclick="event.preventDefault()" title="Unggah">
+						<a class="btn btn-sm px-3 btn-outline-color" href="{{ route('master.import', $table->code) }}" data-bs-toggle="modal" data-bs-placement="top" data-bs-target="#modalControl" data-bs-table="{{ $table->label }}" data-bs-type="Unggah" onclick="event.preventDefault();" title="Unggah">
 							Unggah
 							<i class="bi bi-box-arrow-up-right ms-1"></i>
 						</a>
-						<a class="btn btn-sm btn-outline-color" href="{{ route('master.create', $table->code) }}" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="{{ $table->label }}" data-bs-type="Tambah" onclick="event.preventDefault()" title="Tambah">
+						<a class="btn btn-sm px-3 btn-outline-color" href="{{ route('master.create', $table->code) }}" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="{{ $table->label }}" data-bs-type="Tambah" onclick="event.preventDefault();" title="Tambah">
 							Tambah
 							<i class="bi bi-box-arrow-up-right ms-1"></i>
 						</a>

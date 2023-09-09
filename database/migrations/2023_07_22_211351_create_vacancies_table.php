@@ -14,8 +14,13 @@ return new class extends Migration
         Schema::create('vacancies', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('header_number')->nullable();
+            /*
             $table->foreignUuid('project_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('projects');
             $table->foreignId('job_title_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('job_titles');
+            $table->foreignUuid('region_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('regions');
+            */
+            $table->char('project_id', 36)->nullable()->index();
+            $table->unsignedBigInteger('job_title_id')->nullable()->index();
             $table->string('name')->nullable();
             $table->string('placement')->nullable();
             $table->text('qualification')->nullable();
@@ -25,13 +30,13 @@ return new class extends Migration
             $table->date('closing_date')->nullable();
             $table->unsignedBigInteger('min_limit')->nullable();
             $table->unsignedBigInteger('max_limit')->nullable();
-            $table->char('template_id', 36)->nullable()->index();
-            $table->foreignUuid('region_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('regions');
+            $table->char('region_id', 36)->nullable()->index();
+            $table->char('template_id', 36)->default('00000000-0000-0000-0000-000000000000')->nullable()->index();
             $table->boolean('active')->default(0);
             $table->boolean('hidden_partner')->default(0);
             $table->boolean('hidden_placement')->default(0);
             $table->boolean('hidden_salary')->default(0);
-            $table->foreignId('vacancy_type_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('vacancy_types');
+            $table->foreignId('vacancy_type_id')->default(4)->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('vacancy_types');
             $table->string('slug')->nullable();
             $table->dateTime('published_at')->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));

@@ -43,6 +43,7 @@
 <body class="d-flex flex-column min-vh-100">
     @include('components.modal')
     @include('components.modal-delete')
+    @include('components.modal-filter')
     @include('components.loader')
     @include('components.mover')
     @include('sweetalert::alert')

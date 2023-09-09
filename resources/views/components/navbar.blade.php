@@ -27,10 +27,10 @@
                 --}}
                 @if (Route::has('register'))
                 <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    <a id="navbarDropdown" class="btn btn-outline-color px-3 rounded-0 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         {{ __('Register') }}
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown" id="registerItem">
                         <a class="dropdown-item" href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Pencari kerja</a>
                         <a class="dropdown-item" href="{{ route('register.createPartner') }}"><i class="bi bi-briefcase me-2"></i>Pemberi kerja</a>
                     </div>

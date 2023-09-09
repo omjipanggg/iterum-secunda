@@ -36,11 +36,15 @@
         <div class="mt-12"></div>
 
         <div class="row position-relative">
+
+            @if ($vacancies->count() > 0)
             <div class="col-12">
                 @if(request()->get('keyword'))
                     <p class="mb-4">Menampilkan data dengan kata kunci: <strong>"{{ request()->get('keyword') }}"</strong></p>
                 @endif
             </div>
+            @endif
+
             <div class="col-12">
                 <div class="d-flex flex-wrap gap-3 vacancy-container justify-content-between">
                     @forelse ($vacancies as $vacancy)
@@ -101,7 +105,7 @@
                     @empty
                     <div class="card flex-fill">
                         <div class="card-body">
-                            <p class="m-0 text-center">Data tidak ditemukan dengan kata kunci: <strong>"{{ request()->get('keyword') }}"</strong></p>
+                            <p class="m-0 text-center">Data tidak ditemukan</p>
                         </div>
                     </div>
                     @endforelse
@@ -128,6 +132,7 @@
     	--}}
 
 
+        @if ($vacancies->count() > 0)
         <div class="row pt-4">
             <div class="col">
                 <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start justify-content-between">
@@ -136,6 +141,8 @@
                 </div>
             </div>
         </div>
+        @endif
+
     </div>
 </section>
 @endsection

@@ -57,7 +57,7 @@ class WebMasterController extends Controller
         return redirect()->back();
     }
 
-    public function index(FormBuilder $builder)
+    public function index()
     {
         $context = [];
         return view('pages.master.index', $context);
@@ -70,7 +70,7 @@ class WebMasterController extends Controller
         $form = $builder->create(Insert::class, [
             'method' => 'POST',
             'url' => route('master.store', $code),
-            'model' => $table->name,
+            'model' => $table->name
         ]);
 
         $context = ['form' => $form];
@@ -86,7 +86,7 @@ class WebMasterController extends Controller
 
         Alert::error('Kesalahan', 'Data gagal ditambahkan.');
         if ($query) {
-            \Log::create('Stored—'. $table->name);
+            \Log::create('Stored_'. $table->name . '_table');
             Alert::success('Sukses', 'Data berhasil ditambahkan.');
         }
         return redirect()->back();
@@ -101,7 +101,7 @@ class WebMasterController extends Controller
             return redirect()->route('home.index');
         }
 
-        $model = '\\App\\Models\\' . \Str::studly(\Str::singular($table->name));
+        // $model = '\\App\\Models\\' . \Str::studly(\Str::singular($table->name));
         $columns = array_merge(['edit', 'delete'], get_column_name($table->name));
 
         $records = DB::table($table->name)->get();
@@ -119,7 +119,12 @@ class WebMasterController extends Controller
         $table = TableCode::where('code', $code)->first();
         $columns = array_merge(['edit', 'delete'], get_column_name($table->name));
         $columnTypes = array_merge(['edit', 'delete'], get_column_type($table->name));
-        return DataTables::of(DB::table($table->name)->limit(10))->with('columns', $columns)->with('columnTypes', $columnTypes)->toJson();
+
+        $data = DB::table($table->name)->limit(10);
+        return DataTables::of($data)->with([
+            'columns' => $columns,
+            'columnTypes' => $columnTypes
+        ])->toJson();
     }
 
     public function import(string $code) {
@@ -174,29 +179,60 @@ class WebMasterController extends Controller
     }
 
     public function storeMenu(Request $request) {
+        // dd($request->all());
+        if (!$request->has('menu') || !$request->has('roles')) {
+            Alert::error('Kesalahan', 'Mohon isi semua kolom yang tersedia.');
+            return redirect()->back()->with(['code', 503]);
+        }
+
         foreach ($request->roles as $role) {
             Role::find($role)->menu()->detach();
             foreach ($request->menu as $menu) {
                 Role::find($role)->menu()->attach($menu);
             }
         }
-        Alert::success('Sukses', 'Hak akses disesuaikan.');
-        return redirect()->back()->with(['code' => 200, 'message' => 'Done.']);
+
+        Alert::success('Sukses', 'Hak Akses berhasil disesuaikan.');
+        return redirect()->back()->with(['code' => 200]);
     }
 
     public function show(string $table, string $id)
     {
-        dd($table);
+        dd($table, $id);
     }
 
-    public function edit(string $code, FormBuilder $builder)
+    public function edit(string $code, string $id, FormBuilder $builder)
     {
-        return 'EDIT DI SINI';
+        $table = TableCode::where('code', $code)->first();
+
+        $form = $builder->create(Edit::class, [
+            'method' => 'PUT',
+            'url' => route('master.update', [$code, $id]),
+            'model' => $table->name,
+            'data' => [
+                'records' => DB::table($table->name)->where('id', $id)->get()
+            ]
+        ]);
+
+        $context = ['form' => $form];
+
+        return view('pages.master.edit', $context);
     }
 
     public function update(Request $request, string $code, string $id)
     {
-        \Log::create('Updated—'. $table .' ('. Str::upper($id) .')');
+        $table = TableCode::where('code', $code)->first();
+        $query = DB::table($table->name)->where('id', $id)->update($request->except(['_method', '_token']));
+
+        if (!$query) {
+            Alert::error('Kesalahan', 'Data gagal diubah.');
+            return redirect()->back();
+        }
+
+        \Log::create('Updated_'. $table->name .'_table('. Str::upper($id) .')');
+
+        Alert::success('Sukses', 'Data berhasil diubah.');
+        return redirect()->back();
     }
 
     public function destroy(Request $request, string $code, string $id)
@@ -223,6 +259,6 @@ class WebMasterController extends Controller
 
     public function destroyThem(Request $request) {
         Alert::warning('Perhatian', 'Mohon mencoba kembali.');
-        return redirect()->back()->with('status', 401);
+        return redirect()->back()->with('code', 401);
     }
 }

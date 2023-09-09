@@ -24,6 +24,11 @@ class Vacancy extends Model
         'closing_date' => 'datetime'
     ];
 
+    protected $dates = [
+        'opening_date',
+        'closing_date'
+    ];
+
     public function position() {
         return $this->belongsTo(JobTitle::class, 'job_title_id');
     }
@@ -47,6 +52,14 @@ class Vacancy extends Model
     public function project() {
         return $this->belongsTo(Project::class, 'project_id');
     }
+
+    public function region() {
+        return $this->belongsTo(Region::class, 'region_id');
+    }
+
+    // public function regions() {
+        // return $this->belongsToMany(Region::class, 'regions_and_vacancies')->orderBy('regions.code');
+    // }
 
     public function city() {
         return $this->belongsTo(City::class, 'city_id');
@@ -76,7 +89,7 @@ class Vacancy extends Model
     }
 
     public function categories() {
-        return $this->belongsToMany(VacancyCategory::class, 'categories_and_vacancies')->orderBy('name');
+        return $this->belongsToMany(VacancyCategory::class, 'categories_and_vacancies')->orderBy('vacancy_categories.name');
     }
 
     public function hasCategory($id) {

@@ -28,10 +28,12 @@
                                 <i class="bi bi-archive ms-1"></i>
                             </a>
                         @else
+                            @if (!empty($vacancy->closing_date) && $vacancy->closing_date > today())
                             <a href="{{ route('vacancy.publish', $vacancy->id) }}" class="btn btn-outline-color px-3">
                                 Terbitkan
                                 <i class="bi bi-send ms-1"></i>
                             </a>
+                            @endif
                         @endif
                         <a href="{{ route('vacancy.edit', $vacancy->id) }}" class="btn btn-outline-color px-3">
                             Sunting
@@ -60,7 +62,14 @@
                             <a href="{{ route('vacancy.show', $relate->id) }}" class="list-group-item list-group-item-action">
                                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                                     {{ $relate->name }}
-                                    <span class="badge text-bg-color">{{ ($relate->placement) }}</span>
+                                    <div class="group">
+                                        <span class="badge text-bg-color py-1"><i class="bi bi-geo-alt-fill me-1"></i>{{ Str::slug($relate->placement) }}</span>
+                                        @if ($relate->active)
+                                            <span class="badge text-bg-success py-1"><i class="bi bi-check-circle-fill me-1"></i>active</span>
+                                        @else
+                                            <span class="badge text-bg-danger py-1"><i class="bi bi-x-circle-fill me-1"></i>inactive</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </a>
                         @empty
