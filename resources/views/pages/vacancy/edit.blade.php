@@ -1,5 +1,5 @@
 @extends('layouts.panel')
-@section('title', 'Lowongan Kerja: Sunting')
+@section('title', 'Lowongan Kerja: '. $vacancy->name)
 @section('content')
 <div class="container-fluid px-12">
 	<div class="row">
@@ -27,7 +27,7 @@
 									<i class="bi bi-newspaper me-2"></i>
 									@yield('title')
 								</div>
-								{{ $vacancy->project->project_number }}
+								{{-- {{ $vacancy->project->project_number }} --}}
 							</div>
 						</div>
 						<div class="card-body">

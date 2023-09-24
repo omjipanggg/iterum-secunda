@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Availability;
 use App\Models\Candidate;
 use App\Models\City;
 use App\Models\EducationField;
@@ -29,16 +30,12 @@ class ProfileController extends Controller
 
     public function index()
     {
-        $avails = [
-            'SEGERA', 'DALAM SATU MINGGU', 'DALAM 1 - 3 MINGGU',
-            'DALAM SATU BULAN', 'DALAM 1 - 3 BULAN',
-            'KONFIRMASI DAHULU'
-        ];
+        $availabilities = Availability::all();
         $genders = Gender::all();
         $cities = City::orderBy('name')->groupBy('name')->get();
         $maritals = MaritalStatus::all();
         $context = [
-            'avails' => $avails,
+            'avails' => $availabilities,
             'cities' => $cities,
             'genders' => $genders,
             'maritals' => $maritals
@@ -54,8 +51,8 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
-        alert()->success('Sukses', 'Profile berhasil ditambahkan.');
-        return redirect()->back();
+        alert()->success('Sukses', 'Data Diri berhasil ditambahkan.');
+        return redirect()->back()->with('code', 200);
     }
 
     public function show(string $id)
@@ -70,7 +67,8 @@ class ProfileController extends Controller
 
     public function update(Request $request, string $id)
     {
-        //
+        alert()->success('Sukses', 'Data Diri berhasil diperbarui.');
+        return redirect()->back()->with('code', 200);
     }
 
     public function destroy(string $id)
@@ -78,7 +76,7 @@ class ProfileController extends Controller
         //
     }
 
-    public function destroyData(string $id) {
+    public function destroyData(string $id, string $parameter) {
         return redirect()->back()->with('code', 200);
     }
 

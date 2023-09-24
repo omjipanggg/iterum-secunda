@@ -50,6 +50,16 @@ class User extends Authenticatable implements MustVerifyEmail
         if (!is_array($id)) { $id = [$id]; }
         return $this->roles()->whereIn('role_id', $id)->exists();
     }
+
+    public function menu() {
+        return $this->hasManyThrough(Role::class, Menu::class);
+    }
+
+    public function hasMenu($id) {
+        if (!is_array($id)) { $id = [$id]; }
+        return $this->menu()->whereIn('menu_id', $id)->exists();
+    }
+
     /*
     public function sendEmailVerificationNotification() {
         $url = URL::temporarySignedRoute(

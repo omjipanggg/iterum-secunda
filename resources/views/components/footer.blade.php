@@ -1,25 +1,36 @@
 <div class="mb-12-on"></div>
 <footer class="mt-auto pt-5 text-bg-color">
-  <div class="container">
+  <div class="container mb-5">
     <div class="row">
-      <div class="col-12 col-md-2 mb-3">
-        <h5>Menu</h5>
+      <div class="col-12 col-xl-3 col-lg-4 col-md-6 mb-3">
+        <h5>Informasi</h5>
         <hr>
-        <ul class="nav flex-column">
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 dotted">Home</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 dotted">Portal</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 dotted">Tutorial</a></li>
+        <div class="group d-flex gap-2 align-items-baseline">
+          <i class="bi bi-geo-alt-fill"></i>
+          <a href="https://maps.app.goo.gl/QWCKaYxv96xArMjM8" class="dotted mb-2">Jl. T.B. Simatupang No.10, RT.010/002, Kel. Cilandak Barat, Kec. Cilandak, Kota Jakarta Selatan, DKI Jakarta 12430</a>
+        </div>
+        <div class="group d-flex gap-2 align-items-baseline">
+          <i class="bi bi-telephone-fill"></i>
+          <p class="mb-2">
+            <a href="#" class="dotted">0818 0606 0979</a> / <a href="#" class="dotted">021 769 236 9</a>
+          </p>
+        </div>
+        <div class="group d-flex gap-2 align-items-baseline">
+          <i class="bi bi-envelope-fill"></i>
+          <a href="mailto:selena@ptkam.co.id" class="dotted mb-2">selena@ptkam.co.id</a>
+        </div>
+      </div>
+      <div class="col-12 col-xl-2 col-lg-3 col-md-6 mb-4">
+        <h5>Tautan</h5>
+        <hr>
+        <ul class="nav flex-column gap-2">
+          <li class="nav-item"><a href="#" class="nav-link p-0 dotted">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link p-0 dotted">Portal</a></li>
+          <li class="nav-item"><a href="#" class="nav-link p-0 dotted">Sitemap</a></li>
+          <li class="nav-item"><a href="#" class="nav-link p-0 dotted">Bantuan</a></li>
         </ul>
       </div>
-      <div class="col-12 col-md-2 mb-3">
-        <h5>Permalink</h5>
-        <hr>
-        <ul class="nav flex-column">
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 dotted">Bantuan</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 dotted">Peta situs</a></li>
-        </ul>
-      </div>
-      <div class="col-xl-4 col-lg-5 col-md-7 offset-xl-4 offset-lg-3 offset-md-1 mb-0 mb-md-3">
+      <div class="col-xl-4 col-lg-5 col-md-12 offset-xl-3 mb-0 mb-md-3">
         <h5>Berlangganan</h5>
         <hr>
         <p class="mb-2">Dapatkan informasi lowongan kerja terbaru!</p>

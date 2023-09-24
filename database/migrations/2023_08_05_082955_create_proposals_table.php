@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('proposals', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->foreignUuid('candidate_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('candidates');
             $table->foreignUuid('vacancy_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('vacancies');
             $table->string('resume')->nullable();

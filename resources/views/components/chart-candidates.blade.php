@@ -1,0 +1,1 @@
+<canvas id="candidatesChart" class="m-0"></canvas>

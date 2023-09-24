@@ -18,7 +18,7 @@ class LastEducation extends Model
     }
 
     public function education() {
-    	return $this->belongsTo(Education::class, 'education_id');
+    	return $this->belongsTo(Education::class, 'education_id')->orderBy('education.name');
     }
 
     public function higherEducation() {

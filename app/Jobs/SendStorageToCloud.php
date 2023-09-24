@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 // use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
-class UploadFile implements ShouldQueue
+class SendStorageToCloud implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

@@ -10,7 +10,7 @@
       	<div id="modalFilterPlaceholders">Fetching...</div>
       </div>
       <div class="modal-footer py-1 text-bg-brighter-color">
-        <button type="button" class="btn btn-color px-3" id="trigger">
+        <button type="button" class="btn btn-color btn-sm px-3" id="trigger">
           Terapkan
           <i class="bi bi-funnel ms-1"></i>
         </button>

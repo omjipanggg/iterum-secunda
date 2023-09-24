@@ -131,6 +131,14 @@
 
         </div>
     </div>
+    <form action="{{ route('dashboard.search') }}" class="form form-inline d-inline-block" method="POST">
+        @csrf
+        @method('POST')
+        <div class="input-group">
+            <input class="form-control px-0-5" type="text" autocomplete="off" placeholder="Search" aria-label="Search" aria-describedby="btn-search" name="keyword" value="{{ request()->input('keyword') ?? old('keyword') }}">
+            <button class="btn btn-color" id="btn-search" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
     <div class="sb-sidenav-footer">
         <div class="d-flex gap-2">
         <a href="{{ route('home.settings') }}">

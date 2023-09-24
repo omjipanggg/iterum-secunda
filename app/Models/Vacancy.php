@@ -46,7 +46,11 @@ class Vacancy extends Model
     }
 
     public function candidates() {
-    	return $this->belongsToMany(Candidate::class, 'proposals')->orderByDesc('created_at')->withPivot(['description', 'resume', 'status']);
+    	return $this->belongsToMany(Candidate::class, 'proposals')->orderByDesc('proposals.created_at')->withPivot(['description', 'resume', 'status'])->withTimestamps();
+    }
+
+    public function tests() {
+        return $this->hasMany(VacancyTest::class, 'vacancy_id', 'id');
     }
 
     public function project() {
@@ -67,25 +71,39 @@ class Vacancy extends Model
 
     public function scopeFilter($query, $filter) {
         $query->when($filter ?? false, function($query, $search) {
-            return $query->where('name', 'like', '%'. $search .'%')
+            return $query->orWhere('name', 'like', '%'. $search .'%')
                 ->orWhere('placement', 'like', '%'. $search .'%')
                 /*
                 ->orWhere('description', 'like', '%'. $search .'%')
                 ->orWhere('qualification', 'like', '%'. $search .'%')
                 */
                 ->orWhereHas('project', function($query) use($search) {
-                    $query->where('project_number', 'like', '%'. $search .'%');
+                    $query->orWhere('project_number', 'like', '%'. $search .'%');
                 })
                 ->orWhereHas('project', function($query) use($search) {
-                    $query->whereHas('partner', function($query) use($search) {
-                        $query->where('name', 'like', '%'. $search .'%');
+                    $query->orWhere('project_number', $search)->orWhereHas('partner', function($query) use($search) {
+                        $query->orWhere('name', 'like', '%'. $search .'%');
                     });
                 })
                 ->orWhereHas('type', function($query) use($search) {
-                    $query->where('name', 'like', '%'. $search .'%');
+                    $query->orWhere('name', 'like', '%'. $search .'%');
                 }
             );
         });
+    }
+
+    public function scopeYearlyCount($query) {
+        $starting_date = mktime(0, 0, 0, 1, 1, date("Y"));
+        $starting_date = date("Y-m-d", $starting_date);
+
+        $ending_date = mktime(0, 0, 0, 12, 31, date("Y"));
+        $ending_date = date("Y-m-d", $ending_date);
+
+        return $query->whereBetween('created_at', [$starting_date, $ending_date])
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy(function ($vacancy) { return $vacancy->created_at->format('M'); })
+            ->map(function ($vacancyGroup) { return $vacancyGroup->count(); });
     }
 
     public function categories() {

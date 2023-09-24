@@ -74,7 +74,7 @@
                                     @endforeach
                                     </td>
                                     <td>{{ $user->token->department_name ?? '-' }}</td>
-                                    <td>{{ $user->token->region->name ?? '-' }}</td>
+                                    <td class="fw-semibold">{{ Str::upper($user->token->region->slug ?? '-') ?? '-' }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

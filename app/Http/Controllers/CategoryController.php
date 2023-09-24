@@ -15,7 +15,13 @@ class CategoryController extends Controller
     public function index()
     {
         $context = [
-            'categories' => Category::withCount('vacancies')->get()
+            'categories' => Category::withCount(['vacancies' => function($query) {
+                $query->where([
+                    ['closing_date', '>=', today()],
+                    ['active', true]
+                ]);
+            }])->orderByDesc('vacancies_count')
+            ->orderBy('name')->get()
         ];
         return view('pages.portal.category.index', $context);
     }
@@ -44,7 +50,10 @@ class CategoryController extends Controller
         $category = Category::where('slug', $slug)->with('vacancies')->withCount('vacancies')->first();
         $vacancies = Vacancy::whereHas('categories', function($query) use($slug) {
             $query->where('slug', $slug);
-        })->paginate(6);
+        })->where([
+            ['closing_date', '>=', today()],
+            ['active', true]
+        ])->paginate(6);
         $context = [
             'data' => $category,
             'vacancies' => $vacancies

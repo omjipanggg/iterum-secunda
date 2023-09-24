@@ -17,10 +17,18 @@
 	#navbarSupportedContent #registerItem {
 		border-radius: 0 !important;
 	}
+	.flex-basis-4 {
+		flex-basis: 100%;
+	}
+	#patria .row {
+	    height: unset;
+	}
 }
 
 @media all and (max-width: 767.98px) {
-
+	.flex-basis-6 {
+		flex-basis: 100%;
+	}
 }
 
 @media all and (max-width: 575.98px) {
@@ -39,7 +47,16 @@
 	}
 
 	/* LAYOUTS */
-	.w-90 {
+	.w-90,
+	.w-480 {
 		width: 100% !important;
+	}
+}
+
+/* DASHBOARD */
+@media all and (min-width: 991.98px) and (max-width: 1279.98px) {
+	#layoutSidenav .flex-basis-4,
+	#layoutSidenav .flex-basis-6 {
+		flex-basis: 48%;
 	}
 }

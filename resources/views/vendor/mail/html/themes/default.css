@@ -230,6 +230,7 @@ img {
     text-decoration: none;
 }
 
+/*
 .button-blue,
 .button-primary {
     background-color: #2d3748;
@@ -238,7 +239,14 @@ img {
     border-right: 18px solid #2d3748;
     border-top: 8px solid #2d3748;
 }
-
+.button-red,
+.button-error {
+    background-color: #e53e3e;
+    border-bottom: 8px solid #e53e3e;
+    border-left: 18px solid #e53e3e;
+    border-right: 18px solid #e53e3e;
+    border-top: 8px solid #e53e3e;
+}
 .button-green,
 .button-success {
     background-color: #48bb78;
@@ -247,14 +255,42 @@ img {
     border-right: 18px solid #48bb78;
     border-top: 8px solid #48bb78;
 }
+*/
+
+.button-blue,
+.button-primary {
+    background-color: #314987;
+    border-bottom: 8px solid #314987;
+    border-left: 18px solid #314987;
+    border-right: 18px solid #314987;
+    border-top: 8px solid #314987;
+}
+
+.button-green,
+.button-success {
+    background-color: #00b05f;
+    border-bottom: 8px solid #00b05f;
+    border-left: 18px solid #00b05f;
+    border-right: 18px solid #00b05f;
+    border-top: 8px solid #00b05f;
+}
+
+.button-yellow,
+.button-warning {
+    background-color: #755900;
+    border-bottom: 8px solid #755900;
+    border-left: 18px solid #755900;
+    border-right: 18px solid #755900;
+    border-top: 8px solid #755900;
+}
 
 .button-red,
 .button-error {
-    background-color: #e53e3e;
-    border-bottom: 8px solid #e53e3e;
-    border-left: 18px solid #e53e3e;
-    border-right: 18px solid #e53e3e;
-    border-top: 8px solid #e53e3e;
+    background-color: #a61725;
+    border-bottom: 8px solid #a61725;
+    border-left: 18px solid #a61725;
+    border-right: 18px solid #a61725;
+    border-top: 8px solid #a61725;
 }
 
 /* Panels */

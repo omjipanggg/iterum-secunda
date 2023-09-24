@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendSubscription;
-use App\Jobs\UploadFile;
+use App\Jobs\SendStorageToCloud as Cloud;
 
 use App\Mail\SendSubscription as SendMailable;
 
+use App\Models\InterviewSchedule;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Vacancy;
@@ -40,16 +41,28 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::all();
-        $categories = Category::withCount('vacancies')->take(8)->inRandomOrder()->get();
+        $categories = Category::withCount(['vacancies' => function($query) {
+                $query->where([
+                    ['closing_date', '>=', today()],
+                    ['active', true]
+                ]);
+            }])->take(8)
+        // ->inRandomOrder()
+        ->orderByDesc('vacancies_count')
+        ->orderBy('name')
+        ->get();
+
         $vacancies = Vacancy::withCount('candidates')->where([
             ['closing_date', '>=', today()],
             ['active', true]
         ])->orderByDesc('published_at')->take(5)->get();
+
         $context = [
             'categories' => $categories,
             'users' => $users,
             'vacancies' => $vacancies
         ];
+
         return view('pages.homepage.index', $context);
     }
 
@@ -100,22 +113,26 @@ class HomeController extends Controller
         return view('pages.homepage.lounge', $context);
     }
 
-    public function search(Request $request) {
-        dd($request->all());
-    }
-
-    public function faq() {
-        $context = [];
-        return view('pages.dashboard.faq', $context);
-    }
-
     public function download(string $path, string $file) {
-        $path = implode('/', json_decode($path));
-        $target = storage_path('app/public/' . $path . '/' . $file);
+        $directory = implode('/', json_decode($path));
+        $target = storage_path('app/public/' . $directory . '/' . $file);
+
+        if (!file_exists($target)) {
+            alert()->error('Kesalahan', 'Berkas tidak ditemukan.');
+            return redirect()->back()->with('code', 412);
+        }
+
+        if (pathinfo($file, PATHINFO_EXTENSION) == 'pdf' || pathinfo($file, PATHINFO_EXTENSION) == 'PDF') {
+            return response()->file($target, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $file . '"'
+            ]);
+        }
+
         return response()->download($target);
     }
 
-    public function downloadResume(string $id) {
+    public function preview(string $id) {
         $path = storage_path('app/public/profiles/resumes/' . $id);
         if (!file_exists($path)) {
             alert()->error('Kesalahan', 'Berkas tidak ditemukan.');
@@ -128,11 +145,55 @@ class HomeController extends Controller
                 'Content-Disposition' => 'inline; filename="' . $id . '"'
             ]);
         }
+
         return response()->download($path);
     }
 
     public function report() {
         alert()->info('Informasi', 'Dalam tahap pengembangan.');
         return redirect()->back();
+    }
+
+    public function sendStorageToCloud(Request $request) {
+        $file = $request->file('file');
+        $fileName = $file->getClientOriginalName();
+        Cloud::dispatch($fileName, $file);
+        return redirect()->back()->with('code', 200);
+    }
+
+    // CANDIDATE-RESPONDED-THROUGH-EMAIL
+    // ========================================================================
+    public function scheduleResponse(string $id, string $response) {
+        $schedule = InterviewSchedule::find($id);
+
+        if (!$schedule) {
+            alert()->error('Kesalahan', 'Laman tidak ditemukan.');
+            return redirect()->route('home.index');
+        }
+
+        if ($schedule->has_changed) {
+            alert()->error('Kesalahan', 'Anda sudah memberikan jawaban pada '. date_time_indo_format($schedule->updated_at) .' WIB');
+            return redirect()->route('portal.show', $schedule->proposal->vacancy->slug);
+        }
+
+        $answer = false;
+        if ($response < 3) {
+            $answer = true;
+        } else if ($response == 3) {
+            alert()->info('Perhatian', 'Silakan isi sesi wawancara yang Anda kehendaki.');
+            return redirect()->route('schedule.editSession', $schedule->id);
+        } else {
+            alert()->error('Kesalahan', 'Parameter tidak diketahui.');
+            return redirect()->route('portal.show', $schedule->proposal->vacancy->slug);
+        }
+
+        if ($answer) {
+            $schedule->has_changed = 1;
+            $schedule->status = $response;
+            $schedule->save();
+        }
+
+        alert()->success('Sukses', 'Terima kasih atas jawaban Anda.');
+        return redirect()->route('portal.show', $schedule->proposal->vacancy->slug);
     }
 }

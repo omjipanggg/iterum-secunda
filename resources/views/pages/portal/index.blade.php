@@ -2,6 +2,14 @@
 @section('title', 'Portal')
 @section('content')
 @include('components.navbar')
+@include('components.hero-welcome')
+
+@auth
+@if (auth()->user()->hasRole(7))
+<div class="mb-12"></div>
+@endif
+@endauth
+
 <section id="portal">
     {{--
     <div class="container">
@@ -50,6 +58,15 @@
                     @forelse ($vacancies as $vacancy)
                     <div class="card vacancy-single pointer" onclick="window.location.href = '{{ route('portal.show', $vacancy->slug) }}';">
                         <div class="card-body position-relative">
+                            <div class="category-floating position-absolute w-72 gap-1 d-flex flex-wrap justify-content-end">
+                                @foreach ($vacancy->categories as $category)
+                                <span class="badge text-bg-color">
+                                    <a href="{{ route('category.show', $category->slug) }}" class="dotted">
+                                        {{ $category->name }}
+                                    </a>
+                                </span>
+                                @endforeach
+                            </div>
                             <div class="row">
                                 <div class="col-12 col-lg-9 mb-3">
                                     <span class="badge text-bg-color mb-3">

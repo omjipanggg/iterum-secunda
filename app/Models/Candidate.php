@@ -18,7 +18,11 @@ class Candidate extends Model
     protected $guarded = [];
 
     public function appliedTo() {
-    	return $this->belongsToMany(Vacancy::class, 'proposals')->orderByDesc('created_at')->withPivot(['description', 'resume', 'status']);
+    	return $this->belongsToMany(Vacancy::class, 'proposals')->orderBy('proposals.created_at')->withPivot(['description', 'resume', 'status'])->withTimestamps();
+    }
+
+    public function interviewSchedules() {
+        return $this->hasManyThrough(InterviewSchedule::class, Proposal::class, 'candidate_id', 'proposal_id')->orderBy('interview_sequence');
     }
 
     public function profile() {
@@ -69,5 +73,20 @@ class Candidate extends Model
         return $query->when($availability ?? false, function($query) use($availability) {
             $query->where('ready_to_work', $availability);
         });
+    }
+
+    public function scopeYearlyCount($query) {
+        $starting_date = mktime(0, 0, 0, 1, 1, date("Y"));
+        $starting_date = date("Y-m-d", $starting_date);
+
+        $ending_date = mktime(0, 0, 0, 12, 31, date("Y"));
+        $ending_date = date("Y-m-d", $ending_date);
+
+        return $query->join('profiles', 'candidates.profile_id', '=', 'profiles.id')
+            ->whereBetween('candidates.created_at', [$starting_date, $ending_date])
+            ->orderBy('profiles.name')
+            ->get()
+            ->groupBy(function ($candidate) { return $candidate->created_at->format('M'); })
+            ->map(function ($candidateGroup) { return $candidateGroup->count(); });
     }
 }

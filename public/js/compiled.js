@@ -15,13 +15,21 @@ $(document).ready(function(event) {
     // ================================================================================
     const sidebarToggle = document.body.querySelector('#sidebarToggle');
     if (sidebarToggle) {
-        if (localStorage.getItem('sidebar-toggle') === true) {
-            document.body.classList.toggle('sb-sidenav-toggled');
+        if (localStorage.getItem('sidebar-toggle') === 'lumos') {
+            document.body.classList.add('sb-sidenav-toggled');
+        } else {
+            document.body.classList.remove('sb-sidenav-toggled');
         }
+
         sidebarToggle.addEventListener('click', (event) => {
             event.preventDefault();
             document.body.classList.toggle('sb-sidenav-toggled');
-            localStorage.setItem('sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+            // localStorage.setItem('sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+            if (document.body.classList.contains('sb-sidenav-toggled')) {
+                localStorage.setItem('sidebar-toggle', 'lumos');
+            } else {
+                localStorage.setItem('sidebar-toggle', 'nox');
+            }
         });
     }
 
@@ -56,10 +64,13 @@ $(document).ready(function(event) {
         segments.pop();
         // let parentUrl = baseUrl + segments.join('/');
         let parentUrl = baseUrl + '/' + segments[1];
+        let parentStr = new URL(currentUrl);
+        parentStr.search = '';
+        parentStr = parentStr.toString();
 
         $('#sidenavAccordion a.nav-link').each(function() {
             let parentHref = $(this).attr('href');
-            if (parentUrl == parentHref) {
+            if (parentUrl == parentHref || parentStr == parentHref) {
                 $(this).addClass('active');
 
                 let $parentCollapse = $(this).closest('.collapse');
@@ -106,6 +117,10 @@ $(document).ready(function(event) {
     });
     */
 
+    // ADD-NAME-TO-THE-COLUMNS
+    // ================================================================================
+    $('input[type=search]').attr('name', 'search');
+
     // MASKING-TEXT-TO-PASSWORD
     // ================================================================================
     $('#remember').click(function(event) {
@@ -133,43 +148,6 @@ $(document).ready(function(event) {
     [...document.querySelectorAll('.editor')].map((item) => {
         CKEDITOR.replace(item);
     });
-
-    // SELECT-2-FUCNTIONALITY
-    // ================================================================================
-    if ($('.select2-multiple')) {
-        [...document.body.querySelectorAll('.select2-multiple')].map((item) => {
-            $(item).select2();
-            $(item).select2('destroy');
-            $(item).select2({
-                placeholder: 'Pilih atau ketikkan jika tidak ada',
-                width: '100%',
-                dropdownAutoWidth: true,
-                theme: 'bootstrap-5',
-                language: 'id',
-                allowClear: true,
-                tags: true,
-                debug: true,
-                cache: true,
-            });
-        });
-    }
-
-    if ($('.select2-single')) {
-        [...document.body.querySelectorAll('.select2-single')].map((item) => {
-            $(item).select2();
-            $(item).select2('destroy');
-            $(item).select2({
-                placeholder: 'Pilih satu',
-                width: '100%',
-                theme: 'bootstrap-5',
-                dropdownAutoWidth: true,
-                language: 'id',
-                allowClear: true,
-                debug: true,
-                cache: true,
-            });
-        });
-    }
 
     // DATATABLE
     // ================================================================================
@@ -343,6 +321,10 @@ $(document).ready(function(event) {
                         orderCellsTop: true
                     });
                 },
+                complete: (response) => {
+                    $('#loader').fadeIn();
+                    console.log(response);
+                }
             });
         });
     }
@@ -364,8 +346,14 @@ $(document).ready(function(event) {
                                 response = '<span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i><a href="/portal/'+ row['slug'] +'" class="dotted text-white">Published</a></span>';
                             } else if (!row['active'] && new Date(row['closing_date']) > new Date()) {
                                 response = '<span class="badge text-bg-primary"><i class="bi bi-info-circle me-1"></i>Draft</span>';
-                            } else {
+                            }
+                            else if (row['active'] && new Date(row['closing_date']) < new Date()) {
                                 response = '<span class="badge text-bg-danger"><i class="bi bi-x-circle me-1"></i>Expired</span>';
+                            }
+                            else if (!row['active'] && new Date(row['closing_date']) < new Date()) {
+                                response = '<span class="badge text-bg-danger"><i class="bi bi-x-circle me-1"></i>Expired</span>';
+                            } else {
+                                response = '<span class="badge text-bg-dark"><i class="bi bi-question-circle me-1"></i>Unknown</span>';
                             }
                             return response;
                         }
@@ -502,14 +490,37 @@ $(document).ready(function(event) {
     }
 
     if ($('table.table-candidates')) {
-        const parameters = new URLSearchParams(window.location.search);
+        // const parameters = new URLSearchParams(window.location.search);
         [...document.body.querySelectorAll('table.table-candidates')].map((item) => {
             $(item).DataTable({
                 ajax: '/server/candidates/fetch' + window.location.search,
+                responsive: true,
                 processing: true,
                 serverSide: true,
                 orderCellsTop: true,
                 columns: [
+                    {
+                        data: null,
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return meta.row + 1;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'resume',
+                        name: 'resume',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<a href="/download/'+ encodeURIComponent(JSON.stringify(['profiles', 'resumes'])) +'/files/'+ data +'" class="dotted" target="_blank">Lihat CV</a>';
+                        }
+                    },
                     {
                         data: 'profile.name',
                         name: 'profile.name',
@@ -517,7 +528,27 @@ $(document).ready(function(event) {
                             if (data == '' || data == null) {
                                 return '<em>null</em>';
                             }
-                            return data.toUpperCase();
+                            return '<a href="/recruitment/'+ row['id'] +'" class="dotted fw-semibold">' + data.toUpperCase() + '</a>';
+                        }
+                    },
+                    {
+                        data: 'profile.primary_email',
+                        name: 'profile.primary_email',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<strong>' + data.toLowerCase() + '</strong>';
+                        }
+                    },
+                    {
+                        data: 'profile.phone_number',
+                        name: 'profile.phone_number',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<span class="text-code fw-semibold">' + data + '</span>';
                         }
                     },
                     {
@@ -547,7 +578,7 @@ $(document).ready(function(event) {
                             if (data == '' || data == null) {
                                 return '<em>null</em>';
                             }
-                            return dateFormat(data).toUpperCase() + ' <strong>('+ calculateAge(data) +')</strong>';
+                            return dateFormat(data) + ' <strong>('+ calculateAge(data) +')</strong>';
                         }
                     },
                     {
@@ -584,7 +615,14 @@ $(document).ready(function(event) {
                             }
                             return data.toUpperCase();
                         }
-                    }
+                    },
+                    {
+                        data: 'applied_to_count',
+                        name: 'applied_to_count',
+                        render: function(data, type, row, meta) {
+                            return '<strong>'+ data +'</strong> Lamaran';
+                        }
+                    },
                 ],
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
@@ -604,12 +642,384 @@ $(document).ready(function(event) {
                     if (data.deleted_at) {
                         $(row).addClass('deleted');
                     }
-                    // $(row).find('td:eq(8)').addClass('text-center');
                 }
             });
         });
     }
 
+    if ($('table.table-applied-candidates')) {
+        [...document.body.querySelectorAll('table.table-applied-candidates')].map((item) => {
+            let vacancyId = $(item).data('bsVacancyId');
+            $(item).DataTable({
+                ajax: '/server/vacancies/'+ vacancyId +'/applied/fetch' + window.location.search,
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                orderCellsTop: true,
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                    paginate: {
+                        previous: '<i class="bi bi-caret-left-fill"></i>',
+                        next: '<i class="bi bi-caret-right-fill"></i>'
+                    },
+                    infoFiltered: '',
+                    lengthMenu: '_MENU_',
+                    search: '',
+                    searchPlaceholder: "Pencarian",
+                    emptyTable: "Belum ada pelamar",
+                    processing: "Mengambil data..."
+                },
+                order: [[3, 'asc']],
+                createdRow: function(row, data, index) {
+                    if (data.deleted_at) {
+                        $(row).addClass('deleted');
+                    }
+                    $(row).find('td:eq(1)').addClass('px-2');
+                    $(row).find('td:eq(4)').addClass('text-bg-brighter-color fw-semibold');
+                    $(row).find('td:eq(5)').addClass('text-bg-brighter-color fw-semibold');
+                    $(row).find('td:eq(6)').addClass('text-bg-brighter-color fw-semibold');
+                },
+                meta: {
+                    vacancyId: vacancyId
+                },
+                columns: [
+                    {
+                        data: null,
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return meta.row + 1;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: null,
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            /*
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            */
+                            if (row['interview_schedules'].length) {
+                                let response = '';
+                                for (let i = 0; i < row['interview_schedules'].length; i++) {
+                                    if (row['interview_schedules'][i]['proposal']['vacancy_id'] == meta.settings.oInit.meta.vacancyId) {
+                                        if (row['interview_schedules'][i]['status'] == 0) {
+                                            response += '<span class="d-block text-bg-secondary px-2 py-1"><i class="bi bi-clock"></i>&nbsp;&nbsp;' + dateFormat(row['interview_schedules'][i]['interview_date']) + ' ' + row['interview_schedules'][i]['interview_time'] + ' WIB | Menunggu</span>';
+                                        } else if (row['interview_schedules'][i]['status'] == 1) {
+                                            response += '<span class="d-block text-bg-success px-2 py-1"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;' + dateFormat(row['interview_schedules'][i]['interview_date']) + ' ' + row['interview_schedules'][i]['interview_time'] + ' WIB | Dijadwalkan</span>';
+                                        } else if (row['interview_schedules'][i]['status'] == 2) {
+                                            response += '<span class="d-block text-bg-danger px-2 py-1"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;' + dateFormat(row['interview_schedules'][i]['interview_date']) + ' ' + row['interview_schedules'][i]['interview_time'] + ' WIB | Ditolak</span>';
+                                        } else if (row['interview_schedules'][i]['status'] == 3) {
+                                            response += '<span class="d-block text-bg-warning px-2 py-1"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;' + dateFormat(row['interview_schedules'][i]['interview_date']) + ' ' + row['interview_schedules'][i]['interview_time'] + ' WIB | Reschedule</span>';
+                                        } else if (row['interview_schedules'][i]['status'] == 5) {
+                                            response += '<span class="d-block text-bg-orange px-2 py-1"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;' + dateFormat(row['interview_schedules'][i]['interview_date']) + ' ' + row['interview_schedules'][i]['interview_time'] + ' WIB | Reschedule</span>';
+                                        } else if (row['interview_schedules'][i]['status'] == 9) {
+                                            response += '<span class="d-block text-bg-color px-2 py-1"><i class="bi bi-question-circle"></i>&nbsp;&nbsp;' + dateFormat(row['interview_schedules'][i]['interview_date']) + ' ' + row['interview_schedules'][i]['interview_time'] + ' WIB | <a href="/schedule/session/'+ row['interview_schedules'][i]['id'] +'/create" class="dotted text-white" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="Sesi Wawancara" data-bs-type="Reschedule" onclick="event.preventDefault();">Terima</a> | <a href="/schedule/session/'+ row['interview_schedules'][i]['id'] +'/decline" class="dotted text-white">Tolak</a></span>';
+                                        } else {
+                                            response += '<span class="d-block px-2 py-1">-</span>';
+                                        }
+                                    } else {
+                                        response = '<a href="/schedule/'+ meta.settings.oInit.meta.vacancyId +'/interview/'+ row['id'] +'/create" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="Sesi Wawancara" data-bs-type="Tambah" onclick="event.preventDefault();" class="dotted">Atur Sesi Wawancara</a>';
+                                    }
+                                }
+                                return response;
+                            }
+                            return '<a href="/schedule/'+ meta.settings.oInit.meta.vacancyId +'/interview/'+ row['id'] +'/create" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="Sesi Wawancara" data-bs-type="Tambah" onclick="event.preventDefault();" class="dotted">Atur Sesi Wawancara</a>';
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'resume',
+                        name: 'resume',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<a href="/download/'+ encodeURIComponent(JSON.stringify(['profiles', 'resumes'])) +'/files/'+ data +'" class="dotted" target="_blank">Lihat CV</a>';
+                        }
+                    },
+                    {
+                        data: 'applied_to',
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return dateFormat(row['applied_to'][0].pivot.created_at)
+                        }
+                    },
+                    {
+                        data: 'profile.name',
+                        name: 'profile.name',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        data: 'profile.primary_email',
+                        name: 'profile.primary_email',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<strong>' + data.toLowerCase() + '</strong>';
+                        }
+                    },
+                    {
+                        data: 'profile.phone_number',
+                        name: 'profile.phone_number',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<span class="text-code fw-semibold">' + data + '</span>';
+                        }
+                    },
+                    {
+                        data: 'profile.last_education',
+                        name: 'profile.last_education.education.name',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+
+                            let education = '';
+                            for (let i = 0; i < data.length; i++) {
+                                education += '<span class="badge text-bg-color rounded-0 me-1">' + data[i].education.name + '</span>';
+                            }
+                            return education;
+                        }
+                    },
+                    {
+                        data: 'profile.gender.name',
+                        name: 'profile.gender.name',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        data: 'profile.date_of_birth',
+                        name: 'profile.date_of_birth',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+                            return dateFormat(data) + ' <strong>('+ calculateAge(data) +')</strong>';
+                        }
+                    },
+                    {
+                        data: 'profile.city.name',
+                        name: 'profile.city.name',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        data: 'expected_salary',
+                        name: 'expected_salary',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+                            return 'Rp' + Intl.NumberFormat('id-ID').format(data) + ',-';
+                        }
+                    },
+                    {
+                        data: 'ready_to_work',
+                        name: 'ready_to_work',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return data.toUpperCase();
+                        }
+                    }
+                ]
+            });
+        });
+    }
+
+    if ($('table.table-other-candidates')) {
+        [...document.body.querySelectorAll('table.table-other-candidates')].map((item) => {
+            let vacancy_id = $(item).data('bsVacancyId');
+            let closing_date = $(item).data('bsClosingDate');
+            $(item).DataTable({
+                ajax: '/server/vacancies/'+ vacancy_id +'/other/fetch' + window.location.search,
+                responsive: true,
+                processing: true,
+                serverSide: true,
+                orderCellsTop: true,
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                    paginate: {
+                        previous: '<i class="bi bi-caret-left-fill"></i>',
+                        next: '<i class="bi bi-caret-right-fill"></i>'
+                    },
+                    infoFiltered: '',
+                    lengthMenu: '_MENU_',
+                    search: '',
+                    searchPlaceholder: "Pencarian",
+                    emptyTable: "Data tidak ditemukan",
+                    processing: "Mengambil data..."
+                },
+                order: [[3, 'asc']],
+                createdRow: function(row, data, index) {
+                    if (data.deleted_at) {
+                        $(row).addClass('deleted');
+                    }
+                    $(row).find('td:eq(1)').addClass('text-center');
+                    $(row).find('td:eq(3)').addClass('text-bg-brighter-color fw-semibold');
+                },
+                meta: {
+                    vacancy_id: vacancy_id,
+                    closing_date: closing_date
+                },
+                columns: [
+                    {
+                        data: 'id',
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            if (new Date(meta.settings.oInit.meta.closing_date) < new Date()) {
+                                return '-';
+                            }
+                            return '<a href="/recruitment/apply?candidate='+ data +'&vacancy='+ meta.settings.oInit.meta.vacancy_id +'" data-bs-candidate="'+ row['profile']['name'] +'" class="dotted" onclick="confirmApply(event);">Pilih</a>';
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'resume',
+                        name: 'resume',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<a href="/download/'+ encodeURIComponent(JSON.stringify(['profiles', 'resumes'])) +'/files/'+ data +'" class="dotted" target="_blank">Lihat CV</a>';
+                        }
+                    },
+                    {
+                        data: 'profile.name',
+                        name: 'profile.name',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        data: 'profile.primary_email',
+                        name: 'profile.primary_email',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<strong>' + data.toLowerCase() + '</strong>';
+                        }
+                    },
+                    {
+                        data: 'profile.phone_number',
+                        name: 'profile.phone_number',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<span class="text-code fw-semibold">' + data + '</span>';
+                        }
+                    },
+                    {
+                        data: 'profile.last_education',
+                        name: 'profile.last_education.education.name',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+
+                            let education = '';
+                            for (let i = 0; i < data.length; i++) {
+                                education += '<span class="badge text-bg-color rounded-0 me-1">' + data[i].education.name + '</span>';
+                            }
+                            return education;
+                        }
+                    },
+                    {
+                        data: 'profile.gender.name',
+                        name: 'profile.gender.name',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        data: 'profile.date_of_birth',
+                        name: 'profile.date_of_birth',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+                            return dateFormat(data) + ' <strong>('+ calculateAge(data) +')</strong>';
+                        }
+                    },
+                    {
+                        data: 'profile.city.name',
+                        name: 'profile.city.name',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        data: 'expected_salary',
+                        name: 'expected_salary',
+                        render: function(data, type, row, meta) {
+                            if (data == '' || data == null) {
+                                return '<em>null</em>';
+                            }
+                            return 'Rp' + Intl.NumberFormat('id-ID').format(data) + ',-';
+                        }
+                    },
+                    {
+                        data: 'ready_to_work',
+                        name: 'ready_to_work',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return data.toUpperCase();
+                        }
+                    }
+                ]
+            });
+        });
+    }
     // DELETE-FUNCTIONALITY
     // ================================================================================
     $(document).on('click', '.btn-delete', function(event) {
@@ -680,12 +1090,13 @@ $(document).ready(function(event) {
                         altInputClass: 'flatpickr-hand form-control',
                         altInput: true,
                         altFormat: 'd F Y',
-                        appendTo: modalControl,
+                        // appendTo: modalControl,
                         locale: 'id'
                     });
                     $("input[type=time]").flatpickr({
                         altInputClass: 'flatpickr-hand form-control',
-                        appendTo: modalControl,
+                        // appendTo: modalControl,
+                        allowInput: true,
                         enableTime: true,
                         noCalendar: true,
                         dateFormat: 'H:i',
@@ -816,171 +1227,10 @@ $(document).ready(function(event) {
                 timeout: 4296
             });
         });
-    }
+        // END-OF-SHOW-MODAL-FUNCTION
+        // ====================================================================================
 
-    let modalFilter = document.getElementById('modalFilter');
-    if (modalFilter) {
-        modalFilter.addEventListener('show.bs.modal', function (event) {
-            let btn = event.relatedTarget;
-            let route = btn.getAttribute('href');
-            let table = btn.getAttribute('data-bs-table');
-            let type = btn.getAttribute('data-bs-type');
-
-            modalFilter.querySelector('.modal-title').textContent = table + '—' + type;
-
-            $.ajax({
-                url: route,
-                async: true,
-                type: 'GET',
-                beforeSend: () => {
-                    console.log('Fetching initialized...');
-                },
-                success: (response) => {
-                    $('#modalFilterPlaceholders').html(response);
-                },
-                complete: () => {
-                    // FLATPICKR-LIBRARY
-                    $("input[type=date]").flatpickr({
-                        allowInput: true,
-                        dateFormat: 'Y-m-d',
-                        altInputClass: 'flatpickr-hand form-control',
-                        altInput: true,
-                        altFormat: 'd F Y',
-                        appendTo: modalFilter,
-                        locale: 'id'
-                    });
-                    $("input[type=time]").flatpickr({
-                        altInputClass: 'flatpickr-hand form-control',
-                        appendTo: modalFilter,
-                        enableTime: true,
-                        noCalendar: true,
-                        dateFormat: 'H:i',
-                        locale: 'id'
-                    });
-
-                    // ABLE-TO-DEFINE-NEW-ARTICLES
-                    [...document.querySelectorAll('.select2-multiple-modal')].map((item) => {
-                        $(item).select2();
-                        $(item).select2('destroy');
-                        $(item).select2({
-                            placeholder: 'Pilih atau ketikkan jika tidak ada',
-                            tags: true,
-                            theme: 'bootstrap-5',
-                            width: '100%',
-                            dropdownAutoWidth: true,
-                            dropdownParent: modalFilter,
-                            cache: true,
-                            allowClear: true,
-                            debug: true
-                        });
-                    });
-                    [...document.querySelectorAll('.select2-multiple-server-modal')].map((item) => {
-                        let table = $(item).data('bsTable');
-                        let order = $(item).data('bsOrder');
-                        $(item).select2();
-                        $(item).select2('destroy');
-                        $(item).select2({
-                            ajax: {
-                                url: '/server/' + table,
-                                data: function(params) {
-                                    return {
-                                        keyword: params.term,
-                                        ordering: order
-                                    }
-                                },
-                                type: 'GET',
-                                dataType: 'json',
-                                delay: 250,
-                                processResults: function(response) {
-                                    return {
-                                        results: response.map(function(item) {
-                                            return {
-                                                id: item.id,
-                                                text: item.name.toUpperCase()
-                                            }
-                                        })
-                                    };
-                                },
-                                cache: true
-                            },
-                            // minimumInputLength: 3,
-                            tags: true,
-                            cache: true,
-                            allowClear: true,
-                            placeholder: 'Pilih atau ketikkan jika tidak ada',
-                            dropdownParent: modalFilter,
-                            dropdownAutoWidth: true,
-                            theme: 'bootstrap-5',
-                            width: '100%',
-                            debug: true
-                        });
-                    });
-
-                    // INCAPABLE-OF-DEFINING-NEW-ARTICLES
-                    [...document.querySelectorAll('.select2-single-modal')].map((item) => {
-                        $(item).select2();
-                        $(item).select2('destroy');
-                        $(item).select2({
-                            placeholder: 'Pilih satu',
-                            theme: 'bootstrap-5',
-                            width: '100%',
-                            dropdownAutoWidth: true,
-                            dropdownParent: modalFilter,
-                            cache: true,
-                            allowClear: true,
-                            debug: true
-                        });
-                    });
-                    [...document.querySelectorAll('.select2-single-server-modal')].map((item) => {
-                        let table = $(item).data('bsTable');
-                        let order = $(item).data('bsOrder');
-                        $(item).select2();
-                        $(item).select2('destroy');
-                        $(item).select2({
-                            ajax: {
-                                url: '/server/' + table,
-                                data: function(params) {
-                                    return {
-                                        keyword: params.term,
-                                        ordering: order
-                                    }
-                                },
-                                type: 'GET',
-                                dataType: 'json',
-                                delay: 250,
-                                processResults: function(response) {
-                                    return {
-                                        results: response.map(function(item) {
-                                            return {
-                                                id: item.id,
-                                                text: item.name.toUpperCase()
-                                            }
-                                        })
-                                    };
-                                },
-                                cache: true
-                            },
-                            // minimumInputLength: 3,
-                            cache: true,
-                            allowClear: true,
-                            placeholder: 'Pilih satu',
-                            dropdownParent: modalFilter,
-                            dropdownAutoWidth: true,
-                            theme: 'bootstrap-5',
-                            width: '100%',
-                            debug: true
-                        });
-                    });
-
-                    [...document.querySelectorAll('.editor-on-modal')].map((item) => {
-                        CKEDITOR.replace(item);
-                    });
-
-                    // STATUS
-                    console.log('Fetched successfully...');
-                },
-                timeout: 4296
-            });
+        modalControl.addEventListener('hide.bs.modal', function (event) {
         });
     }
 
@@ -995,8 +1245,31 @@ $(document).ready(function(event) {
         locale: 'id'
     });
 
+    $("input[name=date_of_birth]").flatpickr({
+        allowInput: true,
+        dateFormat: 'Y-m-d',
+        altInputClass: 'flatpickr-hand form-control',
+        altInput: true,
+        altFormat: 'd F Y',
+        locale: 'id',
+        minDate: '1945-01-01',
+        maxDate: new Date()
+    });
+
+    $("input[id=reschedule_interview_date]").flatpickr({
+        allowInput: true,
+        dateFormat: 'Y-m-d',
+        altInputClass: 'flatpickr-hand form-control',
+        altInput: true,
+        altFormat: 'd F Y',
+        locale: 'id',
+        minDate: new Date().fp_incr(1),
+        maxDate: new Date().fp_incr(12)
+    });
+
     $("input[type=time]").flatpickr({
         altInputClass: 'flatpickr-hand form-control',
+        allowInput: true,
         enableTime: true,
         noCalendar: true,
         dateFormat: 'H:i',
@@ -1007,6 +1280,8 @@ $(document).ready(function(event) {
     // ====================================================================================
     if ($('.select2-school')) {
         [...document.querySelectorAll('.select2-school')].map((item) => {
+            $(item).select2();
+            $(item).select2('destroy');
             $(item).select2({
                 placeholder: 'Pilih satu',
                 minimumInputLength: 3,
@@ -1126,7 +1401,42 @@ $(document).ready(function(event) {
         });
     }
 
-    $(document).on('submit', '#formAppendToSelect2', function (event) {
+    if ($('.select2-multiple')) {
+        [...document.body.querySelectorAll('.select2-multiple')].map((item) => {
+            $(item).select2();
+            $(item).select2('destroy');
+            $(item).select2({
+                placeholder: 'Pilih atau ketikkan jika tidak ada',
+                width: '100%',
+                dropdownAutoWidth: true,
+                theme: 'bootstrap-5',
+                language: 'id',
+                allowClear: true,
+                tags: true,
+                debug: true,
+                cache: true
+            });
+        });
+    }
+
+    if ($('.select2-single')) {
+        [...document.body.querySelectorAll('.select2-single')].map((item) => {
+            $(item).select2();
+            $(item).select2('destroy');
+            $(item).select2({
+                placeholder: 'Pilih satu',
+                width: '100%',
+                theme: 'bootstrap-5',
+                dropdownAutoWidth: true,
+                language: 'id',
+                allowClear: true,
+                debug: true,
+                cache: true
+            });
+        });
+    }
+
+    $(document).on('submit', '.formAppendToSelect2', function (event) {
         event.preventDefault();
 
         let formData = $(this).serialize();
@@ -1148,13 +1458,18 @@ $(document).ready(function(event) {
             },
             success: function (response) {
                 let newOption = $(`<option selected="" value="${response.data.id}">${response.data.name}</option>`);
+                if (target == '#project_id') {
+                    newOption = $(`<option selected="" value="${response.data.id}">${response.data.project_number}</option>`);
+                }
                 $(target).append(newOption).trigger('change');
             },
             complete: function(result) {
                 $('#loader').fadeOut();
-                if (result.code == 200) {
-                    $('#modalControl').modal('hide');
+                $('#modalControl').modal('hide');
+                if (result.status == 200) {
                     Swal.fire("Sukses", "Data berhasil ditambahkan.", "success");
+                } else {
+                    Swal.fire("Kesalahan", "Terjadi kesalahan.", "error");
                 }
             },
             error: function (xhr, status, error) {
@@ -1164,6 +1479,135 @@ $(document).ready(function(event) {
             cache: true
         });
     });
+
+    // CHART
+    // ====================================================================================
+    let partnersChartEl = document.querySelector('#partnersChart');
+    if (partnersChartEl) {
+        $.ajax({
+            url: '/server/partners/chart/fetch',
+            type: 'GET',
+            success: function (response) {
+                let labels = Object.keys(response);
+                let data = Object.values(response);
+
+                let chartElement = partnersChartEl.getContext('2d');
+                let myChart = new Chart(chartElement, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Mitra',
+                            data: data,
+                            backgroundColor: ['rgba(49, 73, 147, .5)'],
+                            borderColor: ['rgba(49, 73, 147, 1)'],
+                            // backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(75, 192, 192, 0.5)'],
+                            // borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+            }
+        });
+    }
+    let candidatesChartEl = document.querySelector('#candidatesChart');
+    if (candidatesChartEl) {
+        $.ajax({
+            url: '/server/candidates/chart/fetch',
+            type: 'GET',
+            success: function (response) {
+                let labels = Object.keys(response);
+                let data = Object.values(response);
+
+                let chartElement = candidatesChartEl.getContext('2d');
+                let myChart = new Chart(chartElement, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Kandidat',
+                            data: data,
+                            backgroundColor: ['rgba(49, 73, 147, .5)'],
+                            borderColor: ['rgba(49, 73, 147, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+            }
+        });
+    }
+    let vacancyChartEl = document.querySelector('#vacancyChart');
+    if (vacancyChartEl) {
+        $.ajax({
+            url: '/server/vacancies/chart/fetch',
+            type: 'GET',
+            success: function (response) {
+                let labels = Object.keys(response);
+                let data = Object.values(response);
+
+                let chartElement = vacancyChartEl.getContext('2d');
+                let myChart = new Chart(chartElement, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Lowongan Kerja',
+                            data: data,
+                            backgroundColor: ['rgba(49, 73, 147, 0.5)'],
+                            borderColor: ['rgba(49, 73, 147, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+            }
+        });
+    }
+
+    // $ ('.dataTables_filter input[type=search]').attr('name', 'search');
+
+    // SWIPER-FUCTIONALITY
+    // ====================================================================================
+    const swiperEl = document.body.querySelector('.swiper');
+    if (swiperEl) {
+        const swiper = new Swiper(swiperEl, {
+            // autoplay: true,
+            // direction: 'horizontal',
+            // loop: true,
+            spaceBetween: 24,
+            grabCursor: true,
+            autoHeight: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                1200: {
+                    slidesPerView: 3,
+                },
+                666: {
+                    slidesPerView: 2,
+                },
+            },
+            /*
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            }
+            */
+        });
+    }
 
     // END-OF-READY-ARTICLES
     // ====================================================================================
@@ -1178,6 +1622,12 @@ $(window).on('scroll', function() {
     let documentHeight = $(document).height();
     let scrollPercentage = 100 * (currentScroll / (documentHeight - windowsHeight));
     $('#move').css({ width: (scrollPercentage) + '%' });
+
+    if (currentScroll > 69) {
+        $('.navbar').addClass('active');
+    } else {
+        $('.navbar').removeClass('active');
+    }
 });
 
 // CHECK-PARENT-AND-CHILDREN
@@ -1277,13 +1727,11 @@ function chooseResume() {
 
 // ON-CHANGE-FILE-INPUT
 // ====================================================================================
-/*
-$("[type=file]").on("change", function() {
+$("input#resumeOnModal").on("change", function() {
     let file = this.files[0].name;
     if($(this).val()!=""){ $(this).next().text(file); }
     else { $(this).next().text("Tidak ada berkas terpilih"); }
 });
-*/
 
 function dateFormat(date) {
     let dateString = new Date(date);
@@ -1306,7 +1754,7 @@ function dateFormat(date) {
 
 function underMaintenance(event) {
     event.preventDefault();
-    Swal.fire('Tahap Pengembangan', 'Silakan mencoba kembali.', 'info');
+    Swal.fire('Tahap Pengembangan', 'Coba lagi nanti.', 'info');
 }
 
 function plsConfirm(event) {
@@ -1319,7 +1767,6 @@ function plsConfirm(event) {
         showCancelButton: true,
         confirmButtonText: 'Ya',
         cancelButtonText: 'Tidak',
-        reverseButtons: true,
     }).then((response) => {
         if (response.isConfirmed) {
             $('#loader').fadeIn();
@@ -1327,6 +1774,65 @@ function plsConfirm(event) {
         }
     });
 }
+
+function confirmOnSubmit(event, form) {
+    event.preventDefault();
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: `Apakah data sudah sesuai?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Tidak',
+    }).then((response) => {
+        if (response.isConfirmed) {
+            $('#loader').fadeIn();
+            $(form).submit();
+        }
+    });
+
+}
+
+function confirmApply(event) {
+    event.preventDefault();
+    let route = event.currentTarget.getAttribute('href');
+    let candidate = event.currentTarget.dataset['bsCandidate'];
+    Swal.fire({
+        title: candidate,
+        text: `Pilih Pelamar ini?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Tidak',
+    }).then((response) => {
+        if (response.isConfirmed) {
+            $('#loader').fadeIn();
+            window.location.href = route;
+        }
+    });
+}
+
+/*
+function confirmToSelect(event) {
+    event.preventDefault();
+    let name = $(this).data('bsName');
+
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: `Pilih ${name.toUpperCase()}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, pilih',
+        cancelButtonText: 'Gak jadi',
+        reverseButtons: true,
+    }).then((response) => {
+        if (response.isConfirmed) {
+            $('#loader').fadeIn();
+            $(this).submit();
+        }
+    });
+}
+*/
 
 function confirmDel(event) {
     event.preventDefault();
@@ -1350,10 +1856,6 @@ function confirmDel(event) {
             $('#vanisher').submit();
         }
     });
-}
-
-function applyJob(event) {
-    event.preventDefault();
 }
 
 function showImageOnModal(event) {
@@ -1381,6 +1883,10 @@ function numericOnly(event) {
     let value = input.value;
     let sanitized = value.replace(/\D/g, '');
     input.value = sanitized;
+}
+
+function noEditPlease(event) {
+    event.preventDefault();
 }
 
 function typingMoney(event) {
@@ -1525,7 +2031,7 @@ function archiveOrPublish(event) {
         showCancelButton: true,
         confirmButtonText: 'Ya',
         cancelButtonText: 'Tidak',
-        reverseButtons: true,
+        // reverseButtons: true,
     }).then((response) => {
         if (response.isConfirmed) {
             $('#loader').fadeIn();
@@ -1712,7 +2218,23 @@ function appendToCategories(event) {
     });
 }
 
-
+// RECAPTCHA-ON-MODAL-VALIDATION
+// ================================================================================
+function validateReCaptcha(event, target) {
+    let recaptcha = $('[name=g-recaptcha-response]').val();
+    if (recaptcha.trim() === '' || recaptcha.trim() === null) {
+        $('.invalid-recaptcha').removeClass('d-none');
+        $('.invalid-recaptcha-container').addClass('border');
+        $('.invalid-recaptcha-container').addClass('border-danger');
+        $('.invalid-recaptcha-container').addClass('p-2');
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+    } else {
+        $('#loader').fadeIn();
+        $(target).submit();
+    }
+}
 
 // THIS-FUCNTIONS-ARE-UNUSED-YET
 // ================================================================================

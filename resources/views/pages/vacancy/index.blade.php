@@ -21,7 +21,7 @@
                             <i class="bi bi-database me-2"></i>
                             @yield('title')
                         </div>
-                        <a href="{{ route('vacancy.create') }}" class="btn btn-outline-color px-3">
+                        <a href="{{ route('vacancy.create') }}" class="btn btn-outline-color btn-sm px-3">
                             Tambah
                             <i class="bi bi-box-arrow-up-right ms-1"></i>
                         </a>
@@ -38,7 +38,7 @@
                                     <th rowspan="2">Posisi</th>
                                     <th rowspan="2">Kota Penempatan</th>
                                     <th rowspan="2">Regional</th>
-                                    <th rowspan="2">Kebutuhan Personel</th>
+                                    <th rowspan="2">Kebutuhan</th>
                                     <th rowspan="2">Total Pelamar</th>
                                     <th rowspan="2">Sunting</th>
                                     <th colspan="2">Aksi</th>
@@ -57,7 +57,7 @@
                                     <th>Posisi</th>
                                     <th>Kota Penempatan</th>
                                     <th>Regional</th>
-                                    <th>Kebutuhan Personel</th>
+                                    <th>Kebutuhan</th>
                                     <th>Total Pelamar</th>
                                     <th>Sunting</th>
                                     <th>Terbitkan</th>

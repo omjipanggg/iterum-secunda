@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidate;
 use App\Models\Education;
 use App\Models\JobTitle;
 use App\Models\Partner;
@@ -89,7 +90,22 @@ class VacancyController extends Controller
     }
 
     public function storeProject(Request $request) {
+        $project = Project::create($request->all());
+        $project->slug = Str::slug($request->name) . '-' . Str::substr(strtotime('now'), -6);
+        $project->status = 1;
+        $project->active = 1;
+        $project->save();
 
+        $response = [
+            'data' => $project,
+            'code' => 200
+        ];
+
+        if (!$project) {
+            $response = ['code' => 307];
+        }
+
+        return response()->json($response);
     }
 
     /* CREATE-A-NEW-VACANCY
@@ -232,12 +248,21 @@ class VacancyController extends Controller
 
     public function show(string $id)
     {
-        $vacancy = Vacancy::findOrFail($id);
+        $vacancy = Vacancy::find($id);
+
+        if (!$vacancy) {
+            alert()->error('Kesalahan', 'Lowongan Kerja tidak ditemukan.');
+            return redirect()->route('vacancy.index');
+        }
+
         $similar = Vacancy::whereHas('project', function($query) use($vacancy) {
             $query->where('project_number', $vacancy->project->project_number);
-        })->where('id', '<>', $id)->orderByDesc('active')->get();
+        })->where('id', '<>', $id)->orderByDesc('active')->orderBy('name')->get();
+
+        // $candidates = Candidate::join('profiles', 'candidates.profile_id', '=', 'profiles.id')->orderBy('profiles.name')->get();
 
         $context = [
+            // 'candidates' => $candidates,
             'vacancy' => $vacancy,
             'similar' => $similar
         ];
@@ -408,6 +433,34 @@ class VacancyController extends Controller
 
     public function question() {
         return view('pages.vacancy.question');
+    }
+
+    public function formSelect($id) {
+        $vacancy = Vacancy::find($id);
+
+        if (!$vacancy) {
+            alert()->error('Kesalahan', 'Lowongan Kerja tidak ditemukan.');
+            return redirect()->route('vacancy.index');
+        }
+
+        $applied = Candidate::whereHas('appliedTo', function($query) use($id) {
+            $query->where('vacancy_id', $id);
+        })->get();
+
+        $candidates = Candidate::join('profiles', 'candidates.profile_id', '=', 'profiles.id')->whereHas('appliedTo', function($query) use($id) {
+            $query->where('vacancy_id', '<>', $id);
+        })->orWhereDoesntHave('appliedTo')->orderBy('profiles.name')->get();
+
+        $context = [
+            'applied' => $applied,
+            'candidates' => $candidates,
+            'vacancy' => $vacancy
+        ];
+        return view('pages.vacancy.form.select', $context);
+    }
+
+    public function select(Request $request, $id) {
+        dd($request->all());
     }
 
     public function publish(string $id) {

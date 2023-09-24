@@ -18,14 +18,15 @@ class ActivityLog {
 		Log::create($log);
 	}
 
-	public static function latestLog() {
+	public static function latestLog($user) {
 		$data = [];
 		if (auth()->check()) {
-			$data = Log::where(['user_id' => auth()->user()->id])
-				->limit(1)
-				->offset(1)
-				->orderByDesc('created_at')
-				->first();
+			$data = Log::where('user_id', $user)
+			->where('subject', 'Login')
+			->orderByDesc('created_at')
+			->take(1)
+			->offset(1)
+			->latest()->first();
 		}
 		return $data;
 	}

@@ -22,7 +22,7 @@
                             @yield('title')
                         </div>
                         <div class="group">
-                            <a href="{{ route('recruitment.filter') }}" class="btn btn-outline-color btn-sm px-3" data-bs-toggle="modal" data-bs-target="#modalFilter" data-bs-table="Seleksi" data-bs-type="Saring" onclick="event.preventDefault();" title="Saring">
+                            <a href="{{ route('recruitment.filter') }}" class="btn btn-outline-color btn-sm px-3" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="Seleksi" data-bs-type="Saring" onclick="event.preventDefault();" title="Saring">
                                 Saring
                                 <i class="bi bi-funnel ms-1"></i>
                             </a>
@@ -53,6 +53,7 @@
                                 @endif
                             @elseif ($key == 'ready_to_work')
                                 @php($param[]='Ketersediaan')
+                            @elseif ($key == '_method' || $key == '_token')
                             @else
                                 @php($param[]='Lainnya')
                             @endif
@@ -64,23 +65,33 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover table-sm table-candidates" id="table-candidates">
                             <thead>
+                                <th>No</th>
+                                <th>Dokumen</th>
                                 <th>Nama</th>
+                                <th>Email</th>
+                                <th>No. Telepon</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Kota Domisili</th>
                                 <th>Tanggal Lahir</th>
                                 <th>Pendidikan</th>
                                 <th>Harapan Gaji</th>
                                 <th>Ketersediaan</th>
+                                <th>Total Lamaran</th>
                             </thead>
                             <tbody></tbody>
                             <tfoot>
+                                <th>No</th>
+                                <th>Dokumen</th>
                                 <th>Nama</th>
+                                <th>Email</th>
+                                <th>No. Telepon</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Kota Domisili</th>
                                 <th>Tanggal Lahir</th>
                                 <th>Pendidikan</th>
                                 <th>Harapan Gaji</th>
                                 <th>Ketersediaan</th>
+                                <th>Total Lamaran</th>
                             </tfoot>
                         </table>
                     </div>

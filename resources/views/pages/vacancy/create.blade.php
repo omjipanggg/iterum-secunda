@@ -1,5 +1,5 @@
 @extends('layouts.panel')
-@section('title', 'Lowongan Kerja')
+@section('title', 'Lowongan Kerja: Tambah')
 @section('content')
 <div class="container-fluid px-12">
 	<div class="row">
@@ -292,11 +292,11 @@
 								<div class="card-body">
                                     <div class="form-date-floating mb-2">
                                     	<span for="opening_date" class="fw-semibold small">Tgl. Dibuka Lowongan</span>
-                                    	<input type="date" name="opening_date" id="opening_date" class="form-control" required="">
+                                    	<input type="date" name="opening_date" id="opening_date" class="form-control" required="" placeholder="{{ date_indo_format(date('Y-m-d')) }}">
                                     </div>
                                     <div class="form-date-floating mb-2">
                                     	<span for="closing_date" class="fw-semibold small">Tgl. Ditutup Lowongan</span>
-                                    	<input type="date" name="closing_date" id="closing_date" class="form-control" required="">
+                                    	<input type="date" name="closing_date" id="closing_date" class="form-control" required="" placeholder="{{ date_indo_format(date('Y-m-d', strtotime('+1 year'))) }}">
                                     </div>
                                     <select name="active" id="active" class="form-select select2-single mb-2">
                                         <option value="1">Publish now</option>

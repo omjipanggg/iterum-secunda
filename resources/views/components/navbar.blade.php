@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-bg-color" id="capitis">
+<div id="capitis"></div>
+<nav class="navbar navbar-expand-lg fixed-top bg-body-color">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
@@ -26,7 +27,7 @@
                 </li>
                 --}}
                 @if (Route::has('register'))
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown pt-2 pt-lg-0">
                     <a id="navbarDropdown" class="btn btn-outline-color px-3 rounded-0 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         {{ __('Register') }}
                     </a>
@@ -70,4 +71,5 @@
         </div>
     </div>
 </nav>
-<div class="mb-12"></div>
+<div class="mb-7-on"></div>
+<div class="mb-12-on"></div>

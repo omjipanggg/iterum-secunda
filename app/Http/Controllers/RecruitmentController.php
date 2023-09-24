@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Availability;
 use App\Models\Candidate;
 use App\Models\City;
 use App\Models\Education;
@@ -30,8 +31,25 @@ class RecruitmentController extends Controller
     	return view('pages.recruitment.index', $context);
     }
 
+    public function show(string $id) {
+        $candidate = Candidate::where('id', $id)->with(['profile', 'appliedTo'])->with('interviewSchedules', function($query) {
+            $query->with('proposal');
+        })->withCount(['profile', 'appliedTo', 'interviewSchedules'])->first();
+
+        if (!$candidate) {
+            alert()->error('Kesalahan', 'Pelamar tidak ditemukan.');
+            return redirect()->back()->with('code', 317);
+        }
+
+        $context = [
+            'candidate' => $candidate
+        ];
+        return view('pages.recruitment.show', $context);
+    }
+
     public function filter() {
-        $availablity = [
+        /*
+        $availability = [
             1 => 'SEGERA',
             2 => 'DALAM SATU MINGGU',
             3 => 'DALAM 1 - 3 MINGGU',
@@ -39,15 +57,30 @@ class RecruitmentController extends Controller
             5 => 'DALAM 1 - 3 BULAN',
             6 => 'KONFIRMASI DAHULU'
         ];
+        */
 
+        $availability = Availability::all();
         $candidates = Candidate::join('profiles', 'profiles.id', '=', 'candidates.profile_id');
-        $cities = $candidates->pluck('profiles.city_id');
-        $education = $candidates->join('last_education', 'profiles.id', '=', 'last_education.profile_id')->pluck('last_education.education_id');
+        $cityTuples = $candidates->pluck('profiles.city_id');
+        $cities = City::whereIn('id', $cityTuples)->get();
+        $educationTuples = $candidates->join('last_education', 'profiles.id', '=', 'last_education.profile_id')->pluck('last_education.education_id');
+        $education = Education::whereIn('id', $educationTuples)->get();
         $context = [
-            'availablity' => $availablity,
-            'cities' => City::whereIn('id', $cities)->get(),
-            'education' => Education::whereIn('id', $education)->get()
+            'availability' => $availability,
+            'cities' => $cities,
+            'education' => $education
         ];
         return view('pages.recruitment.form.filter', $context);
+    }
+
+    public function apply(Request $request) {
+        $candidate = Candidate::find($request->candidate);
+        $candidate->appliedTo()->attach($request->vacancy, [
+            'resume' => $candidate->resume,
+            'description' => '<p>Dipilih oleh ' . auth()->user()->name . '.</p>'
+        ]);
+
+        alert()->success(Str::upper($candidate->name), 'Pelamar berhasil dipilih.');
+        return redirect()->back()->with('code', 200);
     }
 }

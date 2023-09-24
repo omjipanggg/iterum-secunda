@@ -33,6 +33,7 @@ class DashboardController extends Controller
         // PARTNER
         $partners = Partner::all();
         $partner_regions = Partner::join('regions', 'regions.id', '=' , 'partners.region_id')->select('*')->selectRaw('count(*) as total')->groupBy('region_id')->orderBy('regions.code')->get();
+        $partner_status = Partner::select('*')->selectRaw('count(*) as total')->groupBy('active')->orderByDesc('active')->get();
 
         // VACANCY
         $vacancies = Vacancy::all();
@@ -42,6 +43,7 @@ class DashboardController extends Controller
         $context = [
             'partners' => $partners,
             'partner_regions' => $partner_regions,
+            'partner_status' => $partner_status,
             'candidates' => $candidates,
             'candidate_genders' => $candidate_genders,
             'vacancies' => $vacancies,
@@ -98,5 +100,19 @@ class DashboardController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function search(Request $request) {
+        $context = [];
+        return view('pages.dashboard.search', $context);
+    }
+
+    public function faq() {
+        $context = [];
+        return view('pages.dashboard.faq', $context);
+    }
+    public function report() {
+        alert()->info('Informasi', 'Dalam tahap pengembangan.');
+        return redirect()->back();
     }
 }

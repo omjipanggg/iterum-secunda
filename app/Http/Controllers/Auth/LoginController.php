@@ -31,16 +31,10 @@ class LoginController extends Controller
     // protected $redirectTo = RouteServiceProvider::HOME;
 
     protected function redirectTo() {
-        if (auth()->user()->hasRole(1)) {
-            return 'master';
-        } else if (auth()->user()->hasRole(7)) {
-            return 'profile';
-        } else if (auth()->user()->hasRole(8)) {
-            return 'partner';
-        } else {
-            return RouteServiceProvider::HOME;
-        }
-        return 'dashboard';
+        if (auth()->user()->hasRole(1)) { return 'master'; }
+        else if (auth()->user()->hasRole(7)) { return 'profile'; }
+        else if (auth()->user()->hasRole(8)) { return 'partner'; }
+        else { return RouteServiceProvider::HOME; }
     }
 
     /**
@@ -95,7 +89,7 @@ class LoginController extends Controller
     }
 
     protected function loggedOut(Request $request) {
-        Alert::success('Terima kasih', 'Sesi Anda telah berakhir.');
+        alert()->success('Terima kasih', 'Sesi Anda telah berakhir.');
         return redirect()->route('home.index');
     }
 }

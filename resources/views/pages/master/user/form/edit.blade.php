@@ -7,7 +7,7 @@
 			<input type="text" name="name" placeholder="Name" class="form-control" required="" id="nameModal" value="{{ $user->name }}" autocomplete="off">
 			<label for="nameModal">Name</label>
 		</div>
-		<div class="form-select-defined-floating">
+		<div class="form-select-multiple-on-modal-floating">
 		<label for="roles-on-modal">Roles</label>
 		<select name="roles[]" id="roles-on-modal" class="form-select select2-single-modal" multiple="" required="">
 			@foreach ($roles as $role)

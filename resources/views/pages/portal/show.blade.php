@@ -1,8 +1,16 @@
 @extends('layouts.app')
-@section('title', Str::headline($vacancy->name))
+@section('title', $vacancy->name)
 @section('content')
 @include('components.modal-apply')
 @include('components.navbar')
+@include('components.hero-welcome')
+
+@auth
+@if (auth()->user()->hasRole(7))
+    <div class="mb-3"></div>
+@endif
+@endauth
+
 <section id="portal">
     <div class="container">
         <div class="row">
@@ -31,15 +39,20 @@
                             @endif
                             @endauth
 
+                            @if ($status)
+                                @include('components.hero-candidate-status')
+                            @endif
+
                             <div class="wrap py-4">
-                                <h3 class="mb-0">{{ Str::headline($vacancy->name) }}</h3>
+                                <h3 class="mb-1">{{ Str::headline($vacancy->name) }}</h3>
                                 @if ($vacancy->hidden_partner)
                                 &nbsp;
                                 @else
-                                <p class="text-muted">{{ Str::headline($vacancy->project->partner->name) }}</p>
+                                <p class="text-muted mb-4">{{ Str::headline($vacancy->project->partner->name) }}</p>
                                 @endif
                             </div>
-                            <div class="d-flex flex-wrap gap-2 mb-2 box-info">
+
+                            <div class="d-flex flex-wrap pb-2 gap-2 box-info">
                                 <div class="border position-relative">
                                     <span class="icon-box-floating position-absolute d-none d-sm-block"><i class="bi bi-geo-alt-fill"></i></span>
                                     <small class="text-muted small">Kota Penempatan</small>
@@ -88,27 +101,7 @@
                                 </div>
                                 --}}
                             </div>
-                            {{--
-                            <div class="qualification">
-                                <h5>Kualifikasi</h5>
-                                <p>{!! Str::headline(htmlspecialchars_decode(stripslashes($vacancy->qualification))) !!}</p>
-                            </div>
-                            <div class="description">
-                                <h5>Deskripsi</h5>
-                                <p>{!! Str::headline(htmlspecialchars_decode(stripslashes($vacancy->description))) !!}</p>
-                            </div>
-                            --}}
                             @include('pages.portal.accordion-detail')
-                            {{--
-                            <div class="skills pb-4 pt-3">
-                                <h5>Keahlian</h5>
-                                @foreach ($vacancy->skills as $skill)
-                                <span class="badge text-bg-color">
-                                    {{ Str::slug($skill->name) }}
-                                </span>
-                                @endforeach
-                            </div>
-                            --}}
                         </div>
                         <div class="card-footer text-bg-brighter-color">
                             <i class="bi bi-clock me-2"></i>
@@ -140,7 +133,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-bg-brighter-color">
-                            <a href="{{ route('portal.index') }}" class="dotted d-flex justify-content-between align-items-center gap-2">
+                            <a href="{{ route('portal.index') }}" class="dotted text-color d-flex justify-content-between align-items-center gap-2">
                                 Telusuri Lowongan Lainnya
                                 <i class="bi bi-arrow-right ms-1"></i>
                             </a>
@@ -170,14 +163,13 @@
                                     @endif
                                     </p>
                                 </div>
-                                <div class="position-relative">
+                                <div class="border-bottom position-relative">
                                     <p class="summary-content text-muted">Tipe Pekerjaan</p>
                                     <p class="summary-header">{{ $vacancy->type->name }}</p>
                                 </div>
-                                {{--
                                 <div class="position-relative">
                                     <p class="summary-content text-muted">Perkiraan Gaji</p>
-                                    <p class="summary-header text-color">
+                                    <p class="summary-header">
                                     @if ($vacancy->hidden_salary)
                                         Disembunyikan
                                     @else
@@ -185,7 +177,6 @@
                                     @endif
                                     </p>
                                 </div>
-                                --}}
                                 {{--
                                 <div class="position-relative">
                                     <p class="summary-content text-muted">Kategori</p>
@@ -203,9 +194,14 @@
                             </div>
                         </div>
                         <div class="card-footer text-bg-brighter-color">
-                            <button type="button" class="btn btn-lg btn-color w-100 breathing" data-bs-toggle="modal" data-bs-target="#modalApply">
+                            <button type="button" class="btn btn-lg btn-color w-100 @if ($status) disabled not-allowed @else breathing @endif" data-bs-toggle="modal" data-bs-target="#modalApply">
+                                @if ($status)
+                                Terkirim
+                                <i class="bi bi-check-circle ms-1"></i>
+                                @else
                                 Lamar
                                 <i class="bi bi-send ms-1"></i>
+                                @endif
                             </button>
                         </div>
                     </div>
@@ -222,7 +218,7 @@
                         --}}
                         <div class="card-body">
                             <div class="wrap">
-                                <h5 class="mb-2">{{ $vacancy->project->partner->name }}</h5>
+                                <h4 class="mb-2">{{ $vacancy->project->partner->name }}</h4>
                                 @isset($vacancy->project->partner->description)
                                     <p class="text-justify">{{ Str::words($vacancy->project->partner->description, 64, '...') }}</p>
                                 @endisset
@@ -280,7 +276,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-bg-brighter-color">
-                            <a href="{{ route('portal.index') }}" class="dotted d-flex justify-content-between align-items-center gap-2">
+                            <a href="{{ route('portal.index') }}" class="dotted text-color d-flex justify-content-between align-items-center gap-2">
                                 Telusuri Lowongan Lainnya
                                 <i class="bi bi-arrow-right ms-1"></i>
                             </a>

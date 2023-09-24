@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('interview_scores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('interview_schedule_id')->cascadeOnUpdate()->noActionOnDelete()->constrained('interview_schedules');
+            $table->foreignUuid('interview_schedule_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('interview_schedules');
             $table->string('header_number')->nullable();
             $table->unsignedTinyInteger('personality')->nullable();
             $table->unsignedTinyInteger('comperhension')->nullable();

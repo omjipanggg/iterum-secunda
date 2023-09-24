@@ -1,5 +1,5 @@
 <div id="by-category"></div>
-<section id="sort-by-category" class="bg-brighter-color py-6">
+<section id="sort-by-category" class="bg-secondary-bright-color py-6">
 	<div class="container">
         <div class="row">
             <div class="col">

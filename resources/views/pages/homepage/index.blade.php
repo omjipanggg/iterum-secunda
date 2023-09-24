@@ -1,186 +1,25 @@
 @extends('layouts.app')
+
 @section('title', 'Home')
+
 @section('content')
+
 @include('components.navbar')
-<section id="patria" class="mb-12">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5 offset-lg-1 d-flex flex-column align-items-center justify-content-center order-lg-1 order-2 mb-lg-31">
-                <h4 class="fw-bold display-6 text-center">Wujudkan Pekerjaan Impianmu Bersama <abbr class="text-color" title="Selection &amp; Recruitment Alihdaya">{{ config('app.name', 'SELENA') }}™</abbr></h4>
-                <p class="text-center">Kirimkan CV Anda, dan lamar pekerjaan di sini!</p>
-                <form action="{{ route('portal.index') }}" method="GET" class="w-100 mt-lg-31">
-                    <div class="filter w-100 d-flex flex-column flex-sm-row">
-                        <div class="position-relative flex-fill">
-                            <i class="bi bi-briefcase icon-floating position-absolute"></i>
-                            <input type="text" class="form-control py-3" name="keyword" autocomplete="off" placeholder="Pencarian" id="query">
-                            <label for="query" class="visually-hidden">Pencarian</label>
-                        </div>
-                        <button type="submit" class="btn btn-color px-4">
-                            {{ __('Telusuri') }}
-                            <i class="bi bi-search ms-2"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-lg-6 d-flex align-items-center order-lg-2 order-1">
-                <img src="{{ asset('img/observe.webp') }}" alt="Browse" class="img-fluid">
-            </div>
-        </div>
-    </div>
-</section>
+
+@include('components.hero-welcome')
+
+@include('pages.homepage.patria')
 
 @include('pages.homepage.category')
 
-<div id="vacancies"></div>
-
-<section id="list-of-vacancy">
-    <div class="w-100 bg-brighter-color py-6">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <div class="text-center">
-                        <h2 class="section-title">
-                            <a href="#vacancies" class="dotted">Lowongan Pekerjaan</a>
-                        </h2>
-                        <p class="section-subtitle text-muted">Telusuri dan lamar pekerjaan impianmu di sini</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row pt-6 hr-top position-relative">
-                <div class="col-lg-8 offset-lg-2">
-                    <div class="d-flex flex-column gap-4 vacancy-container">
-                        @forelse ($vacancies as $vacancy)
-                        <div class="card vacancy-item pointer" onclick="window.location.href = '{{ route('portal.show', $vacancy->slug) }}';">
-                            <div class="card-body position-relative py-4">
-                                <div class="row">
-                                    <div class="col-12 d-block d-lg-none">
-                                        <span class="badge text-bg-color order-2 order-lg-1">
-                                            {{ $vacancy->type->name }}
-                                        </span>
-                                    </div>
-                                    <div class="col-12 col-lg-4 align-self-center">
-                                        <div class="wrap py-3 py-lg-0">
-                                            <h4 class="fw-semibold mb-0">
-                                                <a href="{{ route('portal.show', $vacancy->slug) }}" class="dotted">
-                                                    {{ $vacancy->name }}
-                                                </a>
-                                            </h4>
-                                            @if (!$vacancy->hidden_partner)
-                                                <p class="text-muted m-0">
-                                                    {{ $vacancy->project->partner->name }}
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-3 align-self-center">
-                                        @if (!$vacancy->hidden_placement)
-                                            <i class="bi bi-geo-alt me-1"></i>
-                                            {{ $vacancy->placement }}
-                                        @endif
-                                    </div>
-                                    <div class="col-12 col-lg-2 align-self-center">
-                                        @if(!$vacancy->hidden_salary)
-                                            <i class="bi bi-cash-coin me-1"></i>
-                                            {{ 'Rp' . money_indo_format($vacancy->min_limit) }}&mdash;{{ 'Rp' . money_indo_format($vacancy->max_limit) }}
-                                        @endif
-                                    </div>
-                                    <div class="col-lg-2 offset-lg-1 d-none d-lg-flex flex-wrap justify-content-lg-end">
-                                        <div class="d-flex flex-wrap flex-column justify-content-between align-items-end">
-                                            <span class="badge text-bg-color py-1 px-2">
-                                                {{ $vacancy->type->name }}
-                                            </span>
-                                            <div class="my-3"></div>
-                                            <div class="wrap"><i class="bi bi-people-fill me-1"></i>{{ $vacancy->candidates_count }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer text-bg-brighter-color">
-                                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="wrap">
-                                        <i class="bi bi-clock me-1"></i>
-                                        Dipublikasikan sejak {{ $vacancy->published_at->locale('id')->diffForHumans() }}
-                                    </div>
-                                    <a href="{{ route('portal.show', $vacancy->slug) }}" class="btn btn-sm btn-color px-3">
-                                        Rincian
-                                        <i class="bi bi-box-arrow-up-right ms-1"></i>
-                                    </a>
-                                    {{-- {{ date_indo_format($vacancy->closing_date) }} --}}
-                                    {{--
-                                    <p class="m-0 dotted">
-                                        <i class="bi bi-box-arrow-up-right ms-1"></i>
-                                    </p>
-                                    --}}
-                                </div>
-                            </div>
-                        </div>
-                        @empty
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="m-0 text-center">Tidak ada data.</p>
-                            </div>
-                        </div>
-                        @endforelse
-                    </div>
-                </div>
-                <div class="col-12 d-flex align-items-center justify-content-center py-4">
-                    <a href="{{ route('portal.index') }}" class="btn btn-lg btn-color rounded-0 px-4">
-                        Telusuri Lowongan Lainnya
-                        <i class="bi bi-arrow-right ms-1"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+@include('pages.homepage.vacancy')
 
 @include('components.big-quote')
 
-<div class="mb-12-on" id="tutoria"></div>
+@include('pages.homepage.tutoria')
 
-<section class="tutoria">
-    <div class="container">
-        <div class="text-center">
-            <h2 class="section-title">
-                <a href="#tutoria" class="dotted">Tata Cara Melamar</a>
-            </h2>
-            <p class="section-subtitle text-muted">Ikuti petunjuknya di sini</p>
-        </div>
+@include('pages.homepage.sponsorship')
 
-        <div class="row pt-6 hr-top position-relative align-items-center">
-            <div class="col-lg-4 offset-lg-2 text-lg-start text-center px-5 px-lg-0">
-                <div class="position-relative how-step wrap pe-0 pe-lg-5 pb-3">
-                    <span class="position-relative text-center number-container d-none d-lg-inline">
-                        <span class="how-to-number rounded-circle position-absolute">1</span>
-                    </span>
-                    <div class="wrap ps-6">
-                        <h4 class="m-0 text-color">Pendaftaran akun</h4>
-                        <p class="text-muted">Lakukan pendaftaran akun melalui <a href="{{ route('register') }}" class="underlined">tautan berikut ini</a>.</p>
-                    </div>
-                </div>
-                <div class="position-relative how-step wrap pe-0 pe-lg-5 pb-3">
-                    <span class="position-relative text-center number-container d-none d-lg-inline">
-                        <span class="how-to-number rounded-circle position-absolute">2</span>
-                    </span>
-                    <div class="wrap ps-6">
-                        <h4 class="m-0 text-color">Cari pekerjaan</h4>
-                        <p class="text-muted">Telusuri pekerjaan impianmu <a href="{{ route('portal.index') }}" class="underlined">di sini</a>.</p>
-                    </div>
-                </div>
-                <div class="position-relative how-step wrap pe-0 pe-lg-5 pb-3">
-                    <span class="position-relative text-center number-container d-none d-lg-inline">
-                        <span class="how-to-number rounded-circle position-absolute">3</span>
-                    </span>
-                    <div class="wrap ps-6">
-                        <h4 class="m-0 text-color">Lakukan pelamaran</h4>
-                        <p class="text-muted">Lengkapi biodatamu, dan mulailah melamar!</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 d-none d-lg-block">
-                <img src="{{ asset('img/idea.webp') }}" alt="Logo" class="img-fluid">
-            </div>
-        </div>
-    </div>
-</section>
+@include('pages.homepage.blog')
+
 @endsection

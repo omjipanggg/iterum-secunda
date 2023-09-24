@@ -1,11 +1,11 @@
-<div class="accordion pb-4 vacancy-detail" id="accordionPanelsStayOpenExample">
+<div class="accordion vacancy-detail" id="accordionPanelsStayOpenExample">
     <div class="accordion-item rounded-0">
         <h2 class="accordion-header">
             <button class="accordion-button px-3 py-2 rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">Kualifikasi</button>
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
             <div class="accordion-body p-3">
-                {!! Str::headline(htmlspecialchars_decode(stripslashes($vacancy->qualification))) !!}
+                {!! html_entity_decode(stripslashes($vacancy->qualification)) !!}
             </div>
         </div>
     </div>
@@ -15,7 +15,7 @@
         </h2>
         <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
             <div class="accordion-body p-3">
-                {!! Str::headline(htmlspecialchars_decode(stripslashes($vacancy->description))) !!}
+                {!! html_entity_decode(stripslashes($vacancy->description)) !!}
             </div>
         </div>
     </div>

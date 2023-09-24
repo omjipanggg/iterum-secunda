@@ -2,6 +2,14 @@
 @section('title', 'Profile')
 @section('content')
 @include('components.navbar')
+@include('components.hero-welcome')
+
+@auth
+@if (auth()->user()->hasRole(7))
+<div class="mb-4"></div>
+@endif
+@endauth
+
 <div class="container px-12">
 	<div class="row">
 		<div class="col">

@@ -1,9 +1,9 @@
 <div class="tab-pane fade @if (session('tab') == 'personal' || session()->missing('tab')) show active @endif" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+	<form action="{{ route('profile.updatePersonalData', auth()->user()->profile->id) }}" method="POST" enctype="multipart/form-data">
 	<div class="card">
-		<form action="{{ route('profile.updatePersonalData', auth()->user()->profile->id) }}" method="POST" enctype="multipart/form-data">
 			@csrf
 			@method('POST')
-			<div class="card-header text-bg-brighter-color">
+			<div class="card-header text-bg-brighter-color rounded-top">
 				<div class="d-flex flex-wrap align-items-center justify-content-between">
 					<div class="wrap">
 						<i class="bi bi-person-fill me-2"></i>
@@ -20,13 +20,13 @@
 					{{-- ROW --}}
 					<div class="col-12 col-md-12 col-lg-6">
 						<div class="form-group">
-							<label for="email" class="small fw-semibold">Alamat email</label>
+							<label for="email" class="small fw-semibold">Alamat email *</label>
 							<input type="email" class="form-control disabled" disabled="" name="primary_email" autocomplete="off" id="email" value="{{ Str::lower(auth()->user()->email) }}">
 						</div>
 					</div>
 					<div class="col-12 col-md-12 col-lg-6">
 						<div class="form-group">
-							<label for="name" class="small fw-semibold">Nama lengkap</label>
+							<label for="name" class="small fw-semibold">Nama lengkap *</label>
 							<input type="text" required="" class="form-control @error('name') is-invalid @enderror" name="name" autocomplete="off" id="name" value="{{ old('name') ?? Str::headline(auth()->user()->name) }}">
 						</div>
 						@error('name')
@@ -35,7 +35,7 @@
 					</div>
 					<div class="col-12 col-md-12 col-lg-7">
 						<div class="form-group">
-							<label for="gender" class="small fw-semibold">Jenis kelamin</label>
+							<label for="gender" class="small fw-semibold">Jenis kelamin *</label>
 							<select name="gender_id" id="gender" class="form-select select2-single @error('gender_id') is-invalid @enderror">
 								<option value="" disabled="" selected="">Pilih satu</option>
 								@foreach ($genders as $gender)
@@ -46,7 +46,7 @@
 					</div>
 					<div class="col-12 col-md-12 col-lg-5">
 						<div class="form-group">
-							<label for="phone_number" class="small fw-semibold">No. Telepon</label>
+							<label for="phone_number" class="small fw-semibold">No. Telepon *</label>
 							<input type="text" onkeyup="numericOnly(event);" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" id="phone_number" autocomplete="off" value="{{ auth()->user()->profile->phone_number ?? '' }}">
 						</div>
 						@error('phone_number')
@@ -57,7 +57,7 @@
 					{{-- ROW --}}
 					<div class="col-12 col-lg-3 col-md-6">
 						<div class="form-group">
-							<label for="national_number" class="small fw-semibold">No. KTP</label>
+							<label for="national_number" class="small fw-semibold">No. KTP *</label>
 							<input type="text" onkeyup="numericOnly(event);" autocomplete="off" class="form-control @error('national_number') is-invalid @enderror" name="national_number" id="national_number" value="{{ auth()->user()->profile->national_number ?? '' }}">
 						</div>
 					</div>
@@ -83,13 +83,13 @@
 					{{-- ROW --}}
 					<div class="col-12 col-md-4">
 						<div class="form-group">
-							<label for="birth_place" class="small fw-semibold">Tempat lahir</label>
+							<label for="birth_place" class="small fw-semibold">Tempat lahir *</label>
 							<input type="text" class="form-control" autocomplete="off" name="place_of_birth" id="birth_place" value="{{ auth()->user()->profile->place_of_birth ?? '' }}">
 						</div>
 					</div>
 					<div class="col-12 col-md-4">
 						<div class="form-group">
-							<label for="birth_date" class="small fw-semibold">Tanggal lahir</label>
+							<label for="birth_date" class="small fw-semibold">Tanggal lahir *</label>
 							<input type="date" class="form-control" autocomplete="off" name="date_of_birth" id="birth_date" value="{{ old('date_of_birth') ?? auth()->user()->profile->date_of_birth }}">
 						</div>
 					</div>
@@ -108,7 +108,7 @@
 					{{-- ROW --}}
 					<div class="col-12 col-md-4">
 						<div class="form-group">
-							<label for="city" class="small fw-semibold">Kota domisili</label>
+							<label for="city" class="small fw-semibold">Kota domisili *</label>
 							<select name="city_id" id="city" class="form-select select2-single @error('city_id') is-invalid @enderror">
 								<option value="" disabled="" selected="">Pilih satu</option>
 								@foreach ($cities as $city)
@@ -122,7 +122,7 @@
 					</div>
 					<div class="col-12 col-md-8">
 						<div class="form-group">
-							<label for="address" class="small fw-semibold">Alamat domisili</label>
+							<label for="address" class="small fw-semibold">Alamat domisili *</label>
 							<input type="text" name="current_address" class="form-control @error('current_address') is-invalid @enderror" autocomplete="off" id="address" value="{{ auth()->user()->profile->current_address ?? '' }}">
 						</div>
 						@error('current_address')
@@ -162,23 +162,26 @@
 								<select name="ready_to_work" id="ready_to_work" class="form-select select2-single">
 									<option value="" selected="" disabled="">Pilih satu</option>
 									@foreach ($avails as $avail)
-										<option value="{{ $avail }}" @if(old('ready_to_work') == $avail || auth()->user()->profile->candidate->ready_to_work == $avail) selected="" @endif >{{ $avail }}</option>
+										<option value="{{ $avail->name }}" @if(old('ready_to_work') == $avail->name || auth()->user()->profile->candidate->ready_to_work == $avail->name) selected="" @endif >{{ $avail->name }}</option>
 									@endforeach
 								</select>
 							</div>
 						</div>
 						<div class="col-12">
 							@empty(auth()->user()->profile->candidate->resume)
-							<label for="resume" class="small fw-semibold">Unggah CV Anda</label>
+							<label for="resume" class="small fw-semibold">Unggah CV Anda *</label>
 							<input type="file" class="form-control @error('resume') is-invalid @enderror" name="resume" id="resume" accept="image/*, application/pdf, application/msword, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.wordprocessingml.template, application/vnd.ms-word.document.macroEnabled.12, application/vnd.ms-word.template.macroEnabled.12">
 							<div class="d-flex align-items-center justify-content-between flex-wrap">
-							<small class="small form-text">Maksimal ukuran berkas yang diunggah adalah 4MB</small>
+							<small class="small form-text text-muted">Maksimal ukuran berkas yang diunggah adalah 4MB</small>
 							@error('resume')
 							<span class="badge text-bg-danger">{{ $message }}</span>
 							@enderror
 							</div>
 							@else
-							<small class="small m-0"><span class="fw-semibold">Berkas: </span><a href="{{ route('home.downloadResume', auth()->user()->profile->candidate->resume) }}" target="_blank" class="dotted">CV_{{ Str::upper(Str::snake(auth()->user()->name)) . '_' . date('Y') }}<i class="bi bi-folder2-open ms-1"></i></a></small>
+							<small class="small m-0"><span class="fw-semibold">Berkas: </span><a href="{{ route('home.download', [json_encode(['profiles', 'resumes']), auth()->user()->profile->candidate->resume]) }}" target="_blank" class="dotted">CV_{{ Str::upper(Str::snake(auth()->user()->name)) . '_' . date('Y') }}</a></small>
+							<small><a href="{{ route('candidate.editResume', auth()->user()->profile->candidate->id) }}" data-bs-toggle="modal" data-bs-target="#modalControl" data-bs-table="CV" data-bs-type="Unggah" class="dotted" onclick="event.preventDefault();">
+								<i class="bi bi-pencil-square ms-1"></i>
+							</a></small>
 							<input type="hidden" name="resume" value="{{ auth()->user()->profile->candidate->resume }}">
 							@endempty
 						</div>
@@ -200,6 +203,6 @@
 				<i class="bi bi-info-circle me-2"></i>
 				Mohon pastikan bahwa data yang Anda kirimkan sudah benar dan sesuai.
 			</div>
-		</form>
 	</div>
+	</form>
 </div>

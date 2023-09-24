@@ -1,5 +1,6 @@
 <?php
 use App\Models\TableCode;
+use App\Models\Candidate;
 use App\Models\Vacancy;
 use App\Models\VacancyCategory;
 
@@ -14,6 +15,11 @@ Breadcrumbs::for('master.index', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('dashboard.index', function (BreadcrumbTrail $trail) {
     $trail->push('Home', route('dashboard.index'));
+});
+
+Breadcrumbs::for('dashboard.search', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard.index');
+    $trail->push('Search', route('dashboard.search'));
 });
 
 Breadcrumbs::for('dashboard.faq', function (BreadcrumbTrail $trail) {
@@ -43,6 +49,16 @@ Breadcrumbs::for('user.index', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('portal.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
     $trail->push('Portal', route('portal.index'));
+});
+
+Breadcrumbs::for('candidate.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Pelamar', route('candidate.index'));
+});
+
+Breadcrumbs::for('candidate.show', function (BreadcrumbTrail $trail, Candidate $candidate) {
+    $trail->parent('candidate.index');
+    $trail->push($candidate->profile->name, route('candidate.show', $candidate));
 });
 
 Breadcrumbs::for('vacancy.index', function (BreadcrumbTrail $trail) {
@@ -78,6 +94,11 @@ Breadcrumbs::for('question.index', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('recruitment.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
     $trail->push('Seleksi', route('recruitment.index'));
+});
+
+Breadcrumbs::for('recruitment.show', function (BreadcrumbTrail $trail, Candidate $candidate) {
+    $trail->parent('recruitment.index');
+    $trail->push($candidate->profile->name, route('recruitment.show', $candidate));
 });
 
 Breadcrumbs::for('score.index', function (BreadcrumbTrail $trail) {

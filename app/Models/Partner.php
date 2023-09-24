@@ -23,4 +23,18 @@ class Partner extends Model
     public function region() {
     	return $this->belongsTo(Region::class, 'region_id');
     }
+
+    public function scopeYearlyCount($query) {
+        $starting_date = mktime(0, 0, 0, 1, 1, date("Y"));
+        $starting_date = date("Y-m-d", $starting_date);
+
+        $ending_date = mktime(0, 0, 0, 12, 31, date("Y"));
+        $ending_date = date("Y-m-d", $ending_date);
+
+        return $query->whereBetween('created_at', [$starting_date, $ending_date])
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy(function ($vacancy) { return $vacancy->created_at->format('M'); })
+            ->map(function ($vacancyGroup) { return $vacancyGroup->count(); });
+    }
 }

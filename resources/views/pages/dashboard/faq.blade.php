@@ -11,7 +11,7 @@
 				</div>
 			</div>
 			<div class="card">
-				<div class="card-header text-bg-brighter-color">
+				<div class="card-header text-bg-color">
 					<i class="bi bi-question-circle me-2"></i>
 					@yield('title')
 				</div>

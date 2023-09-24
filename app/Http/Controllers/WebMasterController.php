@@ -60,7 +60,8 @@ class WebMasterController extends Controller
     public function index()
     {
         $context = [];
-        return view('pages.master.index', $context);
+        // return view('pages.master.index', $context);
+        return redirect()->route('dashboard.index');
     }
 
     public function create(string $code, FormBuilder $builder)

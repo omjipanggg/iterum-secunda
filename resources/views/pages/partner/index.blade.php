@@ -30,10 +30,6 @@
 					</div>
 					Partner
 				</div>
-				<div class="card-footer">
-					<i class="bi bi-info-circle me-2"></i>
-					Mohon isikan seluruh data dengan benar.
-				</div>
 			</div>
 		</div>
 	</div>

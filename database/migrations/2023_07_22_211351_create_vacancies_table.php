@@ -33,6 +33,7 @@ return new class extends Migration
             $table->char('region_id', 36)->nullable()->index();
             $table->char('template_id', 36)->default('00000000-0000-0000-0000-000000000000')->nullable()->index();
             $table->boolean('active')->default(0);
+            $table->unsignedTinyInteger('status', 1)->default(0);
             $table->boolean('hidden_partner')->default(0);
             $table->boolean('hidden_placement')->default(0);
             $table->boolean('hidden_salary')->default(0);

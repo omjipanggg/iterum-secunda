@@ -2,7 +2,9 @@
 {{-- Header --}}
 <x-slot:header>
 <x-mail::header :url="config('app.url')">
-{{ config('app.name') }}
+<img src="{{ asset('img/selena.webp') }}" alt="{{ config('app.name') }}" width="257" height="69">
+{{-- ![SELENA]({{ asset('img/selena.webp') }} "SELENA") --}}
+{{-- {{ config('app.name') }} --}}
 </x-mail::header>
 </x-slot:header>
 
@@ -21,7 +23,8 @@
 {{-- Footer --}}
 <x-slot:footer>
 <x-mail::footer>
-© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+{{ config('app.name') }} &copy; {{ date('Y') }}
+{{-- @lang('All rights reserved.') --}}
 </x-mail::footer>
 </x-slot:footer>
 </x-mail::layout>

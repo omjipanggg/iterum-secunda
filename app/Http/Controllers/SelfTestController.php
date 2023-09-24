@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TestQuestion as Test;
+use App\Models\TestQuestion;
 use Illuminate\Http\Request;
 
-class TestQuestion extends Controller
+class SelfTestController extends Controller
 {
     public function __construct() {
         $this->middleware(['auth', 'has.dashboard', 'verified']);

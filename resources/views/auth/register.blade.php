@@ -115,8 +115,15 @@
             </div>
         </div>
         <div class="card-footer text-bg-brighter-color">
-            Sudah memiliki akun?
-            <a href="{{ route('login') }}" class="underlined">{{ __('Login') }}</a>
+            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <div class="group">
+                    Sudah memiliki akun?
+                    <a href="{{ route('login') }}" class="underlined">{{ __('Login') }}</a>
+                </div>
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}" class="underlined">Lupa kata sandi?</a>
+                @endif
+            </div>
         </div>
     </div>
 </div>
