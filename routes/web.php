@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 // AUTHENTICATION
 Auth::routes(['verify' => true]);
 
+// REGISTER
 Route::get('register/partner', [Register::class, 'createPartner'])->name('register.createPartner');
 Route::get('register/partner/{hash}', [Register::class, 'createInternal'])->name('register.createInternal');
 
@@ -50,11 +51,14 @@ Route::prefix('dashboard')->group(function() {
 Route::prefix('contract')->group(function() {
 	Route::get('/', [Contract::class, 'index'])->name('contract.index');
 	Route::get('offering', [Contract::class, 'offering'])->name('contract.offering');
-	Route::post('offering/send', [Contract::class, 'sendOffering'])->name('contract.sendOffering');
+	Route::post('offering', [Contract::class, 'sendOffering'])->name('contract.sendOffering');
 	Route::get('list', [Contract::class, 'list'])->name('contract.list');
 	Route::post('generate', [Contract::class, 'generate'])->name('contract.generate');
 	Route::get('signed', [Contract::class, 'signed'])->name('contract.signed');
 	Route::post('signed', [Contract::class, 'signedContract'])->name('contract.signedContract');
+	Route::get('{contract}/download', [Contract::class, 'download'])->name('contract.download');
+
+	Route::get('offering/{id}/response/{response}', [Home::class, 'offeringResponse'])->name('home.offeringResponse');
 });
 
 // TEMPLATE
@@ -106,6 +110,13 @@ Route::resource('candidate', Candidate::class);
 // SCORING
 Route::prefix('score')->group(function() {
 	Route::get('/', [Score::class, 'index'])->name('score.index');
+	Route::get('{schedule}/response/{response}/reason/{reason}', [Score::class, 'response'])->name('score.response');
+	Route::get('{schedule}/create', [Score::class, 'create'])->name('score.create');
+	Route::post('{schedule}/store', [Score::class, 'store'])->name('score.store');
+	Route::get('{schedule}/detail', [Score::class, 'detail'])->name('score.detail');
+	Route::get('{schedule}/edit', [Score::class, 'edit'])->name('score.edit');
+	Route::post('{schedule}/update', [Score::class, 'update'])->name('score.update');
+	Route::get('{schedule}', [Score::class, 'show'])->name('score.show');
 });
 
 // SCHEDULE
@@ -122,7 +133,7 @@ Route::prefix('schedule')->group(function() {
 
 	Route::get('{schedule}/interview/{response}/response', [Home::class, 'scheduleResponse'])->name('home.scheduleResponse');
 });
-Route::resource('schedule', Schedule::class);
+Route::resource('schedule', Schedule::class)->middleware(['auth', 'verified', 'has.dashboard']);
 
 // RECRUITMENT
 Route::prefix('recruitment')->group(function() {
@@ -148,6 +159,8 @@ Route::prefix('profile')->group(function() {
 
 	Route::get('family/{profile}/edit', [Profile::class, 'editFamilyData'])->name('profile.editFamilyData');
 	Route::post('family/{profile}/update', [Profile::class, 'updateFamilyData'])->name('profile.updateFamilyData');
+
+	Route::get('{id}/detail', [Profile::class, 'detail'])->name('profile.detail');
 
 	Route::delete('{profile}/section/{section}/delete', [Profile::class, 'destroyData'])->name('profile.destroyData');
 });
@@ -184,10 +197,11 @@ Route::prefix('master')->group(function() {
 // SERVER
 Route::get('server/preview/{id}', [Server::class, 'showImageOnModal'])->name('server.showImageOnModal');
 
-Route::get('server/candidates/fetch', [Server::class, 'fetchCandidate'])->name('server.fetchCandidate');
-Route::get('server/vacancies/fetch', [Server::class, 'fetchVacancy'])->name('server.fetchVacancy');
+Route::get('server/candidates/fetch', [Server::class, 'fetchCandidates'])->name('server.fetchCandidates');
+Route::get('server/vacancies/fetch', [Server::class, 'fetchVacancies'])->name('server.fetchVacancies');
 Route::get('server/vacancies/{id}/applied/fetch', [Server::class, 'fetchAppliedCandidates'])->name('server.fetchAppliedCandidates');
 Route::get('server/vacancies/{id}/other/fetch', [Server::class, 'fetchOtherCandidates'])->name('server.fetchOtherCandidates');
+Route::get('server/scores/fetch', [Server::class, 'fetchScores'])->name('server.fetchScores');
 
 Route::get('server/candidates/chart/fetch', [Server::class, 'chartCandidate'])->name('server.chartCandidate');
 Route::get('server/partners/chart/fetch', [Server::class, 'chartPartner'])->name('server.chartPartner');

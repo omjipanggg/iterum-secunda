@@ -91,14 +91,15 @@ class VacancyController extends Controller
 
     public function storeProject(Request $request) {
         $project = Project::create($request->all());
-        $project->slug = Str::slug($request->name) . '-' . Str::substr(strtotime('now'), -6);
+        $project->name = Str::upper($request->project_number);
+        $project->slug =  Str::substr(strtotime('now'), -6);
         $project->status = 1;
         $project->active = 1;
         $project->save();
 
         $response = [
-            'data' => $project,
-            'code' => 200
+            'code' => 200,
+            'data' => $project
         ];
 
         if (!$project) {
@@ -123,7 +124,7 @@ class VacancyController extends Controller
 
     public function store(Request $request)
     {
-        $stored = Vacancy::create($request->except(['test_category', 'test_limitation', 'test_duration', 'test_name', 'unique_number', 'education', 'categories', 'skills', 'partner_id', 'project_id']));
+        $stored = Vacancy::create($request->except(['test_category', 'test_limitation', 'test_duration', 'test_name', 'unique_number', 'education', 'categories', 'skills', 'partner_id', 'project_id', 'min_limit', 'max_limit']));
 
         $job = JobTitle::where('name', 'LIKE', '%' . $request->name . '%')->first();
         if ($job) {
@@ -180,7 +181,7 @@ class VacancyController extends Controller
                     'person_in_charge' => '-',
                     'phone_number' => '-',
                     'active' => 1,
-                    'status' => 0,
+                    'status' => 1,
                     'description' => 'Mohon sesuaikan sebelum PKWT diterbitkan.',
                     'slug' => Str::slug($project_name)
                 ]);
@@ -196,7 +197,7 @@ class VacancyController extends Controller
                 'person_in_charge' => '-',
                 'phone_number' => '-',
                 'active' => 1,
-                'status' => 0,
+                'status' => 1,
                 'description' => 'Mohon sesuaikan sebelum PKWT diterbitkan.',
                 'slug' => Str::slug($project_name)
             ]);
@@ -231,15 +232,24 @@ class VacancyController extends Controller
             }
         }
 
+        $min_limit = Str::replace('.', '', $request->min_limit);
+        $max_limit = Str::replace('.', '', $request->max_limit);
+
+        $stored->min_limit = $min_limit;
+        $stored->max_limit = $max_limit;
+
         $stored->slug = Str::slug($request->name) . '-' . Str::substr(strtotime('now'), -6);
-        $stored->published_at = Carbon::now();
+
+        if ($request->has('active')) {
+            $stored->published_at = Carbon::now();
+        }
 
         if (!$stored->save()) {
             alert()->error('Kesalahan', 'Tidak dapat menyimpan Lowongan Kerja.');
             return redirect()->back()->with('code', 500);
         }
 
-        \Log::create('Stored—vacancies ('. Str::upper($id) .')');
+        \Log::create('Stored—vacancies ('. Str::upper($stored->id) .')');
         // $stored->regions->sync($request->region_id);
 
         alert()->success('Sukses', 'Lowongan Kerja berhasil dibuat.')->autoClose(false);
@@ -271,15 +281,22 @@ class VacancyController extends Controller
 
     public function edit(string $id)
     {
+        $vacancy = Vacancy::find($id);
+
+        if (!$vacancy) {
+            alert()->error('Kesalahan', 'Lowongan Kerja tidak ditemukan.');
+            return redirect()->route('vacancy.index');
+        }
+
         $context = [
             'types' => Type::all(),
             'skills' => Skill::all(),
             'regions' => Region::whereNotIn('code', ['01', '11'])->orderBy('code')->get(),
             'projects' => Project::where('id', '<>', '00000000-0000-0000-0000-000000000000')->get(),
-            'categories' => Category::all(),
             'education' => Education::whereNotIn('id', [1, 2, 3, 4])->orderByDesc('id')->get(),
+            'categories' => Category::all(),
             'partners' => Partner::all(),
-            'vacancy' => Vacancy::findOrFail($id)
+            'vacancy' => Vacancy::find($id)
         ];
 
         return view('pages.vacancy.edit', $context);
@@ -287,13 +304,19 @@ class VacancyController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $vacancy = Vacancy::findOrFail($id);
+        $vacancy = Vacancy::find($id);
+
+        if (!$vacancy) {
+            alert()->error('Kesalahan', 'Lowongan Kerja tidak ditemukan.');
+            return redirect()->route('vacancy.index');
+        }
 
         $vacancy->update(
             $request->except([
                 'test_category', 'test_limitation', 'test_duration',
                 'test_name', 'unique_number', 'education', 'categories',
-                'skills', 'partner_id', 'project_id', 'name'
+                'skills', 'partner_id', 'project_id', 'name',
+                'min_limit', 'max_limit'
             ])
         );
 
@@ -396,7 +419,15 @@ class VacancyController extends Controller
             $vacancy->slug = Str::slug($request->name) . '-' . Str::substr(strtotime('now'), -6);
         }
 
-        $vacancy->published_at = Carbon::now();
+        $min = Str::replace('.', '', $request->min_limit);
+        $max = Str::replace('.', '', $request->max_limit);
+
+        $vacancy->min_limit = $min;
+        $vacancy->max_limit = $max;
+
+        if ($request->has('active')) {
+            $vacancy->published_at = Carbon::now();
+        }
 
         if (!$request->has('hidden_partner')) { $vacancy->hidden_partner = false; }
         if (!$request->has('hidden_placement')) { $vacancy->hidden_placement = false; }
@@ -407,7 +438,7 @@ class VacancyController extends Controller
             return redirect()->back()->with('code', 500);
         }
 
-        \Log::create('Updated—vacancies ('. Str::upper($id) .')');
+        \Log::create('Updated—vacancies ('. Str::upper($vacancy->id) .')');
         // $vacancy->regions->sync($request->region_id);
 
         alert()->success('Sukses', 'Lowongan Kerja berhasil disunting.')->autoClose(false);
@@ -474,6 +505,7 @@ class VacancyController extends Controller
 
     public function archive(string $id) {
         $vacancy = Vacancy::findorFail($id);
+        $vacancy->published_at = Carbon::now();
         $vacancy->active = false;
         $vacancy->save();
         alert()->success(Str::upper($vacancy->name), 'Lowongan Kerja berhasil diarsipkan.')->autoClose(false);

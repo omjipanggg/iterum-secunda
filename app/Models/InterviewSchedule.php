@@ -24,4 +24,8 @@ class InterviewSchedule extends Model
 	public function proposal() {
 		return $this->belongsTo(Proposal::class, 'proposal_id');
 	}
+
+    public function score() {
+        return $this->hasOne(InterviewScore::class, 'interview_schedule_id');
+    }
 }

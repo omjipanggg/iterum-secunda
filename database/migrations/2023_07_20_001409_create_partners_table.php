@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->char('prefix', 3)->nullable();
             $table->unsignedBigInteger('city_id')->nullable()->index();
+            $table->char('region_id', 36)->nullable()->index();
             // $table->foreignId('city_id')->cascadeOnUpdate()->noActionOnDelete()->nullable()->constrained('cities');
             $table->string('address')->nullable();
             $table->string('person_in_charge')->nullable();

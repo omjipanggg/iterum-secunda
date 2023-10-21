@@ -373,6 +373,11 @@ hr.dropdown-divider {
     left: 1rem;
 }
 
+.badge-right-floating {
+    top: 1rem;
+    right: 1rem;
+}
+
 .badge-floating {
     top: 2rem;
     right: 1rem;
@@ -512,6 +517,10 @@ ol.breadcrumb {
 .my-12 {
     margin-top: 12px;
     margin-bottom: 12px;
+}
+
+.pe-12 {
+    padding-right: 6.4rem !important;
 }
 
 .px-0-5 {
@@ -747,6 +756,10 @@ ol.breadcrumb {
     width: 100px !important;
 }
 
+.w-48 {
+    width: 48px !important;
+}
+
 .w-480 {
     width: 480px !important;
 }
@@ -902,11 +915,22 @@ table.fetch td,
     text-overflow: ellipsis;
 }
 
-table.nowrap th,
-table.nowrap td {
+table.no-wrap th,
+table.no-wrap td {
     white-space: nowrap;
-    vertical-align: top;
     text-overflow: ellipsis;
+}
+
+table.align-top th {
+    vertical-align: top;
+}
+
+table.no-wrap th {
+    vertical-align: bottom;
+}
+
+table.no-wrap td {
+    vertical-align: top;
 }
 
 div.dataTables_wrapper
@@ -928,6 +952,10 @@ table tr.deleted td {
 /* ===================================================================== */
 .form-floating > label {
     top: 4px;
+}
+
+.show-placeholder .form-control:focus::placeholder {
+    color: var(--muted-color) !important;
 }
 
 .form-control,
@@ -992,6 +1020,13 @@ table tr.deleted td {
     padding-bottom: 10px !important;
 }
 
+td.is-invalid,
+th.is-invalid {
+    background-color: var(--bs-danger-bg-subtle);
+    border: 1px solid var(--bs-danger-border-subtle);
+    color: var(--bs-danger-text-emphasis);
+}
+
 /* FORM ON MODAL */
 /* ===================================================================== */
 .form-select-multiple-on-modal-floating label {
@@ -1022,6 +1057,12 @@ table tr.deleted td {
     padding-top: 28px;
     padding-left: 13px;
     padding-bottom: 10px;
+}
+
+.table-modal ul {
+    list-style-type: square;
+    padding-left: 1rem;
+    margin-bottom: 0;
 }
 
 /* SELECT-2-LIBRARY */
@@ -1177,6 +1218,7 @@ ul.pagination {
 .swal2-title { font-size: var(--swal2-title-size) !important; }
 .swal2-html-container { font-size: var(--default-size) !important; }
 .swal2-styled { font-size: var(--title-size) !important; }
+.swal2-input { font-size: var(--normal-size); }
 
 
 /* RPS */

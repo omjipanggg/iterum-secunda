@@ -15,6 +15,12 @@
     <div class="container">
         <div class="row">
             <div class="col">
+                @if ($vacancy->closing_date < date('Y-m-d H:i:s'))
+                <div class="alert alert-warning fade show" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Lowongan Kerja ini sudah kedaluwarsa</strong>, saat ini Anda dalam mode hanya baca (<span class="text-decoration-underline fst-italic">read-only</span>).
+                </div>
+                @endif
                 <div class="card mb-3">
                     <div class="card-body">
                         {{ Breadcrumbs::render('portal.show', $vacancy) }}
@@ -44,11 +50,11 @@
                             @endif
 
                             <div class="wrap py-4">
-                                <h3 class="mb-1">{{ Str::headline($vacancy->name) }}</h3>
+                                <h3 class="mb-1">{{ $vacancy->name }}</h3>
                                 @if ($vacancy->hidden_partner)
                                 &nbsp;
                                 @else
-                                <p class="text-muted mb-4">{{ Str::headline($vacancy->project->partner->name) }}</p>
+                                <p class="text-muted mb-4">{{ $vacancy->project->partner->name }}</p>
                                 @endif
                             </div>
 
@@ -59,7 +65,7 @@
                                     @if ($vacancy->hidden_placement)
                                     <p class="m-0 fw-semibold">-</p>
                                     @else
-                                    <p class="m-0 fw-semibold">{{ Str::headline($vacancy->placement) }}</p>
+                                    <p class="m-0 fw-semibold">{{ $vacancy->placement }}</p>
                                     @endif
                                 </div>
                                 <div class="border position-relative">
@@ -139,7 +145,6 @@
                             </a>
                         </div>
                     </div>
-                    @else
                     @endif
                 </div>
             </div>
@@ -151,7 +156,7 @@
                             <div class="d-flex flex-column box-info">
                                 <div class="border-bottom position-relative">
                                     <p class="summary-content text-muted">Posisi</p>
-                                    <p class="summary-header">{{ Str::headline($vacancy->name) }}</p>
+                                    <p class="summary-header">{{ $vacancy->name }}</p>
                                 </div>
                                 <div class="border-bottom position-relative">
                                     <p class="summary-content text-muted">Kota Penempatan</p>
@@ -159,7 +164,7 @@
                                     @if ($vacancy->hidden_placement)
                                         -
                                     @else
-                                        {{ Str::headline($vacancy->placement) }}
+                                        {{ $vacancy->placement }}
                                     @endif
                                     </p>
                                 </div>
@@ -194,13 +199,16 @@
                             </div>
                         </div>
                         <div class="card-footer text-bg-brighter-color">
-                            <button type="button" class="btn btn-lg btn-color w-100 @if ($status) disabled not-allowed @else breathing @endif" data-bs-toggle="modal" data-bs-target="#modalApply">
+                            <button type="button" class="btn btn-lg btn-color w-100 @if ($status || !$vacancy->active || !$vacancy->closing_date > date('Y-m-d')) disabled not-allowed @else breathing @endif" data-bs-toggle="modal" data-bs-target="#modalApply">
                                 @if ($status)
-                                Terkirim
-                                <i class="bi bi-check-circle ms-1"></i>
+                                    Terkirim
+                                    <i class="bi bi-check-circle ms-1"></i>
+                                @elseif (!$vacancy->active || !$vacancy->closing_date > date('Y-m-d'))
+                                    Kedaluwarsa
+                                    <i class="bi bi-x-circle ms-1"></i>
                                 @else
-                                Lamar
-                                <i class="bi bi-send ms-1"></i>
+                                    Lamar
+                                    <i class="bi bi-send ms-1"></i>
                                 @endif
                             </button>
                         </div>
@@ -211,11 +219,8 @@
                         <div class="card-header text-bg-color">Informasi Mitra</div>
                         @if ($vacancy->project->partner->picture == 'landscape.webp')
                             <img src="{{ asset('img/landscape.webp') }}" alt="Tables" class="card-img-top">
+                            {{-- @else --}}
                         @endif
-                        {{--
-                        @else
-                        @endif
-                        --}}
                         <div class="card-body">
                             <div class="wrap">
                                 <h4 class="mb-2">{{ $vacancy->project->partner->name }}</h4>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('hash')->unique();
             $table->string('department_name')->nullable();
             $table->foreignUuid('region_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('regions');
+            $table->foreignUuid('user_id')->nullable()->cascadeOnUpdate()->noActionOnDelete()->constrained('users');
             $table->boolean('completed')->default(0);
             $table->dateTime('expired_at')->default('2025-12-31 23:59:59');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

@@ -99,14 +99,14 @@
 							<div class="form-group form-salary">
 								<div class="d-flex flex-wrap gap-2 mb-1">
 									<div class="flex-basis-6 form-floating">
-										<input type="text" class="form-control" autocomplete="off" placeholder="Gaji (batas-bawah)" oninput="typingMoney(event);" id="min_limit_temp" onkeyup="putMoneyHolder(event, '#min_limit')" required="">
+										<input type="text" class="form-control" autocomplete="off" placeholder="Gaji (batas-bawah)" oninput="typingMoney(event);" id="min_limit_temp" name="min_limit" required="">
 										<label for="min_limit_temp" class="fw-semibold small">Gaji (batas-bawah)</label>
-										<input type="hidden" name="min_limit" id="min_limit">
+										<input type="hidden" id="min_limit">
 									</div>
 									<div class="flex-basis-6 form-floating">
-										<input type="text" class="form-control" autocomplete="off" placeholder="Gaji (batas-atas)" oninput="typingMoney(event);" id="max_limit_temp" onkeyup="putMoneyHolder(event, '#max_limit')" required="">
+										<input type="text" class="form-control" autocomplete="off" placeholder="Gaji (batas-atas)" oninput="typingMoney(event);" id="max_limit_temp" name="max_limit" required="">
 										<label for="max_limit_temp" class="fw-semibold small">Gaji (batas-atas)</label>
-										<input type="hidden" name="max_limit" id="max_limit">
+										<input type="hidden" id="max_limit">
 									</div>
 								</div>
 								<div class="form-check form-switch">

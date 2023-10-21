@@ -16,4 +16,8 @@ class Relative extends Model
     public function relation() {
     	return $this->belongsTo(Relation::class, 'close_relation_id');
     }
+
+    public function education() {
+    	return $this->belongsTo(Education::class, 'education_id');
+    }
 }

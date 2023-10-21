@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Helpers\ActivityLog;
 
+use App\Models\Candidate;
 use App\Models\User;
 
 use App\Http\Controllers\Controller;
@@ -50,7 +51,7 @@ class VerificationController extends Controller
         $user = User::find($id);
 
         if (!empty($user->email_verified_at)) {
-            Alert::error('Kesalahan', 'Aktivasi akun sudah dilakukan pada ' . date_time_indo_format($user->email_verified_at))->autoClose(false);
+            Alert::error('Kesalahan', 'Aktivasi akun sudah dilakukan pada ' . date_time_indo_format($user->email_verified_at) . ' WIB')->autoClose(false);
             return redirect()->route('home.index');
         }
 

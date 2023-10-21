@@ -12,4 +12,12 @@ class InterviewScore extends Model
 
     protected $table = 'interview_scores';
     protected $guarded = [];
+
+    public function schedule() {
+    	return $this->belongsTo(InterviewSchedule::class, 'interview_schedule_id');
+    }
+
+    public function offered() {
+    	return $this->hasOne(OfferingLetter::class, 'interview_score_id');
+    }
 }

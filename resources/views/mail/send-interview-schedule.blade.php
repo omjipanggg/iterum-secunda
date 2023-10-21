@@ -37,9 +37,8 @@ Lamaran Anda untuk posisi **{{ $data['position'] }}** sudah kami terima. Selanju
 
 ----
 
-**Perhatian!** Mohon berikan jawaban Anda sebelum tanggal sesi wawancara yang ditentukan.
+<font size="1">**Perhatian!** Mohon berikan jawaban Anda sebelum tanggal sesi wawancara yang ditentukan.</font>
 {{-- @component('mail::subcopy') --}}
 {{-- <font size="1">**Perhatian!** Mohon berikan jawaban Anda sebelum tanggal sesi wawancara yang ditentukan.</font> --}}
 {{-- @endcomponent --}}
-
 @endcomponent

@@ -1,3 +1,4 @@
+@auth
 <div id="layoutSidenav_nav">
 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
     <div class="sb-sidenav-menu">
@@ -136,7 +137,7 @@
         @method('POST')
         <div class="input-group">
             <input class="form-control px-0-5" type="text" autocomplete="off" placeholder="Search" aria-label="Search" aria-describedby="btn-search" name="keyword" value="{{ request()->input('keyword') ?? old('keyword') }}">
-            <button class="btn btn-color" id="btn-search" type="submit"><i class="bi bi-search"></i></button>
+            <button class="btn btn-dual-color rounded-0" id="btn-search" type="submit"><i class="bi bi-search"></i></button>
         </div>
     </form>
     <div class="sb-sidenav-footer">
@@ -157,3 +158,4 @@
     </div>
 </nav>
 </div>
+@endauth

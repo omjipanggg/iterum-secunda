@@ -116,19 +116,25 @@ function set_prefix($string) {
     return implode('', $initials);
 }
 
-function fresh_card_number($prefix, $region, $id) {
-    return $prefix . $region . date('y') . sprintf('%03s', intval(Str::substr($id, -3)) + 1);
-}
-
 function incerement_card_number($id) {
     return sprintf('%03s', intval(Str::substr($id, -3)) + 1);
+}
+
+function fresh_card_number($prefix, $region, $id, $year = null) {
+    if ($year === null) {
+        $year = date('y');
+    }
+
+    $id = incerement_card_number($id);
+
+    return $prefix . $region . $year . $id;
 }
 
 function randomizer() {
     $number = rand(0, 25);
     $letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    // $response = chr(rand(65, 90));
     $response = $letter[$number];
+    // $response = chr(rand(65, 90));
     return $response;
 }
 
@@ -145,11 +151,66 @@ function generate_table_code() {
     return $result;
 }
 
+function month_to_rome($month) {
+    $monthTuple = ['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+    return $monthTuple[$month];
+}
+
+
+function number_string($date) {
+        $tuple = ['Nol', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima',
+        'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas'];
+
+        $temp = '';
+
+        if ($date < 12) {
+            $temp = $tuple[$date];
+        } else if ($date < 20) {
+            $temp = number_string($date - 10) . ' Belas';
+        } else if ($date < 100) {
+            if ($date%10 == 0) {
+                $temp = number_string($date/10) . " Puluh";
+            } else {
+                $temp = number_string($date/10) . " Puluh " . number_string($date%10);
+            }
+        } else if ($date < 200) {
+            $temp = " Seratus " . number_string($date-100);
+        } else if ($date < 1000) {
+            $temp = number_string($date/100) . " Ratus " . number_string($date%100);
+        } else if ($date < 2000) {
+            $temp = " Seribu " . $number_string($date-1000);
+        } else if ($date < 1000000) {
+            $temp = number_string($date/1000) . " Ribu " . number_string($date%1000);
+        } else {
+            $temp = "#REF";
+        }
+        return trim($temp);
+}
+
 function calculate_age($date) {
     $birthdate = new DateTime($date);
     $currentDate = new DateTime();
     $age = $currentDate->diff($birthdate);
     return $age->y;
+}
+
+function count_duration($start, $end) {
+    $start = new DateTime($start);
+    $end = new DateTime($end);
+
+    $interval = $start->diff($end);
+    $total_days = $interval->format('%d');
+    $total_count_days = $interval->format('%a') + 1;
+
+    $total_years = $interval->format('%y');
+    $total_months = $end->diff($start)->format('%m');
+
+    if ($total_years > 0) {
+        $total_months = $total_months + (12 * $total_years);
+    }
+
+    // return trim($total_months . ' (' . number_string($total_months) . ') Bulan, ' . $total_days . ' (' . number_string($total_days) . ') Hari');
+    return $total_months . ' bulan, ' . $total_days . ' hari';
 }
 
 function publish_sftp_now() {}

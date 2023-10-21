@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalBodyOnly" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="modalBodyOnlyLabel" aria-hidden="true">
+<div class="modal fade" id="modalBodyOnly" tabindex="-1" aria-labelledby="modalBodyOnlyLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-fullscreen-lg-down modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header text-bg-color">
@@ -10,7 +10,12 @@
       	<div id="modalBodyOnlyPlaceholders">Fetching...</div>
       </div>
       <div class="modal-footer text-bg-outline-color">
-        Footer.
+        <div class="d-flex gap-2 w-100 flex-wrap justify-content-between align-items-center">
+          <p class="m-0 form-text">
+            <i class="bi bi-info-circle me-1"></i>
+            Pratinjau.
+          </p>
+        </div>
       </div>
     </div>
   </div>

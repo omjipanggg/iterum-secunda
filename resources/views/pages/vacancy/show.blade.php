@@ -70,14 +70,33 @@
                     </span>
                     @endif
 
+                    <div class="badge-right-floating position-absolute">
+                        <a href="{{ route('portal.show', $vacancy->slug) }}" target="_blank" class="btn btn-sm btn-color px-3">
+                            Pratinjau
+                            <i class="bi bi-box-arrow-up-right ms-1"></i>
+                        </a>
+                    </div>
+
                     <div class="mt-5">
                         <p class="fs-5"><i class="bi bi-geo-alt-fill me-2"></i>{{ $vacancy->placement }}</p>
-                        <p class="fs-2 mb-0">
-                            <em>{{ $vacancy->project->project_number ?? 'Belum diperbarui' }}</em>
-                            <span class="px-2">&middot;</span>
-                            {{ $vacancy->name }}
-                        </p>
-                        <h5 class="mb-5 text-muted">{{ $vacancy->project->partner->name ?? 'Belum diperbarui' }}</h5>
+                        <div class="d-flex flex-wrap gap-2 mb-5 align-items-center justify-content-between">
+                            <div class="group">
+                                <p class="fs-2 mb-0">
+                                    <a href="{{ route('portal.show', $vacancy->slug) }}" target="_blank" class="dotted">
+                                        <em>{{ $vacancy->project->project_number ?? 'Belum diperbarui' }}</em>
+                                        <span class="px-2">&middot;</span>
+                                        {{ $vacancy->name }}
+                                    </a>
+                                </p>
+                                <h5 class="text-muted">{{ $vacancy->project->partner->name ?? 'Belum diperbarui' }}</h5>
+                            </div>
+                            <div class="group">
+                                <p class="mb-0 fw-semibold text-end">Tgl. Awal</pmb-0 >
+                                <p class="mb-2 text-end">{{ date_indo_format($vacancy->project->starting_date) }}</p>
+                                <p class="mb-0 fw-semibold text-end">Tgl. Akhir</pmb-0 >
+                                <p class="mb-0 text-end">{{ date_indo_format($vacancy->project->ending_date) }}</p>
+                            </div>
+                        </div>
                     </div>
 
                     @if ($similar->count() > 0)
@@ -119,12 +138,12 @@
 
     <div class="row">
         <div class="col">
-            <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
+            <ul class="nav nav-pills mb-3 nav-justified gap-3" id="pills-tab" role="tablist">
               <li class="nav-item" role="presentation">
-                <button class="nav-link px-5 py-3 active" id="pills-primary-tab" data-bs-toggle="pill" data-bs-target="#pills-primary" type="button" role="tab" aria-controls="pills-primary" aria-selected="true">Pelamar</button>
+                <button class="nav-link py-3 active" id="pills-primary-tab" data-bs-toggle="pill" data-bs-target="#pills-primary" type="button" role="tab" aria-controls="pills-primary" aria-selected="true">Pelamar</button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link px-5 py-3" id="pills-secondary-tab" data-bs-toggle="pill" data-bs-target="#pills-secondary" type="button" role="tab" aria-controls="pills-secondary" aria-selected="false">Lainnya</button>
+                <button class="nav-link py-3" id="pills-secondary-tab" data-bs-toggle="pill" data-bs-target="#pills-secondary" type="button" role="tab" aria-controls="pills-secondary" aria-selected="false">Lainnya</button>
               </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
@@ -141,10 +160,10 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-sm table-bordered table-hover nowrap table-applied-candidates" data-bs-vacancy-id="{{ $vacancy->id }}">
+                            <table class="table table-sm table-bordered table-hover no-wrap table-applied-candidates responsive" data-bs-vacancy-id="{{ $vacancy->id }}">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
+                                        <th class="text-center">No</th>
                                         <th class="px-2">Aksi</th>
                                         <th>Dokumen</th>
                                         <th>Tgl. Melamar</th>
@@ -162,7 +181,7 @@
                                 <tbody></tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>No</th>
+                                        <th class="text-center">No</th>
                                         <th class="px-2">Aksi</th>
                                         <th>Dokumen</th>
                                         <th>Tgl. Melamar</th>
@@ -199,11 +218,11 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-sm table-bordered table-hover nowrap table-other-candidates" data-bs-vacancy-id="{{ $vacancy->id }}" data-bs-closing-date="{{ $vacancy->closing_date }}">
+                            <table class="table table-sm table-bordered table-hover no-wrap table-other-candidates responsive" data-bs-vacancy-id="{{ $vacancy->id }}" data-bs-closing-date="{{ $vacancy->closing_date }}">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th class="text-center">No</th>
+                                        <th class="pe-4">Aksi</th>
                                         <th>Dokumen</th>
                                         <th class="text-bg-lighest-color">Nama</th>
                                         <th>Alamat email</th>
@@ -219,8 +238,8 @@
                                 <tbody></tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>No</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th class="text-center">No</th>
+                                        <th class="pe-4">Aksi</th>
                                         <th>Dokumen</th>
                                         <th class="text-bg-lighest-color">Nama</th>
                                         <th>Alamat email</th>

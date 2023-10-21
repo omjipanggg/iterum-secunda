@@ -29,6 +29,8 @@ return new class extends Migration
             $table->string('placement_to_be')->nullable();
             $table->unsignedBigInteger('first_salary')->nullable();
             $table->unsignedBigInteger('second_salary')->nullable();
+            $table->date('starting_date')->nullable();
+            $table->date('ending_date')->nullable();
             $table->unsignedTinyInteger('percentage')->nullable();
             $table->text('private_notes')->nullable();
             $table->text('reason')->nullable();

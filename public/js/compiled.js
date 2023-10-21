@@ -149,6 +149,35 @@ $(document).ready(function(event) {
         CKEDITOR.replace(item);
     });
 
+    [...document.querySelectorAll('.editor-with-placeholder')].map((item) => {
+        const initial = $(item).data('bsContent');
+        const placeholder = $(item).data('bsPlaceholder');
+        CKEDITOR.replace(item, {
+            on: {
+                instanceReady: function(event) {
+                    if (initial == null || initial == '') {
+                        return event.editor.setData(placeholder);
+                    }
+                    return event.editor.setData(initial);
+                },
+                focus: function(event) {
+                    let editor = event.editor;
+                    let data = editor.getData();
+                    if (data === placeholder) {
+                        return editor.setData('');
+                    }
+                },
+                blur: function(event) {
+                    let editor = event.editor;
+                    let data = editor.getData();
+                    if (!data || data === placeholder) {
+                        return editor.setData(placeholder);
+                    }
+                }
+            }
+        });
+    });
+
     // DATATABLE
     // ================================================================================
     if ($('table.fetch')) {
@@ -167,6 +196,32 @@ $(document).ready(function(event) {
                     emptyTable: "Data tidak ditemukan",
                     processing: "Mengambil data..."
                 },
+                createdRow: function(row, data, index) {
+                    if (data.deleted_at) {
+                        $(row).addClass('deleted');
+                    }
+                }
+            });
+        });
+    }
+
+    if ($('table.disabled-order')) {
+        [...document.body.querySelectorAll('table.disabled-order')].map((item) => {
+            $(item).DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                    paginate: {
+                        previous: '<i class="bi bi-caret-left-fill"></i>',
+                        next: '<i class="bi bi-caret-right-fill"></i>'
+                    },
+                    infoFiltered: '',
+                    lengthMenu: '_MENU_',
+                    search: '',
+                    searchPlaceholder: "Pencarian",
+                    emptyTable: "Data tidak ditemukan",
+                    processing: "Mengambil data..."
+                },
+                ordering: false,
                 createdRow: function(row, data, index) {
                     if (data.deleted_at) {
                         $(row).addClass('deleted');
@@ -320,10 +375,6 @@ $(document).ready(function(event) {
                         },
                         orderCellsTop: true
                     });
-                },
-                complete: (response) => {
-                    $('#loader').fadeIn();
-                    console.log(response);
                 }
             });
         });
@@ -333,6 +384,7 @@ $(document).ready(function(event) {
         [...document.body.querySelectorAll('table.table-vacancy')].map((item) => {
             $(item).DataTable({
                 ajax: '/server/vacancies/fetch',
+                responsive: true,
                 processing: true,
                 serverSide: true,
                 orderCellsTop: true,
@@ -343,26 +395,35 @@ $(document).ready(function(event) {
                         render: function(data, type, row) {
                             let response = '-';
                             if (row['active'] && new Date(row['closing_date']) > new Date()) {
-                                response = '<span class="badge text-bg-success"><i class="bi bi-check-circle me-1"></i><a href="/portal/'+ row['slug'] +'" class="dotted text-white">Published</a></span>';
+                                response = '<span class="badge rounded-0 text-bg-success"><i class="bi bi-check-circle me-1"></i><a href="/portal/'+ row['slug'] +'" class="dotted text-white">Published</a></span>';
                             } else if (!row['active'] && new Date(row['closing_date']) > new Date()) {
-                                response = '<span class="badge text-bg-primary"><i class="bi bi-info-circle me-1"></i>Draft</span>';
+                                response = '<span class="badge rounded-0 text-bg-primary"><i class="bi bi-info-circle me-1"></i>Draft</span>';
                             }
                             else if (row['active'] && new Date(row['closing_date']) < new Date()) {
-                                response = '<span class="badge text-bg-danger"><i class="bi bi-x-circle me-1"></i>Expired</span>';
+                                response = '<span class="badge rounded-0 text-bg-danger"><i class="bi bi-x-circle me-1"></i>Expired</span>';
                             }
                             else if (!row['active'] && new Date(row['closing_date']) < new Date()) {
-                                response = '<span class="badge text-bg-danger"><i class="bi bi-x-circle me-1"></i>Expired</span>';
+                                response = '<span class="badge rounded-0 text-bg-danger"><i class="bi bi-x-circle me-1"></i>Expired</span>';
                             } else {
-                                response = '<span class="badge text-bg-dark"><i class="bi bi-question-circle me-1"></i>Unknown</span>';
+                                response = '<span class="badge rounded-0 text-bg-dark"><i class="bi bi-question-circle me-1"></i>Unknown</span>';
                             }
                             return response;
                         }
                     },
                     {
-                        data: 'id',
+                        data: null,
+                        name: 'id',
+                        render: function(data, type, row) {
+                            return '<a href="/vacancy/'+ row['id'] +'/edit" class="dotted"><i class="bi bi-pencil-square"></i></a>';
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'project.project_number',
                         name: 'project.project_number',
                         render: function(data, type, row) {
-                            return '<a href="/vacancy/' + data + '" class="underlined"><strong>' + row['project']['project_number'].toUpperCase() + '</strong></a>';
+                            return '<a href="/vacancy/' + row['id'] + '" class="underlined"><strong>' + row['project']['project_number'].toUpperCase() + '</strong></a>';
                         }
                     },
                     {
@@ -387,8 +448,8 @@ $(document).ready(function(event) {
                         }
                     },
                     {
-                        data: 'region',
-                        name: 'region.name',
+                        data: 'region.slug',
+                        name: 'region.slug',
                         render: function(data, type, row) {
                             /* MULTIPLE */
                             /*
@@ -412,7 +473,7 @@ $(document).ready(function(event) {
                             if (data == null || data == '') {
                                 return '<em>-</em>'
                             }
-                            return '<strong>' + data.slug.toUpperCase() + '</strong>';
+                            return '<span class="badge text-bg-dark rounded-0">' + data.toUpperCase() + '</span>';
                         }
                     },
                     {
@@ -430,20 +491,11 @@ $(document).ready(function(event) {
                         }
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at',
-                        render: function(data, type, row) {
-                            return '<a href="/vacancy/'+ row['id'] +'/edit" class="text-center"><i class="bi bi-pencil-square"></i></a>';
-                        },
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'closing_date',
+                        data: null,
                         name: 'id',
                         render: function(data, type, row) {
                             let response = '-';
-                            if ((!row['active'] && (new Date(data) > new Date())) || (data == null || data == '')) {
+                            if ((!row['active'] && (new Date(row['closing_date']) > new Date()))) {
                                 response = '<a href="/vacancy/' + row['id'] + '/publish" class="dotted" data-bs-position="' + row['name'].toUpperCase() + '" data-bs-param="info" onclick="archiveOrPublish(event)">Terbitkan</a>';
                             }
                             return response;
@@ -452,11 +504,11 @@ $(document).ready(function(event) {
                         searchable: false
                     },
                     {
-                        data: 'closing_date',
+                        data: null,
                         name: 'id',
                         render: function(data, type, row) {
                             let response = '-';
-                            if ((row['active'] && (new Date(row['closing_date']) > new Date())) || (data == null || data == '')) {
+                            if ((row['active'] && (new Date(row['closing_date']) > new Date()))) {
                                 response = '<a href="/vacancy/' + row['id'] + '/archive" class="dotted" data-bs-position="' + row['name'].toUpperCase() + '" data-bs-param="warning" onclick="archiveOrPublish(event)">Arsipkan</a>';
                             }
                             return response;
@@ -482,7 +534,8 @@ $(document).ready(function(event) {
                     if (data.deleted_at) {
                         $(row).addClass('deleted');
                     }
-                    $(row).find('td:eq(8)').addClass('text-center');
+                    $(row).find('td:eq(1)').addClass('text-center');
+                    $(row).find('td').not(':eq(1)').addClass('pe-4');
                 },
                 order: [[9, 'desc']]
             });
@@ -674,6 +727,7 @@ $(document).ready(function(event) {
                     if (data.deleted_at) {
                         $(row).addClass('deleted');
                     }
+                    $(row).find('td:eq(0)').addClass('text-center');
                     $(row).find('td:eq(1)').addClass('px-2');
                     $(row).find('td:eq(4)').addClass('text-bg-brighter-color fw-semibold');
                     $(row).find('td:eq(5)').addClass('text-bg-brighter-color fw-semibold');
@@ -742,7 +796,9 @@ $(document).ready(function(event) {
                                 return '<em>null</em>';
                             }
                             return '<a href="/download/'+ encodeURIComponent(JSON.stringify(['profiles', 'resumes'])) +'/files/'+ data +'" class="dotted" target="_blank">Lihat CV</a>';
-                        }
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'applied_to',
@@ -761,7 +817,7 @@ $(document).ready(function(event) {
                             if (data == null || data == '') {
                                 return '<em>null</em>';
                             }
-                            return data.toUpperCase();
+                            return '<a href="/profile/' + row['profile']['id'] + '/detail" class="dotted fw-semibold text-color" data-bs-toggle="modal" data-bs-target="#modalBodyOnly" data-bs-table="PROFILE" data-bs-type="' + data.toUpperCase() + '">' + data.toUpperCase() + '</a>';
                         }
                     },
                     {
@@ -771,7 +827,7 @@ $(document).ready(function(event) {
                             if (data == null || data == '') {
                                 return '<em>null</em>';
                             }
-                            return '<strong>' + data.toLowerCase() + '</strong>';
+                            return '<span class="fw-semibold">' + data.toLowerCase() + '</span class="fw-semibold">';
                         }
                     },
                     {
@@ -882,7 +938,7 @@ $(document).ready(function(event) {
                     if (data.deleted_at) {
                         $(row).addClass('deleted');
                     }
-                    $(row).find('td:eq(1)').addClass('text-center');
+                    $(row).find('td:eq(0)').addClass('text-center');
                     $(row).find('td:eq(3)').addClass('text-bg-brighter-color fw-semibold');
                 },
                 meta: {
@@ -919,7 +975,9 @@ $(document).ready(function(event) {
                                 return '<em>null</em>';
                             }
                             return '<a href="/download/'+ encodeURIComponent(JSON.stringify(['profiles', 'resumes'])) +'/files/'+ data +'" class="dotted" target="_blank">Lihat CV</a>';
-                        }
+                        },
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'profile.name',
@@ -928,7 +986,7 @@ $(document).ready(function(event) {
                             if (data == null || data == '') {
                                 return '<em>null</em>';
                             }
-                            return data.toUpperCase();
+                            return '<a href="/profile/' + row['profile']['id'] + '/detail" class="dotted fw-semibold text-color" data-bs-toggle="modal" data-bs-target="#modalBodyOnly" data-bs-table="PROFILE" data-bs-type="' + data.toUpperCase() + '">' + data.toUpperCase() + '</a>';
                         }
                     },
                     {
@@ -1020,6 +1078,330 @@ $(document).ready(function(event) {
             });
         });
     }
+
+    if ($('table.table-contract')) {
+        let table = $('table.tablel-contract').DataTable({
+            ajax: '/server/contracts/fetch',
+            processing: true,
+            serverSide: true,
+            orderCellsTop: true,
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                paginate: {
+                    previous: '<i class="bi bi-caret-left-fill"></i>',
+                    next: '<i class="bi bi-caret-right-fill"></i>'
+                },
+                infoFiltered: '',
+                lengthMenu: '_MENU_',
+                search: '',
+                searchPlaceholder: "Pencarian",
+                emptyTable: "Data tidak ditemukan",
+                processing: "Mengambil data..."
+            },
+            order: [
+                [5, 'asc']
+            ],
+            createdRow: function(row, data, index) {
+                if (data.deleted_at) {
+                    $(row).addClass('deleted');
+                }
+            },
+            meta: {},
+            columns: [
+                {
+                    data: 'id',
+                    name: 'id'
+                }
+            ]
+        });
+    }
+
+    if ($('table.table-scoring')) {
+        // [...document.body.querySelectorAll('table.table-scoring')].map((item) => {
+            let table = $('table.table-scoring').DataTable({
+             // $(item).DataTable({
+                ajax: '/server/scores/fetch',
+                processing: true,
+                serverSide: true,
+                orderCellsTop: true,
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                    paginate: {
+                        previous: '<i class="bi bi-caret-left-fill"></i>',
+                        next: '<i class="bi bi-caret-right-fill"></i>'
+                    },
+                    infoFiltered: '',
+                    lengthMenu: '_MENU_',
+                    search: '',
+                    searchPlaceholder: "Pencarian",
+                    emptyTable: "Data tidak ditemukan",
+                    processing: "Mengambil data..."
+                },
+                order: [
+                    [5, 'asc']
+                ],
+                createdRow: function(row, data, index) {
+                    if (data.deleted_at) {
+                        $(row).addClass('deleted');
+                    }
+                    $(row).attr('id', 'holder'+(index+1));
+                    $('<tr class="collapse show" id="collapse'+(index+1)+'" data-bs-parent="#scoreParentBody"><td>'+ index +'</td></tr>').insertAfter($(row));
+                    $(row).find('td:eq(0)').addClass('text-center');
+                    $(row).find('td:eq(1)').addClass('text-center');
+                    $(row).find('td:eq(4)').addClass('text-center');
+                },
+                meta: {},
+                columns: [
+                    {
+                        data: 'id',
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            return '<a href="#" class="dotted expander-table-icon" onclick="rotateIcon(event);" id="expander'+ (meta.row + 1) +'" data-bs-parent-row="#holder'+ meta.row +'" data-bs-row-index="'+ meta.row +'" data-bs-schedule-id="'+ row['id']+'"><i class="bi bi-caret-right-square"></i></a>';
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            return '<a href="/score/'+ row['id'] +'" class="dotted"><i class="bi bi-box-arrow-up-right"></i></a>';
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            if (row['score'] == null || row['score'] == '') {
+                                return '-';
+                            }
+
+                            if (row['score']['status'] > 0) {
+                                return '-';
+                            }
+                            return '<a href="/score/'+ row['id'] +'/response" class="dotted text-success" data-bs-name="'+ row['proposal']['candidate']['profile']['name'].toUpperCase() +'" data-bs-id="'+ row['id'] +'" data-bs-type="Terima" data-bs-parameter="1" onclick="assessmentResponse(event);">Terima</a>'
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            if (row['score'] == null || row['score'] == '') {
+                                return '-';
+                            }
+
+                            if (row['score']['status'] > 0) {
+                                return '-';
+                            }
+                            return '<a href="/score/'+ row['id'] +'/response" class="dotted text-danger" data-bs-name="'+ row['proposal']['candidate']['profile']['name'].toUpperCase() +'" data-bs-id="'+ row['id'] +'" data-bs-type="Tolak" data-bs-parameter="2" onclick="assessmentResponse(event);">Tolak</a>'
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'id',
+                        name: 'id',
+                        render: function(data, type, row, meta) {
+                            if (row['score'] == null || row['score'] == '') {
+                                return '-';
+                            }
+                            let p = row['score']['personality'] + row['score']['comperhension'] + row['score']['teamwork'] + row['score']['leadership'] + row['score']['work_motivation'] + row['score']['interest_in_work']; let avg_p = ((p/30)*100); let q = row['score']['computer_basic'] + row['score']['computer_advance'] + row['score']['linguistics'] + row['score']['work_knowledge']; let avg_q = ((q/20)*100); let x = row['score']['suitability']; let avg_x = ((x/5)*100);
+                            return ((avg_p + avg_q + avg_x)/3).toFixed(2);
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'interview_date',
+                        name: 'interview_date',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return dayFormat(data) + ', ' + dateFormat(data) + ' ' + row['interview_time'];
+                        }
+                    },
+                    {
+                        data: 'proposal.candidate.profile.name',
+                        name: 'proposal.candidate.profile.name',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<a href="/recruitment/'+ row['proposal']['candidate']['id'] +'" class="dotted" target="_blank">' + data.toUpperCase() + '</a>';
+                        }
+                    },
+                    {
+                        data: 'proposal.vacancy.name',
+                        name: 'proposal.vacancy.name',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return '<a href="/vacancy/'+ row['proposal']['vacancy']['id'] +'" class="dotted" target="_blank"><em>' + row['proposal']['vacancy']['project']['project_number'] + '</em> • ' + data.toUpperCase() + '</a>';
+                        }
+                    },
+                    {
+                        data: 'score.placement_to_be',
+                        name: 'score.placement_to_be',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                if (row['proposal']['vacancy']['placement'] == null || row['proposal']['vacancy']['placement'] == '') {
+                                    return '<em>null</em>';
+                                }
+                                return row['proposal']['vacancy']['placement'].toUpperCase();
+                            }
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        data: 'score.starting_date',
+                        name: 'score.starting_date',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return dateFormat(data);
+                        }
+                    },
+                    {
+                        data: 'score.ending_date',
+                        name: 'score.ending_date',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                return '<em>null</em>';
+                            }
+                            return dateFormat(data);
+                        }
+                    },
+                    {
+                        data: 'score',
+                        name: 'score',
+                        render: function(data, type, row, meta) {
+                            if (data == null || data == '') {
+                                if (row['proposal']['candidate']['expected_salary'] == null || row['proposal']['candidate']['expected_salary'] == '') {
+                                    return '<em>null</em>';
+                                }
+                                return '-';
+                                return formatMoney(row['proposal']['candidate']['expected_salary'] ?? 0);
+                            }
+                            const salary = row['score']['first_salary'] + row['score']['second_salary'];
+                            return formatMoney(salary);
+                        }
+                    },
+                    {
+                        data: 'score.status',
+                        name: 'score.status',
+                        render: function(data, type, row, meta) {
+                            if (row['score'] == null || row['score'] == '') {
+                                return '<span class="badge rounded-0 text-bg-dark py-1"><i class="bi bi-skip-forward-circle me-1"></i>Queued</span>';
+                            }
+
+                            if (row['score']['status'] > 0) {
+                                if (row['score']['status'] == 1) {
+                                    return '<span class="badge rounded-0 text-bg-primary py-1"><i class="bi bi-check-circle me-1"></i>Accepted</span>';
+                                } else if (row['score']['status'] == 2) {
+                                    return '<span class="badge rounded-0 text-bg-danger py-1"><i class="bi bi-x-circle me-1"></i>Declined</span>';
+                                } else {
+                                    return '<span class="badge rounded-0 text-bg-warning py-1"><i class="bi bi-question-circle me-1"></i>Invalid</span>';
+                                }
+                            }
+
+                            return '<span class="badge rounded-0 text-bg-success py-1"><i class="bi bi-check-circle me-1"></i>Scored</span>';
+                        }
+                    }
+                ]
+            });
+        // });
+
+        $('.table-scoring tbody').on('click', '.expander-table-icon', function(event) {
+            let iterate = event.currentTarget.dataset.bsRowIndex;
+            let parentRowId = event.currentTarget.dataset.bsParentRow;
+            let scheduleId = event.currentTarget.dataset.bsScheduleId;
+            let currentRow = $(this).closest('tr');
+            let row = table.row(currentRow);
+            let currentRowIndex = row.index();
+            let rowData = row.data();
+            if (row.child.isShown()) {
+                row.child.hide();
+                currentRow.removeClass('shown active');
+            } else {
+                table.rows().every(function() {
+                    if (this.index() !== currentRowIndex) {
+                        $(this.node()).removeClass('shown active');
+                        this.child.hide();
+                    }
+                });
+                currentRow.addClass('shown active');
+                $.get({
+                    url: '/score/' + scheduleId + '/detail',
+                    beforeSend: () => {
+                        $('#loader').fadeIn();
+                    },
+                    success: (html) => {
+                        row.child(html).show();
+                    },
+                    complete: () => {
+                        const fetch = [...document.querySelectorAll('.score-details')];
+                        fetch.map((item) => {
+                            $(item).DataTable().destroy();
+                            $(item).DataTable({
+                                language: {
+                                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                                    paginate: {
+                                        previous: '<i class="bi bi-caret-left-fill"></i>',
+                                        next: '<i class="bi bi-caret-right-fill"></i>'
+                                    },
+                                    infoFiltered: '',
+                                    lengthMenu: '_MENU_',
+                                    search: '',
+                                    searchPlaceholder: "Pencarian",
+                                    emptyTable: "Data tidak ditemukan",
+                                    processing: "Mengambil data..."
+                                },
+                                paging: false,
+                                searching: false,
+                                orderCellsTop: false,
+                                info: false
+                            });
+                        });
+                        row.child().addClass('active');
+                        $('#loader').fadeOut();
+                    }
+                });
+            }
+        });
+    }
+
+    if ($('table.no-info')) {
+        [...document.body.querySelectorAll('table.no-info')].map((item) => {
+            $(item).DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json",
+                    paginate: {
+                        previous: '<i class="bi bi-caret-left-fill"></i>',
+                        next: '<i class="bi bi-caret-right-fill"></i>'
+                    },
+                    infoFiltered: '',
+                    lengthMenu: '_MENU_',
+                    search: '',
+                    searchPlaceholder: "Pencarian",
+                    emptyTable: "Data tidak ditemukan",
+                    processing: "Mengambil data..."
+                },
+                paging: false,
+                ordering: false,
+                searching: false,
+                orderCellsTop: false,
+                info: false
+            });
+        });
+    }
+
     // DELETE-FUNCTIONALITY
     // ================================================================================
     $(document).on('click', '.btn-delete', function(event) {
@@ -1234,6 +1616,34 @@ $(document).ready(function(event) {
         });
     }
 
+    let modalBodyOnly = document.getElementById('modalBodyOnly');
+    if (modalBodyOnly) {
+        modalBodyOnly.addEventListener('show.bs.modal', function (event) {
+            let btn = event.relatedTarget;
+            let route = btn.getAttribute('href');
+            let table = btn.getAttribute('data-bs-table');
+            let type = btn.getAttribute('data-bs-type');
+
+            modalBodyOnly.querySelector('.modal-title').textContent = table + '—' + type;
+
+            $.ajax({
+                url: route,
+                async: true,
+                type: 'GET',
+                beforeSend: () => {
+                    console.log('Fetching initialized...');
+                },
+                success: (response) => {
+                    $('#modalBodyOnlyPlaceholders').html(response);
+                },
+                complete: () => {
+                    console.log('Fetched successfully...');
+                },
+                timeout: 4296
+            });
+        });
+    }
+
     // FLATPICKR
     // ====================================================================================
     $("input[type=date]").flatpickr({
@@ -1339,7 +1749,7 @@ $(document).ready(function(event) {
                             results: response.map(function(item) {
                                 return {
                                     id: item.id,
-                                    text: item.name
+                                    text: item.name.toUpperCase()
                                 }
                             })
                         };
@@ -1382,7 +1792,7 @@ $(document).ready(function(event) {
                             results: response.map(function(item) {
                                 return {
                                     id: item.id,
-                                    text: item.name
+                                    text: item.name.toUpperCase()
                                 }
                             })
                         };
@@ -1609,6 +2019,43 @@ $(document).ready(function(event) {
         });
     }
 
+    $('.check-box-offering').on('change', function() {
+        const $checkbox = $(this);
+        const chkValue = $checkbox.attr('value');
+
+        if ($checkbox.prop('checked')) {
+            const $newElement = $('<input>').attr({
+                id: 'element-' + chkValue,
+                type: 'hidden',
+                name: 'offered[]',
+                value: chkValue
+            });
+
+            $('#offering-placeholder').append($newElement);
+        } else {
+            $('#element-' + chkValue).remove();
+        }
+    });
+
+    $('.check-box-generated').on('change', function() {
+        const $checkbox = $(this);
+        const chkValue = $checkbox.attr('value');
+
+        if ($checkbox.prop('checked')) {
+            const $newElement = $('<input>').attr({
+                id: 'element-' + chkValue,
+                type: 'hidden',
+                name: 'generated[]',
+                value: chkValue
+            });
+
+            $('#generated-placeholder').append($newElement);
+        } else {
+            $('#element-' + chkValue).remove();
+        }
+    });
+
+
     // END-OF-READY-ARTICLES
     // ====================================================================================
 });
@@ -1715,6 +2162,10 @@ function updateParentCheckBoxState(batch) {
 // USER-DEFINED-FUCNTIONS
 // ====================================================================================
 // THIS-FUNCTION-SHOULD-BE-PUT-ON-THE-ON-SUBMIT-FORM
+function rotateIcon(event) {
+    event.preventDefault();
+}
+
 function loadingOnSubmit(event) {
     event.preventDefault();
     $('#loader').fadeIn();
@@ -1725,6 +2176,44 @@ function chooseResume() {
     $('#resumeOnModal').trigger('click');
 }
 
+function assessmentResponse(event) {
+    event.preventDefault();
+    let id = event.currentTarget.dataset['bsId'];
+    let name = event.currentTarget.dataset['bsName'];
+    let parameter = event.currentTarget.dataset['bsParameter'];
+    let type = event.currentTarget.dataset['bsType'];
+
+    let icon = (parameter == 1) ? 'info' : 'warning';
+
+    Swal.fire({
+        title: name,
+        text: type + ' kandidat ini? Mohon berikan alasan.',
+        input: 'text',
+        inputAttributes: {
+            required: true
+        },
+        inputValidator: (value) => {
+            return new Promise((resolve) => {
+                if (value == null || value == '') {
+                    resolve('Mohon isi kolom yang tersedia.');
+                } else {
+                    resolve();
+                }
+            });
+        },
+        icon: icon,
+        showCancelButton: true,
+        reverseButtons: true,
+        confirmButtonText: 'Kirim',
+        cancelButtonText: 'Batal'
+    }).then((response) => {
+        if (response.isConfirmed) {
+            $('#loader').fadeIn();
+            window.location.href = '/score/' + id + '/response/' + parameter + '/reason/' + response.value;
+        }
+    });
+}
+
 // ON-CHANGE-FILE-INPUT
 // ====================================================================================
 $("input#resumeOnModal").on("change", function() {
@@ -1733,6 +2222,13 @@ $("input#resumeOnModal").on("change", function() {
     else { $(this).next().text("Tidak ada berkas terpilih"); }
 });
 
+function dayFormat(date) {
+  const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
+  const dateObj = new Date(date);
+  const index = dateObj.getDay();
+  return days[index];
+}
+
 function dateFormat(date) {
     let dateString = new Date(date);
     let day = dateString.getDay();
@@ -1740,8 +2236,8 @@ function dateFormat(date) {
     let month = dateString.getMonth();
     let yearOfDate = dateString.getYear();
 
-    let dayTuple = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    let monthTuple = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','Nopember','Desember'];
+    let dayTuple = ['Minggu','Senin','Selasa','Rabu','Kamis','Jum\'at','Sabtu'];
+    let monthTuple = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
     let year = (yearOfDate < 1000) ? yearOfDate + 1900 : yearOfDate;
 
@@ -1754,7 +2250,7 @@ function dateFormat(date) {
 
 function underMaintenance(event) {
     event.preventDefault();
-    Swal.fire('Tahap Pengembangan', 'Coba lagi nanti.', 'info');
+    Swal.fire('Tahap Pengembangan', 'Silakan coba lagi nanti.', 'info');
 }
 
 function plsConfirm(event) {
@@ -1775,8 +2271,9 @@ function plsConfirm(event) {
     });
 }
 
-function confirmOnSubmit(event, form) {
+function confirmOnSubmit(event) {
     event.preventDefault();
+    let form = event.currentTarget.dataset['bsForm'];
     Swal.fire({
         title: 'Konfirmasi',
         text: `Apakah data sudah sesuai?`,
@@ -1790,7 +2287,6 @@ function confirmOnSubmit(event, form) {
             $(form).submit();
         }
     });
-
 }
 
 function confirmApply(event) {
@@ -1889,16 +2385,31 @@ function noEditPlease(event) {
     event.preventDefault();
 }
 
+function putMoneyHolder(event, element) {
+    let money = event.target.value;
+    $(element).val(money);
+}
+
 function typingMoney(event) {
-  $(event.currentTarget).val(function(index, value) {
+  $(event.target).val(function(index, value) {
     return value
     .replace(/\D/g, "")
     .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   });
 }
 
-function putMoneyHolder(event, element) {
-    $(element).val(event.currentTarget.value.replaceAll('.',''));
+function oneChar(input) {
+    const value = input.value;
+    const sanitized = value.replace(/[^1-5]/g, '');
+    input.value = sanitized;
+    if (value.length > 1) {
+        input.value = value.charAt(0);
+    }
+}
+
+function triggerClick(event, element) {
+    event.preventDefault();
+    $(element).trigger('click');
 }
 
 function disableUntilNow(event) {
@@ -1982,7 +2493,7 @@ function cloneQuestion(event) {
                     results: response.map(function(item) {
                         return {
                             id: item.id,
-                            text: item.name
+                            text: item.name.toUpperCase()
                         }
                     })
                 };
@@ -2015,6 +2526,24 @@ function capitalizeEachWord(string) {
   });
 }
 
+// TRIM-CHARACTERS
+// ====================================================================================
+function trimText(url, char) {
+    if (url.length >= char) {
+        const trimmedURL = url.substr(0, char / 2) + "..." + url.substr(url.length - char / 2);
+        return trimmedURL;
+    }
+
+    return url;
+}
+
+function formatMoney(amount) {
+    amount = parseFloat(amount).toString().replace(/\D/g, '');
+    return 'Rp' + amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',-';
+}
+
+// ARCHIVE-OR-PUBLISH
+// ====================================================================================
 function archiveOrPublish(event) {
     event.preventDefault();
     let param = event.currentTarget.dataset['bsParam'];

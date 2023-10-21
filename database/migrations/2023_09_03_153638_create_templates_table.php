@@ -25,7 +25,7 @@ return new class extends Migration
 
         DB::table('templates')->insert([
             'id' => '00000000-0000-0000-0000-000000000000',
-            'name' => 'Template_PKWT_2023_Terbaru',
+            'name' => 'TEMPLATE_PKWT_2023.odt',
             'created_by' => '00000000-0000-0000-0000-000000000000',
             'updated_by' => '00000000-0000-0000-0000-000000000000'
         ]);

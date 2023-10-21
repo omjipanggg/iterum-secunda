@@ -3,18 +3,20 @@
 	@csrf
 
 	<div class="d-flex flex-wrap gap-2 mb-2">
-		<div class="form-select-floating flex-basis-4">
+		<div class="form-select-floating flex-basis-6">
 	    	<select name="partner_id" id="partner_id_on_modal" class="form-select select2-single-server-modal" data-bs-table="partners" required=""></select>
 			<label for="partner_id_on_modal" class="fw-semibold small">Nama Mitra</label>
 		</div>
-		<div class="form-floating flex-basis-4">
+		<div class="form-floating flex-basis-6">
 			<input type="text" name="project_number" placeholder="ID Project" class="form-control" autocomplete="off" id="project_number" required="">
 			<label for="project_number" class="fw-semibold small form-label">ID Project</label>
 		</div>
+		{{--
 		<div class="form-floating flex-basis-4">
 			<input type="text" name="name" placeholder="Nama" class="form-control" autocomplete="off" id="project_name" required="">
 			<label for="project_name" class="fw-semibold small form-label">Nama</label>
 		</div>
+		--}}
 	</div>
 
 	<div class="d-flex flex-wrap gap-2 mb-2">

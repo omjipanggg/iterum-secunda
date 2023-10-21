@@ -21,7 +21,7 @@
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
-						<table class="table table-bordered table-hover table-sm fetch nowrap">
+						<table class="table table-bordered table-hover table-sm fetch no-wrap">
 							<thead>
 								<tr>
 									<th>No</th>
@@ -36,7 +36,7 @@
 								<tr>
 									<td>{{ $loop->iteration }}</td>
 									<td>{{ date_time_indo_format($applied->pivot->created_at) }}</td>
-									<td><a href="{{ route('portal.show', $applied->slug) }}" class="dotted fw-semibold" target="_blank">{{ Str::upper($applied->name) }}</a></td>
+									<td><a href="{{ route('vacancy.show', $applied->id) }}" class="dotted fw-semibold" target="_blank">{{ Str::upper($applied->name) }}</a></td>
 									<td>{{ Str::upper($applied->placement) }}</td>
 									<td>
 										@php($scheduled=false)

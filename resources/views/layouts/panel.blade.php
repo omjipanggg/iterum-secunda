@@ -43,6 +43,7 @@
 <body class="sb-nav-fixed">
     @include('sweetalert::alert')
 	@include('components.modal')
+    @include('components.modal-body-only')
     @include('components.modal-delete')
     @include('components.loader')
     @include('components.mover')

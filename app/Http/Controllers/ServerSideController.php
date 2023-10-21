@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TableCode;
 use App\Models\Candidate;
+use App\Models\InterviewSchedule as Schedule;
+use App\Models\OfferingLetter;
 use App\Models\Partner;
+use App\Models\TableCode;
 use App\Models\Vacancy;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
@@ -62,7 +65,7 @@ class ServerSideController extends Controller
 
     // route('recruitment.index');
     /* ========================================================================================== */
-    public function fetchCandidate(Request $request) {
+    public function fetchCandidates(Request $request) {
         $data = Candidate::join('profiles', 'candidates.profile_id', '=', 'profiles.id')->with(['profile' => function($query) {
             $query->with(['city', 'gender'])->with(['last_education' => function($query) {
                 $query->with('education');
@@ -86,14 +89,16 @@ class ServerSideController extends Controller
         }
 
         if (!empty($request->min_limit) || !empty($request->max_limit)) {
-            $min = $request->min_limit;
-            $max = $request->max_limit;
+            // if (empty($request->min_limit)) { $min = Candidate::min('expected_salary'); }
+            // if (empty($request->max_limit)) { $max = Candidate::max('expected_salary'); }
 
-            if (empty($request->min_limit)) { $min = Candidate::min('expected_salary'); }
-            if (empty($request->max_limit)) { $max = Candidate::max('expected_salary'); }
+            $min = Str::replace('.', '', $request->min_limit);
+            $max = Str::replace('.', '', $request->max_limit);
 
-            $limit = ['min' => $min, 'max' => $max];
-            $data = $data->hasExpectedSalary($limit);
+            $data = $data->hasExpectedSalary([
+                'min' => $min,
+                'max' => $max
+            ]);
         }
 
         if (!empty($request->ready_to_work)) {
@@ -106,10 +111,15 @@ class ServerSideController extends Controller
 
     // route('vacancy.index');
     /* ========================================================================================== */
-    public function fetchVacancy(Request $request) {
-        $data = Vacancy::withCount('candidates')->with(['type', 'skills', 'region', 'position', 'education', 'candidates', 'city', 'categories', 'project' => function($query) {
-            return $query->with(['partner']);
-        }, 'creator', 'editor', 'terminator'])->latest()->get();
+    public function fetchContracts() {
+        $data = OfferingLetter::with(['schedule', 'contract', 'score'])->withCount('contract')->orderBy('contract_count')->get();
+        return DataTables::of($data)->make(true);
+    }
+
+    // route('vacancy.index');
+    /* ========================================================================================== */
+    public function fetchVacancies() {
+        $data = Vacancy::withCount('candidates')->with(['type', 'skills', 'region', 'position', 'education', 'candidates', 'city', 'categories', 'project.partner', 'creator', 'editor', 'terminator'])->latest()->get();
         return DataTables::of($data)->make(true);
     }
 
@@ -117,16 +127,15 @@ class ServerSideController extends Controller
     /* ========================================================================================== */
     public function fetchAppliedCandidates(Request $request, string $id) {
         $data = Candidate::join('profiles', 'candidates.profile_id', '=', 'profiles.id')->with(['profile' => function($query) {
-            $query->with(['city', 'gender'])->with(['last_education' => function($query) {
-                $query->with('education');
-            }]);
+            $query->with(['city', 'gender', 'last_education.education']);
         }])->whereHas('appliedTo', function($query) use($id) {
             $query->where('vacancy_id', $id);
         })->with('appliedTo', function($query) use($id) {
             $query->where('vacancy_id', $id);
-        })->with('interviewSchedules', function($query) use($id) {
+        })->withCount('appliedTo')
+        ->with('interviewSchedules', function($query) use($id) {
             $query->with('proposal');
-        })->withCount('appliedTo');
+        });
 
         if (!empty($request->table) && $request->table == 'applied') {
             if (!empty($request->age)) {
@@ -146,14 +155,16 @@ class ServerSideController extends Controller
             }
 
             if (!empty($request->min_limit) || !empty($request->max_limit)) {
-                $min = $request->min_limit;
-                $max = $request->max_limit;
+                // if (empty($request->min_limit)) { $min = Candidate::min('expected_salary'); }
+                // if (empty($request->max_limit)) { $max = Candidate::max('expected_salary'); }
 
-                if (empty($request->min_limit)) { $min = Candidate::min('expected_salary'); }
-                if (empty($request->max_limit)) { $max = Candidate::max('expected_salary'); }
+                $min = Str::replace('.', '', $request->min_limit);
+                $max = Str::replace('.', '', $request->max_limit);
 
-                $limit = ['min' => $min, 'max' => $max];
-                $data = $data->hasExpectedSalary($limit);
+                $data = $data->hasExpectedSalary([
+                    'min' => $min,
+                    'max' => $max
+                ]);
             }
 
             if (!empty($request->ready_to_work)) {
@@ -168,14 +179,13 @@ class ServerSideController extends Controller
 
     public function fetchOtherCandidates(Request $request, string $id) {
         $data = Candidate::join('profiles', 'candidates.profile_id', '=', 'profiles.id')->with(['profile' => function($query) {
-            $query->with(['city', 'gender'])->with(['last_education' => function($query) {
-                $query->with('education');
-            }]);
-        }])->whereDoesntHave('appliedTo', function($query) use($id) {
+            $query->with(['city', 'gender', 'last_education.education']);
+        }])->with('appliedTo', function($query) use($id) {
             $query->where('vacancy_id', $id);
-        })->with('appliedTo', function($query) use($id) {
+        })->withCount('appliedTo')
+        ->whereDoesntHave('appliedTo', function($query) use($id) {
             $query->where('vacancy_id', $id);
-        })->withCount('appliedTo');
+        });
 
         if (!empty($request->table) && $request->table == 'applied') {
             if (!empty($request->age)) {
@@ -195,14 +205,16 @@ class ServerSideController extends Controller
             }
 
             if (!empty($request->min_limit) || !empty($request->max_limit)) {
-                $min = $request->min_limit;
-                $max = $request->max_limit;
+                // if (empty($request->min_limit)) { $min = Candidate::min('expected_salary'); }
+                // if (empty($request->max_limit)) { $max = Candidate::max('expected_salary'); }
 
-                if (empty($request->min_limit)) { $min = Candidate::min('expected_salary'); }
-                if (empty($request->max_limit)) { $max = Candidate::max('expected_salary'); }
+                $min = Str::replace('.', '', $request->min_limit);
+                $max = Str::replace('.', '', $request->max_limit);
 
-                $limit = ['min' => $min, 'max' => $max];
-                $data = $data->hasExpectedSalary($limit);
+                $data = $data->hasExpectedSalary([
+                    'min' => $min,
+                    'max' => $max
+                ]);
             }
 
             if (!empty($request->ready_to_work)) {
@@ -211,6 +223,25 @@ class ServerSideController extends Controller
         }
 
         $data = $data->get();
+
+        return DataTables::of($data)->make(true);
+    }
+
+    // route('score.index');
+    /* ========================================================================================== */
+    public function fetchScores() {
+        $data = Schedule::where('status', 1)
+        ->whereDoesntHave('score')
+        ->orWhereHas('score', function($query) {
+            $query->where('status', 0);
+        })
+        ->orderBy('interview_date')
+        ->with([
+            'proposal.candidate.profile',
+            'proposal.vacancy.project',
+            'proposal.vacancy.region',
+            'score'
+        ])->get();
 
         return DataTables::of($data)->make(true);
     }

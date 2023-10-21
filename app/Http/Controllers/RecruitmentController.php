@@ -48,16 +48,8 @@ class RecruitmentController extends Controller
     }
 
     public function filter() {
-        /*
-        $availability = [
-            1 => 'SEGERA',
-            2 => 'DALAM SATU MINGGU',
-            3 => 'DALAM 1 - 3 MINGGU',
-            4 => 'DALAM SATU BULAN',
-            5 => 'DALAM 1 - 3 BULAN',
-            6 => 'KONFIRMASI DAHULU'
-        ];
-        */
+        /* $availability = [1 => 'SEGERA', 2 => 'DALAM SATU MINGGU', 3 => 'DALAM 1 - 3 MINGGU',
+        4 => 'DALAM SATU BULAN', 5 => 'DALAM 1 - 3 BULAN', 6 => 'KONFIRMASI DAHULU']; */
 
         $availability = Availability::all();
         $candidates = Candidate::join('profiles', 'profiles.id', '=', 'candidates.profile_id');
@@ -70,6 +62,7 @@ class RecruitmentController extends Controller
             'cities' => $cities,
             'education' => $education
         ];
+
         return view('pages.recruitment.form.filter', $context);
     }
 

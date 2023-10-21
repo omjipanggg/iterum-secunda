@@ -11,6 +11,7 @@ use App\Models\City;
 use App\Models\Education;
 use App\Models\InterviewSchedule;
 use App\Models\Proposal;
+use App\Models\InterviewSchedule as Schedule;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -26,7 +27,13 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        abort(404);
+        $schedules = Schedule::orderBy('interview_sequence')->where('status', 1)->get();
+
+        $context = [
+            'schedules' => $schedules
+        ];
+
+        return view('pages.schedule.index', $context);
     }
 
     /**

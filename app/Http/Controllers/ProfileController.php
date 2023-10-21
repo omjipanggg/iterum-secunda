@@ -57,7 +57,7 @@ class ProfileController extends Controller
 
     public function show(string $id)
     {
-        //
+        dd($id);
     }
 
     public function edit(string $id)
@@ -74,6 +74,21 @@ class ProfileController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function detail(string $id) {
+        $profile = Profile::find($id);
+
+        if (!$profile) {
+            alert()->error('Kesalahan', 'Data tidak ditemukan.');
+            return redirect()->back()->with('code', 320);
+        }
+
+        $context = [
+            'profile' => $profile
+        ];
+
+        return view('pages.profile.form.detail', $context);
     }
 
     public function destroyData(string $id, string $parameter) {

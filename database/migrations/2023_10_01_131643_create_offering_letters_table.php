@@ -11,17 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('interview_schedules', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignId('proposal_id')->cascadeOnUpdate()->noActionOnDelete()->constrained('proposals');
-            $table->unsignedTinyInteger('interview_sequence')->nullable()->default(1);
-            $table->date('interview_date');
-            $table->time('interview_time');
-            $table->string('interview_type');
-            $table->string('interview_location');
-            $table->text('description');
-            $table->string('person_in_charge');
-            $table->string('phone_number');
+        Schema::create('offering_letters', function (Blueprint $table) {
+            $table->id();
+            $table->char('interview_score_id', 36)->nullable();
+            $table->unsignedBigInteger('primary_salary')->nullable();
+            $table->unsignedBigInteger('secondary_salary')->nullable();
+            $table->string('placement')->nullable();
+            $table->dateTime('expired_at')->nullable();
             $table->unsignedTinyInteger('status')->default(0);
             $table->boolean('has_changed')->default(0);
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
@@ -38,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('interview_schedules');
+        Schema::dropIfExists('offering_letters');
     }
 };

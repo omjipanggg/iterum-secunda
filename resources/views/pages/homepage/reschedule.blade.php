@@ -12,7 +12,8 @@
 	            </div>
 	            @else
 				<div class="alert alert-warning alert-dismissible fade show mb-2 rounded-0" role="alert">
-					<i class="bi bi-info-circle me-2"></i><strong>Perhatian!</strong> Anda hanya dapat mengubah sesi wawancara sebanyak <strong>1</strong> kali.
+					<i class="bi bi-info-circle me-2"></i><strong>Perhatian!</strong>
+					<p class="m-0 mt-2">Anda hanya dapat mengubah sesi wawancara sebanyak <strong>1</strong> kali.</p>
 	                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	            </div>
 	            @endif

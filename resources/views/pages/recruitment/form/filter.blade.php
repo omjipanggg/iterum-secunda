@@ -25,19 +25,19 @@
 			<label for="age" class="fw-semibold small">Usia (Maksimal)</label>
 		</div>
 		<div class="form-floating flex-fill">
-			<input type="text" class="form-control" oninput="typingMoney(event);" onkeyup="putMoneyHolder(event, '#min_limit');" placeholder="Gaji (Batas Bawah)" autocomplete="off" id="min_limit_label">
-			<input type="hidden" name="min_limit" id="min_limit" value="0">
+			<input type="text" class="form-control" oninput="typingMoney(event);" name="min_limit" placeholder="Gaji (Batas Bawah)" autocomplete="off" id="min_limit_label">
+			<input type="hidden" id="min_limit" value="0">
 			<label for="min_limit_label" class="fw-semibold small">Gaji (Batas Bawah)</label>
 		</div>
 		<div class="form-floating flex-fill">
-			<input type="text" class="form-control" oninput="typingMoney(event);" onkeyup="putMoneyHolder(event, '#max_limit');" placeholder="Gaji (Batas Atas)" autocomplete="off" id="max_limit_label">
-			<input type="hidden" name="max_limit" id="max_limit" value="0">
+			<input type="text" class="form-control" oninput="typingMoney(event);" name="max_limit" placeholder="Gaji (Batas Atas)" autocomplete="off" id="max_limit_label">
+			<input type="hidden" id="max_limit" value="0">
 			<label for="max_limit_label" class="fw-semibold small">Gaji (Batas Atas)</label>
 		</div>
 	</div>
 	<div class="form-select-floating">
 		<select name="ready_to_work" id="ready_to_work" class="form-select select2-single-modal" multiple="">
-			@foreach ($availablity as $key => $value)
+			@foreach ($availability as $key => $value)
 				<option value="{{ $key }}">{{ $value }}</option>
 			@endforeach
 		</select>

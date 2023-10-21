@@ -1,6 +1,7 @@
 <?php
 use App\Models\TableCode;
 use App\Models\Candidate;
+use App\Models\InterviewSchedule as Schedule;
 use App\Models\Vacancy;
 use App\Models\VacancyCategory;
 
@@ -101,9 +102,29 @@ Breadcrumbs::for('recruitment.show', function (BreadcrumbTrail $trail, Candidate
     $trail->push($candidate->profile->name, route('recruitment.show', $candidate));
 });
 
+Breadcrumbs::for('schedule.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home.index');
+    $trail->push('Sesi Wawancara', route('schedule.index'));
+});
+
 Breadcrumbs::for('score.index', function (BreadcrumbTrail $trail) {
     $trail->parent('home.index');
     $trail->push('Penilaian', route('score.index'));
+});
+
+Breadcrumbs::for('score.create', function (BreadcrumbTrail $trail, Schedule $schedule) {
+    $trail->parent('score.index');
+    $trail->push('Tambah', route('score.create', $schedule));
+});
+
+Breadcrumbs::for('score.edit', function (BreadcrumbTrail $trail, Schedule $schedule) {
+    $trail->parent('score.index');
+    $trail->push('Sunting', route('score.edit', $schedule));
+});
+
+Breadcrumbs::for('score.show', function (BreadcrumbTrail $trail, Schedule $schedule) {
+    $trail->parent('score.index');
+    $trail->push(Str::upper($schedule->id), route('score.show', $schedule));
 });
 
 Breadcrumbs::for('contract.index', function (BreadcrumbTrail $trail) {

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\SendSubscription as SendEmail;
+use App\Mail\SendOfferingLetter as SendEmail;
 
 use Illuminate\Bus\Queueable;
 // use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -12,19 +12,18 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendSubscription implements ShouldQueue
+class SendOfferingLetter implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $email;
-
-    public function __construct($email)
+    protected $data;
+    public function __construct($data)
     {
-        $this->email = $email;
+        $this->data = $data;
     }
 
     public function handle(): void
     {
-        Mail::to($this->email)->send(new SendEmail($this->email));
+        Mail::to($this->data['recipient'])->send(new SendEmail($this->data));
     }
 }

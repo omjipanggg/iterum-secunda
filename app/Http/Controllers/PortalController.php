@@ -7,11 +7,16 @@ use App\Models\InterviewSchedule as Schedule;
 use App\Models\Vacancy;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PortalController extends Controller
 {
+    public function __construct() {
+        Vacancy::where('closing_date', '<', Carbon::today())->update(['active' => false]);
+    }
+
     public function index(Request $request)
     {
         $vacancies = Vacancy::where([
@@ -60,18 +65,33 @@ class PortalController extends Controller
         $vacancy = Vacancy::where('slug', $slug)->withCount('candidates')->first();
 
         if (!$vacancy) {
-            alert()->error('Kesalahan', 'Lowongan Pekerjaan tidak ditemukan.');
+            alert()->error('Kesalahan', 'Lowongan Kerja tidak ditemukan.');
             return redirect()->route('home.index');
         }
+
+        /*
+        if (auth()->check()) {
+            if (!auth()->user()->hasRole([1, 5])) {
+                alert()->error('Kesalahan', 'Lowongan Kerja sudah kedaluwarsa.');
+                return redirect()->route('home.index');
+            }
+        } else {
+            if ($vacancy->closing_date < Carbon::today()) {
+                alert()->error('Kesalahan', 'Lowongan Kerja sudah kedaluwarsa.');
+                return redirect()->route('home.index');
+            }
+        }
+        */
 
         $vacancy_id = $vacancy->id;
 
         $categories = $vacancy->categories()->pluck('vacancy_categories.id');
+
         $related = Vacancy::whereHas('categories', function($query) use($categories) {
             $query->whereIn('vacancy_category_id', $categories);
         })->where([
             ['slug', '<>', $slug],
-            ['closing_date', '>=', today()],
+            ['closing_date', '>=', Carbon::today()],
             ['active', true]
         ])
         ->withCount('candidates')
@@ -101,6 +121,7 @@ class PortalController extends Controller
             'vacancy' => $vacancy,
             'related' => $related
         ];
+
         return view('pages.portal.show', $context);
     }
 

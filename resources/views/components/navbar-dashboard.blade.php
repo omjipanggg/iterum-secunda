@@ -13,9 +13,12 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-person d-inline-block d-lg-none"></i>
+                    @auth
                     <span class="d-none d-lg-inline-block">{{ Str::lower(auth()->user()->email) }}</span>
+                    @endauth
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    @auth
                     <li>
                         @if (auth()->user()->hasRole(1))
                             <a class="dropdown-item" href="{{ route('master.index') }}">Dashboard</a>
@@ -27,6 +30,7 @@
                             <a class="dropdown-item" href="{{ route('dashboard.index') }}">Dashboard</a>
                         @endif
                     </li>
+                    @endauth
                     <li><a class="dropdown-item" href="{{ route('home.settings') }}">Pengaturan</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Keluar</a></li>

@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendSubscription;
-use App\Jobs\SendStorageToCloud as Cloud;
+use App\Jobs\DumpStorage;
 
 use App\Mail\SendSubscription as SendMailable;
 
-use App\Models\InterviewSchedule;
-use App\Models\User;
+use App\Models\InterviewSchedule as Schedule;
+use App\Models\OfferingLetter;
 use App\Models\Profile;
+use App\Models\User;
 use App\Models\Vacancy;
 use App\Models\VacancyCategory as Category;
 
@@ -157,14 +158,14 @@ class HomeController extends Controller
     public function sendStorageToCloud(Request $request) {
         $file = $request->file('file');
         $fileName = $file->getClientOriginalName();
-        Cloud::dispatch($fileName, $file);
+        DumpStorage::dispatch($fileName, $file);
         return redirect()->back()->with('code', 200);
     }
 
     // CANDIDATE-RESPONDED-THROUGH-EMAIL
     // ========================================================================
     public function scheduleResponse(string $id, string $response) {
-        $schedule = InterviewSchedule::find($id);
+        $schedule = Schedule::find($id);
 
         if (!$schedule) {
             alert()->error('Kesalahan', 'Laman tidak ditemukan.');
@@ -172,7 +173,7 @@ class HomeController extends Controller
         }
 
         if ($schedule->has_changed) {
-            alert()->error('Kesalahan', 'Anda sudah memberikan jawaban pada '. date_time_indo_format($schedule->updated_at) .' WIB');
+            alert()->warning('Perhatian', 'Anda sudah memberikan jawaban pada '. date_time_indo_format($schedule->updated_at) .' WIB');
             return redirect()->route('portal.show', $schedule->proposal->vacancy->slug);
         }
 
@@ -180,7 +181,7 @@ class HomeController extends Controller
         if ($response < 3) {
             $answer = true;
         } else if ($response == 3) {
-            alert()->info('Perhatian', 'Silakan isi sesi wawancara yang Anda kehendaki.');
+            alert()->info('Perhatian', 'Mohon isi jadwal sesi wawancara yang Anda kehendaki.')->autoClose(false);
             return redirect()->route('schedule.editSession', $schedule->id);
         } else {
             alert()->error('Kesalahan', 'Parameter tidak diketahui.');
@@ -195,5 +196,37 @@ class HomeController extends Controller
 
         alert()->success('Sukses', 'Terima kasih atas jawaban Anda.');
         return redirect()->route('portal.show', $schedule->proposal->vacancy->slug);
+    }
+
+    public function offeringResponse(string $id, string $response) {
+        $offering = OfferingLetter::find($id);
+
+        if (!$offering) {
+            alert()->error('Kesalahan', 'Laman tidak ditemukan.');
+            return redirect()->route('home.index');
+        }
+
+        $slug = $offering->score->schedule->proposal->vacancy->slug;
+        if ($offering->has_changed) {
+            alert()->warning('Perhatian', 'Anda sudah memberikan jawaban pada '. date_time_indo_format($offering->updated_at) .' WIB');
+            return redirect()->route('portal.show', $slug);
+        }
+
+        $answer = false;
+        if ($response < 3) {
+            $answer = true;
+        } else {
+            alert()->error('Kesalahan', 'Parameter tidak diketahui.');
+            return redirect()->route('portal.show', $slug);
+        }
+
+        if ($answer) {
+            $offering->has_changed = 1;
+            $offering->status = $response;
+            $offering->save();
+        }
+
+        alert()->success('Sukses', 'Terima kasih atas jawaban Anda.');
+        return redirect()->route('portal.show', $slug);
     }
 }

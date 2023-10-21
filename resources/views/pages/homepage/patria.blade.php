@@ -17,7 +17,7 @@
                         </button>
                     </div>
                 </form>
-                <a href="#" class="underlined mt-2">Kirim CV Anda</a>
+                <a href="#" class="dotted mt-2" onclick="underMaintenance(event);">Kirim CV Anda</a>
             </div>
             <div class="col-lg-6 d-flex align-items-center order-lg-2 order-1">
                 <img src="{{ asset('img/observe.webp') }}" alt="Browse" class="img-fluid">
